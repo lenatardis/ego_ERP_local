@@ -1,0 +1,25 @@
+.rateInfo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rateInfoItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+.rateInfoValue {
+  font-weight: 600;
+}
+
+.rateColumn {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+
+}

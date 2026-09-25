@@ -1,0 +1,19 @@
+.popupCloser, .popupCloserActive {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;  background-color: rgba(48, 34, 59, 0);
+  pointer-events: none;
+  backdrop-filter: blur(0);
+  z-index: 65;
+  transition: all .1s;
+}
+
+.popupCloserActive {
+  background-color: rgba(48, 34, 59, 0.88);
+  filter: blur(33%);
+  pointer-events: all;
+  cursor: default;
+  backdrop-filter: blur(3px)
+}

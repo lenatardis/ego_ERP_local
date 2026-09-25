@@ -1,0 +1,139 @@
+.payments {
+  .smallBtn {
+    width: 30px;
+  }
+}
+
+.payPopupGrid {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+
+  &__leftColumn {
+    padding-right: 12px;
+    border-right: 1px solid #ffffff;
+  }
+
+  &__rightColumn {
+    padding-left: 12px;
+    border-left: 1px solid #ffffff;
+  }
+}
+
+.paymentTab {
+
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 5px;
+    padding: 0 5px;
+    min-height: 71px;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-S);
+    background: var(--bg-main);
+    cursor: pointer;
+
+    &.active {
+      border-color: var(--btn-dark);
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h4 {
+      font-size: 13px;
+      line-height: 12px;
+
+      p {
+        font-size: 12px;
+        line-height: 12px;
+      }
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+      font-size: 12px;
+      line-height: 12px;
+    }
+  }
+}
+
+.paymentTabContent {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.paymentAccount {
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-main);
+    border-radius: var(--border-radius-S);
+    padding: 5px;
+    min-height: 71px;
+
+    h5 {
+      font-size: 12px;
+      line-height: 11px;
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+      column-gap: 10px;
+
+      p, span {
+        font-size: 12px;
+        line-height: 11px;
+
+        &.clarification {
+          font-size: 10px;
+          padding-top: 5px;
+          color: var(--text-label);
+        }
+      }
+    }
+  }
+
+  &__date {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+
+    img {
+      display: block;
+      width: 12px;
+      height: 12px;
+      cursor: pointer;
+    }
+  }
+
+
+}
+
+.btnRow {
+  padding-left: 10px;
+}
+
+.commentCell {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+

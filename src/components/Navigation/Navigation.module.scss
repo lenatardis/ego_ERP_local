@@ -1,0 +1,161 @@
+.navigation {
+  position: fixed;
+  background-color: var(--bh-nav);
+  max-width: 204px;
+  min-width: 204px;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__logo {
+    margin-top: 30px;
+    border-radius: 50%;
+  }
+}
+
+.navigation__list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.link, .linkActive {
+  width: 168px;
+  height: 40px;
+  border-radius: var(--border-radius-L);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+
+  span {
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+  }
+}
+
+.link:hover {
+  border: 1px solid var(--btn-dark);
+}
+
+.linkActive {
+  background-color: var(--btn-dark);
+  border: 1px solid var(--btn-dark);
+}
+
+.logout {
+  display: flex;
+  margin-top: auto;
+  margin-bottom: 20px;
+  row-gap: 10px;
+  width: 100%;
+  padding: 0 20px;
+  justify-content: space-between;
+  flex-direction: column;
+
+  &__block {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__row {
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+  }
+
+  &__imagePlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 31px;
+    height: 31px;
+    background: #4C2F63;;
+    border-radius: 50%;
+    flex: 0 0 auto;
+
+    img {
+      width: 31px;
+      height: 31px;
+    }
+  }
+
+  &__name {
+    font-size: 12px;
+    line-height: 16px;
+    color: #ffffff;
+  }
+
+  &__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 4px;
+    border-radius: var(--border-radius-S);
+    background: #9B3A3A;
+    min-height: auto;
+    width: 100%;
+    height: 100%;
+
+    span {
+      font-size: 8px;
+      line-height: 12px;
+      color: #ffffff;
+      text-wrap: nowrap;
+    }
+  }
+}
+
+.accordionBlock {
+  width: 100%;
+}
+
+.accordionHead {
+  width: 168px;
+  min-height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  margin-bottom: 8px;
+
+  span {
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+  }
+}
+
+.accordionArrow {
+  width: 10px;
+  height: 10px;
+  transition: transform .2s ease;
+}
+
+.accordionArrowOpen {
+  transform: rotate(180deg);
+}
+
+.accordionBody {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all .25s ease;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}
+
+.accordionBodyOpen {
+  max-height: 400px;
+  opacity: 1;
+}
+

@@ -1,0 +1,24 @@
+.sizeRow {
+  display: flex;
+  column-gap: 4px;
+  flex: 0 0 auto;
+
+  span {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto;
+    background: var(--bg-main);
+
+    p {
+      font-size: 8px;
+      line-height: 1em;
+      color: var(--text-primary);
+      font-weight: 500;
+      transform: rotate(-45deg);
+    }
+  }
+}

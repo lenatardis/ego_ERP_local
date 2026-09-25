@@ -1,0 +1,30 @@
+.infoBlock {
+  padding: 12px;
+}
+
+.imgBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+
+  &__img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  &__title {
+    font-weight: 700;
+  }
+}
+
+.infoText {
+  font-weight: 600;
+}
+
+.infoTitle {
+  margin-bottom: 12px;
+  font-weight: 600;
+}

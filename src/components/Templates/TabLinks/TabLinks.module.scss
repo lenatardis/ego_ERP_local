@@ -1,0 +1,34 @@
+.tabs {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  padding: 8px 24px;
+  width: 130px;
+  min-height: 40px;
+  border-radius: var(--border-radius-S);
+  background-color: #ffffff;
+  font-size: 14px;
+  line-height: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+
+  span {
+    display: inline-block;
+  }
+
+  &.activeTab {
+    background-color: var(--btn-dark);
+
+    span {
+      color: #FFFFFF;
+    }
+  }
+}

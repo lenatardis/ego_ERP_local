@@ -1,0 +1,229 @@
+.orders {
+  min-height: 100vh;
+  padding: 42px 54px 32px;
+  background: #ebe4ef;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabsWrap {
+  display: flex;
+  justify-content: center;
+  margin: 18px 0 14px;
+}
+
+.switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.switchButton {
+  min-width: 285px;
+  height: 40px;
+  padding: 0 24px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #5a5261;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.switchButtonActive {
+  background: #6e468f;
+  color: #ffffff;
+}
+
+.innerTabsWrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 22px;
+}
+
+.innerSwitcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.innerSwitchButton {
+  min-width: 220px;
+  height: 38px;
+  padding: 0 20px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #5a5261;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.innerSwitchButtonActive {
+  background: #6e468f;
+  color: #ffffff;
+}
+
+.tableWrap {
+  background: #f7f4f8;
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 560px;
+}
+
+.headerRow {
+  display: grid;
+  gap: 16px;
+  padding: 0 14px 12px;
+  color: #8e8795;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 620px;
+  overflow-y: auto;
+}
+
+.rowCard {
+  width: 100%;
+  display: grid;
+  min-height: 170px;
+  align-items: stretch;
+  gap: 16px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.rowCard:hover {
+  background: #f3edf7;
+}
+
+.withoutBarcode {
+  grid-template-columns: 1fr 1.1fr 1.1fr 1.1fr 1.1fr 1.6fr;
+}
+
+.withBarcode {
+  grid-template-columns: 1fr 1.1fr 1.1fr 1.1fr 1.1fr 1fr 1.6fr;
+}
+
+.myWarehouseTable {
+  grid-template-columns: 1fr 1.1fr 1.25fr 1fr 1fr 1fr 1.4fr;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  color: #3f3948;
+  font-size: 16px;
+  line-height: 1.35;
+  min-height: 146px;
+}
+
+.photo {
+  width: 124px;
+  height: 146px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  min-width: 124px;
+  flex: 0 0 124px;
+}
+
+.photoPlaceholder {
+  width: 124px;
+  height: 146px;
+  min-width: 124px;
+  flex: 0 0 124px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #efe9df 0%, #e4ddd3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6a4b88;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.comment {
+  max-width: 290px;
+  color: #3f3948;
+  font-size: 16px;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.stateBlock {
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5a5261;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.barcodePreview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  min-height: 56px;
+  cursor: pointer;
+}
+
+.barcodeImage {
+  display: block;
+  max-width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+.barcodeModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.barcodeModalContent {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.barcodeModalImage {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

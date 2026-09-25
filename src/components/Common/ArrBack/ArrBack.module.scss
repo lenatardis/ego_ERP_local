@@ -1,0 +1,18 @@
+.arrLine {
+  margin-bottom: 10px;
+}
+
+.arrWrap {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 10px;
+  cursor: pointer;
+
+  span {
+    color: #201827;
+  }
+}
+
+.arrIcon {
+  transform: rotate(180deg);
+}

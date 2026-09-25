@@ -1,0 +1,300 @@
+.table {
+  margin-top: 30px;
+  border-radius: var(--border-radius-M);
+  background-color: var(--bg-second);
+  padding: 16px 24px 16px 16px;
+  overflow-x: auto;
+
+  &.zeroPdTable {
+    .gridTable__cell {
+      padding: 0;
+    }
+  }
+}
+.tableRows {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.gridTable__header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  font-weight: 400;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  align-items: center;
+}
+
+
+.gridTable__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  background-color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-second);
+  padding: 8px 16px;
+  border-radius: var(--border-radius-S);
+  align-items: center;
+}
+
+.gridTable__cell {
+  padding: 0 8px;
+
+  button {
+    justify-content: flex-start;
+    min-height: auto;
+    font-size: 12px;
+    color: var(--text-second);
+  }
+}
+
+.subtitle {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: var(--text-primary);
+  padding-bottom: 8px;
+}
+
+.editableTable {
+
+  .gridTable__header {
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .gridTable__row {
+    padding: 8px 0;
+  }
+
+  .gridTable__cell {
+    padding: 0;
+
+    > span {
+      min-height: 24px;
+    }
+  }
+
+  input, select {
+    text-align: center;
+  }
+}
+
+.centered {
+  .gridTable__row {
+    min-height: 54px;
+  }
+
+  &.priceTable {
+    .gridTable__row {
+      min-height: auto;
+    }
+  }
+
+  .gridTable__cell {
+    text-align: center;
+
+    button {
+      justify-content: center;
+    }
+  }
+}
+
+.priceTable {
+  /*padding-top: 0;
+  margin-top: 0;
+  padding-right: 16px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;*/
+
+  .tableRows {
+    gap: 0;
+  }
+
+
+  .gridTable__row, .gridTable__header {
+    padding: 0;
+  }
+
+  .gridTable__header {
+    .gridTable__cell {
+      padding-top: 16px;
+    }
+  }
+
+
+  .gridTable__cell:has(:global(.neCell)) {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: var(--bg-main);
+
+  }
+
+  :global(.neCell) {
+    width: 100%;
+  }
+}
+
+.priceTable .tableRows .gridTable__row:nth-child(2n) .gridTable__cell:has(:global(.neCell)) {
+  background: #D7E2F2;
+}
+
+
+/*sticky header table styles */
+
+.tableFixedRoot {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  margin-top: 30px;
+  border-radius: var(--border-radius-M);
+  background-color: var(--bg-second);
+  padding: 8px 16px;
+  overflow: visible;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+
+  .gridTable__header {
+    padding: 8px 0;
+  }
+
+  .gridTable__cell {
+    padding-top: 16px;
+  }
+}
+
+.tableFixedRoot.centered {
+  @extend .centered;
+}
+
+.tableFixedRoot.priceTable {
+  @extend .priceTable;
+}
+
+.stickyHeaderWrap {
+  background: var(--bg-second);
+  overflow-x: hidden;
+}
+
+.stickyHeaderWrap .gridTable__header {
+  margin-bottom: 0;
+}
+
+/*price table input cell*/
+
+.inputCellFirst {
+  height: 100%;
+  padding: 0;
+  border: 1px solid #111;
+}
+
+.inputCell {
+  height: 100%;
+  padding: 0;
+  border: 1px solid #111;
+  border-left: none;
+}
+
+.gridTable__cell.inputCell,
+.gridTable__cell.inputCellFirst {
+  padding: 0;
+}
+
+.gridTable__cell:has(:global(.cellInputWithLeftBorder)) {
+  border-left: 1px solid #111;
+}
+
+.priceTable .tableRows .gridTable__row + .gridTable__row .inputCell,
+.priceTable .tableRows .gridTable__row + .gridTable__row .inputCellFirst {
+  border-top: none;
+}
+
+.tableWithStickyHeader {
+  padding-top: 0;
+  margin-top: 0;
+  padding-right: 16px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  .gridTable__row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+:global(.editableTable) .gridTable__row, .notEditableCell, .notEditableCell input {
+  background: #f7f5f8;
+}
+
+/* ===== rate highlight (global, used from NewPrices columns) ===== */
+
+:global(.rateCompareWrap) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+}
+
+:global(.rateDiff) {
+  font-size: 11px;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+:global(.rateBad) {
+  background: rgba(231, 76, 60, 0.26);
+  color: #C0392B;
+  font-weight: 700;
+}
+
+:global(.rateGood) {
+  background: rgba(46, 204, 113, 0.26);
+  color: #1E8449;
+  font-weight: 700;
+}
+
+.priceTable .gridTable__cell:has(:global(.neCell)):global(.rateBad) {
+  background: rgba(231, 76, 60, 0.26) !important;
+  color: #C0392B;
+}
+
+.priceTable .gridTable__cell:has(:global(.neCell)):global(.rateGood) {
+  background: rgba(46, 204, 113, 0.26) !important;
+  color: #1E8449;
+}
+
+.popupTable {
+  padding: 12px 0;
+  margin-top: 0;
+  .gridTable__header {
+    background: var(--bg-main);
+    margin-bottom: 0;
+    border-top-left-radius: var(--border-radius-S);
+    border-top-right-radius: var(--border-radius-S);
+  }
+}
+
+// .gridTable__header .gridTable__cell,
+// .gridTable__row .gridTable__cell {
+//   outline: 1px solid red;
+// }
+
+.centered {
+  .gridTable__subrow {
+  .gridTable__cell {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      justify-content: center;
+    }
+  }
+}
+}

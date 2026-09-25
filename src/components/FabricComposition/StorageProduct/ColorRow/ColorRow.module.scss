@@ -1,0 +1,11 @@
+.colorsRow {
+  display: flex;
+  column-gap: 4px;
+  flex: 0 0 auto;
+
+  span {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+  }
+}

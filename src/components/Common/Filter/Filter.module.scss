@@ -1,0 +1,54 @@
+.filter, .filterShow {
+  position: fixed;
+  background-color: var(--btn-dark);
+  right: -400px;
+  top: 0;
+  width: 360px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-height: 100vh;
+  height: 100%;
+  transition: all .2s;
+  z-index: 70;
+  overflow: auto;
+
+  h3 {
+    margin: 10px 0 10px;
+    color: #fff;
+    font-size: 32px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+}
+
+.filterShow {
+  right: 0;
+}
+
+.selects {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  width: 100%;
+}
+
+.removeFilters {
+  height: 30px;
+  width: 30px;
+  flex: 0 0 auto;
+  min-width: 20px;
+  border-radius: 4px;
+  background-color: #F1EEF3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-end;
+  min-height: auto;
+
+  img {
+    width: 20px;
+    height: 18px;
+  }
+}

@@ -1,0 +1,94 @@
+.payments {
+  .tooltipCell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .infoIcon {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .approvedBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .inProc {
+    color: #E6C94A;
+  }
+
+  .approved {
+    color: #2ECC71;
+  }
+
+  .declined {
+    color: #dc2626;
+  }
+
+  .confirmPopupContent {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .confirmPopupActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+}
+
+.btnGreen,
+.btnRed {
+  width: 120px;
+  border-radius: var(--border-radius-S);
+
+  span {
+    color: #fff;
+    line-height: 22px;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+}
+
+.btnGreen {
+  background-color: #2ECC71
+}
+
+.btnRed {
+  background-color: #DC2626;
+}
+
+.btnConfirm {
+  padding: 8px;
+
+  span {
+    font-size: 12px;
+    line-height: 1em;
+  }
+}
+
+.btnConfirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.confirmPopupWarning {
+  margin-top: 16px;
+}

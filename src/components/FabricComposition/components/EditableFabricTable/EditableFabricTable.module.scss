@@ -1,0 +1,189 @@
+input {
+  max-width: 100%;
+  font-size: 12px;
+  min-height: 32px;
+
+  &[type="file"] {
+    min-height: 36px;
+  }
+}
+
+span {
+  font-size: 12px;
+}
+
+.addBtn, .separateBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: var(--border-radius-S);
+  margin-top: 15px;
+  min-height: 32px;
+
+  span {
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+.separateBtn {
+  min-height: auto;
+  margin-top: 0;
+  padding-bottom: 5px;
+
+  span {
+    font-size: 10px;
+    line-height: 12px;
+  }
+}
+
+.sizeCell {
+  display: flex;
+  flex-direction: column;
+}
+.or {
+  font-size: 11px;
+  line-height: 1em;
+  margin: 2px 0;
+  opacity: 0.6;
+}
+
+.muiLocal {
+  :global(.MuiFormControl-root .MuiOutlinedInput-root) {
+    padding: 0;
+  }
+
+  :global(.MuiFormControl-root .MuiOutlinedInput-root .MuiSelect-select) {
+    font-size: 12px;
+    white-space: pre-line;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+.muiLocal {
+  :global(.MuiSvgIcon-root.MuiSelect-icon) {
+    right: 0;
+  }
+}
+
+
+.err { color: #c62828; font-size: 12px; margin-top: 4px; }
+
+.fabricCellWrap {
+  position: relative;
+}
+
+.createFabricBtn {
+  position: absolute;
+  right: 0;
+  top: -28px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: var(--btn-dark);
+  cursor: pointer;
+  z-index: 2;
+  padding: 0;
+
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: #ffffff;
+    border-radius: 2px;
+    transform: translate(-50%, -50%);
+  }
+
+  &::before {
+    width: 10px;
+    height: 2px;
+  }
+
+  &::after {
+    width: 2px;
+    height: 10px;
+  }
+}
+.hintEmpty {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #636363;
+}
+
+.fabricTooltip {
+  position: absolute;
+  left: 0;
+  top: -26px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.infoIcon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  display: block;
+}
+
+.productTooltip {
+  top: -21px;
+}
+
+.productAddIcon {
+  top: -23px;
+}
+
+.rowBlock {
+  position: relative;
+}
+
+.removeRowBtn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 14px;
+    height: 14px;
+    display: block;
+  }
+}
+
+.fullBorder {
+  border: 1px solid var(--bg-main);
+}
+
+.noRightBorder {
+  border: 1px solid var(--bg-main);
+  border-right: none;
+}
+
+.priceTooltipRight {
+  left: auto;
+  right: 0;
+  top: -21px;
+}
+
+.capacityWarningBorder {
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.35);
+}
+
+

@@ -1,0 +1,120 @@
+.wrapper {
+  margin-top: 30px;
+}
+
+.sourcesCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 8px;
+}
+
+.defaultSource {
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.sourcesList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  margin-top: 8px;
+}
+
+.sourcesListItem {
+}
+
+.addSourceLink {
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  line-height: 16px;
+  color: #573971;
+  cursor: pointer;
+  text-align: left;
+}
+
+
+.actionsCell {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  align-items: flex-start;
+
+  button {
+    width: min(126px, 100%);
+  }
+}
+
+.textareaBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.textareaLabel {
+  padding-left: 16px;
+  padding-bottom: 6px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-label);
+}
+
+.textarea {
+  min-height: 80px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #E0E0E0;
+  font-size: 14px;
+  line-height: 14px;
+  font-family: inherit;
+  background-color: #FFFFFF;
+  color: #201827;
+
+  &:focus {
+    outline: none;
+    background: #BFCBDA;
+  }
+}
+
+.errorText {
+  font-size: 14px;
+  color: #d54f4f;
+  margin-top: 2px;
+}
+
+.textareaError {
+  border-color: #F17C7C;
+}
+
+.topActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 15px;
+}
+
+.priceCountList {
+  padding-top: 5px;
+  text-align: left;
+}
+
+.xScrollHide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    height: 0 !important;
+  }
+}
+
+.filterBlock {
+  height: 160px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  background: #C5A9DE;
+}
+

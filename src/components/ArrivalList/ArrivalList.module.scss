@@ -1,0 +1,68 @@
+.arrivalList {
+  padding-bottom: 20px;
+
+  h2 {
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    column-gap: 20px;
+    padding: 20px 10px 20px 20px;
+    background: var(--bg-second);
+    border-radius: var(--border-radius-S);
+  }
+
+  .infoBlock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 25px;
+    flex: 1;
+
+    p {
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--text-second);
+      margin: 0;
+    }
+  }
+
+  .infoCol {
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+    min-width: auto;
+  }
+
+  .infoTitle {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .actionBlock {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .navBtnRow {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 15px;
+    margin-bottom: 20px;
+  }
+}
