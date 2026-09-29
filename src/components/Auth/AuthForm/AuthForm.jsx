@@ -9,11 +9,16 @@ import { useAppDispatch } from "../../../hooks/redux";
 import { setAuth, setProfile } from "../../../store/account-slice";
 import { loginUser } from "../../../api/authApi";
 import { setTokens, setUserId } from "../../../api/authStorage";
+import CustomSelect from "../../Common/CustomSelect/CustomSelect";
+import { DEMO_USERS } from "../../../mocks/demoUsers";
+
+const DEMO_ROLE_OPTIONS = DEMO_USERS.map((u) => ({ value: String(u.id), name: u.roleLabel }));
 
 const AuthForm = () => {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [authError, setAuthError] = useState('');
+    const [demoRole, setDemoRole] = useState('');
 
     const LOGIN_REQUIREMENTS_MESSAGE =
         'Логін повинен містити щонайменше 3 символи';
@@ -45,7 +50,7 @@ const AuthForm = () => {
     });
 
     const {
-        register, handleSubmit, formState: { errors }, setError
+        register, handleSubmit, formState: { errors }, setError, setValue, clearErrors
     } = useForm({
         resolver: yupResolver(validationSchema),
         defaultValues: {
@@ -53,6 +58,19 @@ const AuthForm = () => {
             password: '',
         }
     });
+
+    const handleDemoRoleChange = (e) => {
+        const id = e.target.value;
+        setDemoRole(id);
+        setAuthError('');
+        clearErrors();
+
+        const user = DEMO_USERS.find((u) => String(u.id) === id);
+        if (user) {
+            setValue('login', user.username);
+            setValue('password', user.password);
+        }
+    };
 
     const onSubmit = async (data) => {
         setIsLoading(true);
@@ -82,6 +100,11 @@ const AuthForm = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
             <div className={styles.form}>
+                <div className={styles.demoRole}>
+                    <span className={styles.demoRole__label}>Демо-роль</span>
+                    <CustomSelect value={demoRole} onChange={handleDemoRoleChange}
+                        options={DEMO_ROLE_OPTIONS} label={'Оберіть демо-роль'} />
+                </div>
                 <InputBox errors={errors} name={'login'} label={'Логін'} placeholder={'Логін'}
                     type={'text'} options={{
                         ...register('login')
