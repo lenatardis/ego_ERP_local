@@ -21,7 +21,11 @@ import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 
 /* helpers */
 const toSizeLabel = (s) => (s ? `${s.width}x${s.length}` : "");
-const colorToArray = (name) => (name ? [{ title: name }] : []);
+// title is used by ColorRow as the swatch background: prefer the color's hex, fall back to its name
+const colorToArray = (color) => {
+    const value = color?.hex ?? color?.name;
+    return value ? [{ title: value }] : [];
+};
 const sizeToArray = (s) => {
     const label = toSizeLabel(s);
     return label ? [{ title: label }] : [];
@@ -179,7 +183,7 @@ const StorageProduct = () => {
                     name: "",
                     photo: "",
                     quantity: type?.quantity ?? "",
-                    colors: colorToArray(type?.color?.name ?? ""),
+                    colors: colorToArray(type?.color),
                     sizes: sizeToArray(type?.size ?? null),
                     __locationRows: locationRows,
                 }));
@@ -215,7 +219,7 @@ const StorageProduct = () => {
                 name: t?.name ?? "",
                 photo: t?.images?.[0] ?? "",
                 quantity: first?.quantity != null ? first.quantity : "",
-                colors: colorToArray(first?.color?.name ?? ""),
+                colors: colorToArray(first?.color),
                 sizes: sizeToArray(first?.size ?? null),
             };
         });
@@ -480,7 +484,11 @@ const StorageProduct = () => {
                     if (row?.__isAggregate) {
                         return <div></div>;
                     }
-                    return <ColorRow colors={row.colors} />;
+                    return (
+                        <div style={{ display: "flex", justifyContent: "center" }}>
+                            <ColorRow colors={row.colors} />
+                        </div>
+                    );
                 },
             },
 

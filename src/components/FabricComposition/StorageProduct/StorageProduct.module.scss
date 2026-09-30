@@ -1,5 +1,9 @@
 .var {
   padding: 8px 5px;
+  // fixed width so "Показати варіанти" / "Сховати варіанти" toggles don't change size
+  width: 140px;
+  justify-content: center;
+  text-align: center;
 }
 
 .infoBlock {

@@ -11,7 +11,7 @@ const DEFAULT_ROLLS_PAGE_SIZE = 20;
 const FABRICS_COUNT = 56;
 const IN_STOCK_COUNT = 8; // only the first fabrics have rolls; the rest are out of stock
 
-const mulberry32 = (seed) => () => {
+export const mulberry32 = (seed) => () => {
     seed |= 0;
     seed = (seed + 0x6D2B79F5) | 0;
     let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);

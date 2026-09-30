@@ -5,6 +5,7 @@ import {
     getDemoFabricFilters,
     mockDelay
 } from '../mocks/fabrics';
+import {queryDemoProducts, getDemoProductProperties} from '../mocks/products';
 
 const API_BASE_URL = 'https://dev.panel.egodevelopment.pp.ua/admin_panel/api/v1';
 
@@ -371,18 +372,12 @@ export const editSpecificArrival = async (token, id, payload) => {
 };
 
 
+// eslint-disable-next-line no-unused-vars -- signature kept for callers; token unused in demo mode
 export const fetchProductProperties = async (token) => {
+    // Demo mode: GET /warehouses/warehouse-item-templates/properties is served from local mock data (src/mocks/products.js)
     try {
-        const response = await fetch(`${API_BASE_URL}/warehouses/warehouse-item-templates/properties`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-
-        return await handleResponse(response, (newToken) => fetchProductProperties(newToken));
+        await mockDelay();
+        return getDemoProductProperties();
     } catch (error) {
         console.error("Error fetching product properties:", error);
         return [];
@@ -507,53 +502,10 @@ export const fetchFinishedProducts = async (
     token,
     { name, category, prices__color, prices__size, in_stock, page = 1 } = {}
 ) => {
+    // Demo mode: GET /warehouses/warehouse-item-templates/ is served from local mock data (src/mocks/products.js)
     try {
-        const params = new URLSearchParams();
-
-        if (name !== undefined && name !== null && String(name).trim() !== '') {
-            params.append('name', String(name).trim());
-        }
-        if (category !== undefined && category !== null && String(category).trim() !== '') {
-            params.append('category', String(category).trim());
-        }
-        if (prices__color !== undefined && prices__color !== null && String(prices__color).trim() !== '') {
-            params.append('color', String(prices__color).trim());
-        }
-        if (prices__size !== undefined && prices__size !== null && String(prices__size).trim() !== '') {
-            params.append('size', String(prices__size).trim());
-        }
-
-        if (in_stock === true) {
-            params.append('in_stock', 'true');
-        }
-        if (in_stock === false) {
-            params.append('in_stock', 'false');
-        }
-
-        params.append('page', page);
-
-        const qs = params.toString();
-        const url = `${API_BASE_URL}/warehouses/warehouse-item-templates/${qs ? `?${qs}` : ''}`;
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-
-        return await handleResponse(response, (newToken) =>
-            fetchFinishedProducts(newToken, {
-                name,
-                category,
-                prices__color,
-                prices__size,
-                in_stock,
-                page
-            })
-        );
+        await mockDelay();
+        return queryDemoProducts({ name, category, prices__color, prices__size, in_stock, page });
     } catch (error) {
         console.error('Error fetching finished products:', error);
         return [];
