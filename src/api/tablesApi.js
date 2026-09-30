@@ -1,4 +1,10 @@
 import {refreshAccessToken} from './authApi';
+import {
+    queryDemoFabrics,
+    queryDemoFabricRolls,
+    getDemoFabricFilters,
+    mockDelay
+} from '../mocks/fabrics';
 
 const API_BASE_URL = 'https://dev.panel.egodevelopment.pp.ua/admin_panel/api/v1';
 
@@ -39,51 +45,17 @@ export const getFabrics = async (
     } = {},
     signal
 ) => {
+    // Demo mode: GET /warehouses/fabrics/ is served from local mock data (src/mocks/fabrics.js)
     try {
-        const params = new URLSearchParams();
-        params.append('page', page);
-        if (in_stock === true) {
-            params.append('in_stock', 'true');
-        }
-        if (in_stock === false) {
-            params.append('in_stock', 'false');
-        }
-
-        if (type_id !== undefined && type_id !== null && type_id !== '') {
-            params.append('type_id', type_id);
-        }
-        if (name !== undefined && name !== null && name !== '') {
-            params.append('name', name);
-        }
-        if (new_fabricroll_remainder_min != null) {
-            params.append('new_fabricroll_remainder_min', String(new_fabricroll_remainder_min));
-        }
-        if (new_fabricroll_remainder_max != null) {
-            params.append('new_fabricroll_remainder_max', String(new_fabricroll_remainder_max));
-        }
-
-        const url = `${API_BASE_URL}/warehouses/fabrics/?${params.toString()}`;
-
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            signal
+        await mockDelay(signal);
+        return queryDemoFabrics({
+            page,
+            type_id,
+            name,
+            new_fabricroll_remainder_min,
+            new_fabricroll_remainder_max,
+            in_stock
         });
-
-        return await handleResponse(response, (newToken) =>
-            getFabrics(newToken, {
-                page,
-                type_id,
-                name,
-                new_fabricroll_remainder_min,
-                new_fabricroll_remainder_max,
-                in_stock
-            }, signal)
-        );
     } catch (error) {
         if (error?.name !== 'AbortError') {
             console.error('Error fetching fabrics:', error);
@@ -92,18 +64,12 @@ export const getFabrics = async (
     }
 };
 
+// eslint-disable-next-line no-unused-vars -- signature kept for callers; token unused in demo mode
 export const fetchFilters = async (token) => {
+    // Demo mode: GET /warehouses/fabrics/types-tags/ is served from local mock data
     try {
-        const response = await fetch(`${API_BASE_URL}/warehouses/fabrics/types-tags/`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-
-        return await handleResponse(response, (newToken) => fetchFilters(newToken));
+        await mockDelay();
+        return getDemoFabricFilters();
     } catch (error) {
         console.error("Error fetching filter list:", error);
         return [];
@@ -2474,41 +2440,12 @@ export const fetchFabricRolls = async (
     { page = 1, page_size, status = ["NEW", "OPENED"] } = {},
     signal
 ) => {
+    // Demo mode: GET /warehouses/fabrics/:id/fabric-rolls/ is served from local mock data
     try {
         if (fabricId == null) throw new Error("fetchFabricRolls: fabricId is required");
 
-        const params = new URLSearchParams();
-        if (page != null) params.append("page", String(page));
-        if (page_size != null && String(page_size).trim() !== "") {
-            params.append("page_size", String(page_size).trim());
-        }
-
-        if (Array.isArray(status)) {
-            status.forEach((item) => {
-                if (item != null && String(item).trim() !== "") {
-                    params.append("status", String(item).trim());
-                }
-            });
-        } else if (status != null && String(status).trim() !== "") {
-            params.append("status", String(status).trim());
-        }
-
-        const qs = params.toString();
-        const url = `${API_BASE_URL}/warehouses/fabrics/${fabricId}/fabric-rolls/${qs ? `?${qs}` : ""}`;
-
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            signal,
-        });
-
-        return await handleResponse(response, (newToken) =>
-            fetchFabricRolls(newToken, fabricId, { page, page_size, status }, signal)
-        );
+        await mockDelay(signal);
+        return queryDemoFabricRolls(fabricId, { page, page_size, status });
     } catch (error) {
         if (error?.name !== "AbortError") {
             console.error("Error fetching fabric rolls:", error);
