@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toNumberOrNull, paginate, notFound } from './utils';
 import { getCollection, saveCollection, nextId } from '../db';
 import { DEMO_VENDORS, toIso, money } from '../data/vendors';
+import { DEMO_VENDOR_PAYMENTS } from '../data/vendorPayments';
 
 // Response shapes follow the original API, as consumed by VendorManagement.jsx, VendorDebtList.jsx,
 // NewVendorPayment.jsx and the fabric/product arrival forms:
@@ -10,12 +11,31 @@ import { DEMO_VENDORS, toIso, money } from '../data/vendors';
 //   PATCH  /vendor-invoices/vendors/:id/   -> vendor
 //   DELETE /vendor-invoices/vendors/:id/   -> 204
 // Changes are persisted in the visitor's browser (see src/mocks/db.js).
+// `dept` is derived from vendor payments (Взаєморозрахунок з постачальниками), so the debt list always
+// matches that page: the vendor owes the sum of its payments that are not PAID yet.
 
 const COLLECTION = 'vendors';
 const EDITABLE_FIELDS = ['full_name', 'email', 'phone'];
 
 const vendors = () => getCollection(COLLECTION, DEMO_VENDORS);
+const payments = () => getCollection('vendorPayments', DEMO_VENDOR_PAYMENTS);
 const findActive = (id) => vendors().find((v) => v.id === Number(id) && !v.deleted_at);
+
+const OUTSTANDING_STATUSES = ['UNPAID', 'WAIT_FOR_PAY'];
+
+/** Vendor's debt from payments that are still outstanding (not paid, not deleted). */
+const debtOf = (vendorId) => {
+    let uah = 0;
+    let usd = 0;
+    payments().forEach((p) => {
+        if (p.vendor_id !== vendorId || p.deleted_at || !OUTSTANDING_STATUSES.includes(p.status)) return;
+        uah += Number(p.uah_amount) || 0;
+        usd += Number(p.usd_amount) || 0;
+    });
+    return { uah: money(uah), usd: money(usd), dept_paid_off: uah === 0 && usd === 0 };
+};
+
+const serialize = (vendor) => ({ ...vendor, dept: debtOf(vendor.id) });
 
 export const vendorHandlers = [
     http.get(`${API}/vendor-invoices/vendors/`, withAuth(({ request }) => {
@@ -27,8 +47,9 @@ export const vendorHandlers = [
         const usdMax = toNumberOrNull(q.get('usd_dept_max'));
 
         const filtered = vendors()
+            .filter((v) => !v.deleted_at)
+            .map(serialize)
             .filter((v) => {
-                if (v.deleted_at) return false;
                 if (search && ![v.full_name, v.email, v.phone].some((f) => f.toLowerCase().includes(search))) return false;
                 const uah = Number(v.dept.uah);
                 const usd = Number(v.dept.usd);
@@ -59,7 +80,6 @@ export const vendorHandlers = [
             full_name,
             email,
             phone,
-            dept: { uah: money(0), usd: money(0), dept_paid_off: true },
             created: now,
             modified: now,
             deleted_at: null,
@@ -68,7 +88,7 @@ export const vendorHandlers = [
         vendors().push(vendor);
         saveCollection(COLLECTION);
 
-        return HttpResponse.json(vendor, { status: 201 });
+        return HttpResponse.json(serialize(vendor), { status: 201 });
     })),
 
     http.patch(`${API}/vendor-invoices/vendors/:id/`, withAuth(async ({ request, params }) => {
@@ -82,7 +102,7 @@ export const vendorHandlers = [
         vendor.modified = toIso(new Date());
         saveCollection(COLLECTION);
 
-        return HttpResponse.json(vendor);
+        return HttpResponse.json(serialize(vendor));
     })),
 
     // soft delete: the record keeps its deleted_at timestamp, like the original model

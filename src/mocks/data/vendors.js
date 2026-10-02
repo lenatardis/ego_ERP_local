@@ -1,6 +1,7 @@
 // Seed data for the Vendors pages (the original backend is unavailable).
 // Record shapes mirror the original API, as consumed by VendorManagement.jsx, VendorDebtList.jsx,
 // NewVendorPayment.jsx and the fabric/product arrival forms; served by src/mocks/handlers/vendors.js.
+// A vendor's debt (`dept`) is not stored: the handler computes it from vendor payments.
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
 import { mulberry32 } from './fabrics';
@@ -49,16 +50,6 @@ export const toIso = (d) =>
     `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 export const money = (n) => n.toFixed(2);
 
-const generateDept = () => {
-    // ~30% of vendors are fully paid off; the rest owe UAH and sometimes USD
-    if (rand() < 0.3) {
-        return { uah: money(0), usd: money(0), dept_paid_off: true };
-    }
-    const uah = randInt(15, 4200) * 50;
-    const usd = rand() < 0.4 ? randInt(5, 900) * 10 : 0;
-    return { uah: money(uah), usd: money(usd), dept_paid_off: false };
-};
-
 // spread creation dates over the last ~2 years, oldest first
 const SEED_START = new Date(2024, 9, 1, 9, 0, 0).getTime();
 const SEED_STEP = 20 * 24 * 60 * 60 * 1000;
@@ -71,7 +62,6 @@ export const DEMO_VENDORS = VENDOR_SPECS.map(([full_name, email, phone], i) => {
         full_name,
         email,
         phone,
-        dept: generateDept(),
         created: toIso(created),
         modified: toIso(modified),
         deleted_at: null,
