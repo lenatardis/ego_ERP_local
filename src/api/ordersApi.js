@@ -1,6 +1,7 @@
 import { refreshAccessToken } from "./authApi";
 
-const API_BASE_URL = "https://dev.panel.egodevelopment.pp.ua/admin_panel/api/v1";
+// Demo mode: the original backend is unavailable; same-origin paths are answered by the mock backend (src/mocks, MSW)
+const API_BASE_URL = "/admin_panel/api/v1";
 
 const handleUnauthorized = async (retryFunction) => {
     try {

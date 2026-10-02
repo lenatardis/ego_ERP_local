@@ -1,14 +1,50 @@
-import { getAccessToken, setTokens, removeTokens } from './authStorage';
+import { getRefreshToken, getAccessToken, setTokens, removeTokens } from './authStorage';
 import { setAuth } from '../store/account-slice';
-import { findDemoUserByCredentials, findDemoUserById, makeDemoTokens } from '../mocks/demoUsers';
 
-const API_BASE_URL = 'https://dev.panel.egodevelopment.pp.ua/admin_panel/api/v1';
+// Demo mode: the original backend is unavailable; same-origin paths are answered by the mock backend (src/mocks, MSW)
+const API_BASE_URL = '/admin_panel/api/v1';
 
-/** ⏳ Refresh token if expired
- *  Demo mode: the original backend is unavailable, so there is nothing to refresh against.
- *  Demo tokens never expire; returning null makes callers skip the retry (no retry loops). */
+/** ⏳ Refresh token if expired */
 export const refreshAccessToken = async () => {
-    return null;
+    const refresh = getRefreshToken();
+    if (!refresh) return null;
+
+    try {
+        const res = await fetch(`/api/v1/users/token/refresh/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                refresh: refresh,
+            })
+        });
+
+        const text = await res.text();
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch {
+            console.error('❌ Not JSON:', text);
+            return null;
+        }
+
+        if (res.ok && data.access) {
+            const newAccess = data.access;
+            const newRefresh = data.refresh || refresh;
+
+            setTokens(newAccess, newRefresh);
+            return newAccess;
+        } else {
+            console.warn('❌ REFRESH RESPONSE ERROR', res.status, data);
+            return null;
+        }
+    } catch (e) {
+        console.error("Token refresh error:", e);
+        return null;
+    }
 };
 
 
@@ -54,39 +90,84 @@ export const fetchVendorPayments = async (token = getAccessToken()) => {
     }
 };
 
-/** ✅ GET /employees/:id/ — demo mode: resolved from local demo users */
+/** ✅ GET /employees/:id/ */
 export const getUserById = async (id, token = getAccessToken()) => {
-    if (!token || !String(token).startsWith('demo-access-')) {
-        return { error: 'unauthorized' };
-    }
+    try {
+        const response = await fetch(`${API_BASE_URL}/employees/${id}/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+            },
+        });
 
-    const user = findDemoUserById(id);
-    if (!user) {
-        return { error: 'not_found' };
+        return await handleResponse(response, (newToken) => getUserById(id, newToken));
+    } catch (error) {
+        console.error("Error fetching user by ID:", error);
+        return { error: 'network' };
     }
-
-    return { ...user.profile };
 };
 
-/** 🔐 Auth — demo mode: credentials are validated locally against demo users.
- *  Returns the same shape the original API returned: profile fields + id + access/refresh tokens,
- *  or `{ field, error }` on failure. */
+/** 🔐 Auth */
 export const loginUser = async (username, password) => {
-    const user = findDemoUserByCredentials(username, password);
+    try {
+        const response = await fetch(`${API_BASE_URL}/employees/auth/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
 
-    if (!user) {
-        return {
-            field: 'credentials',
-            error: 'Логін чи пароль невірні',
-        };
+        const data = await response.json();
+
+        if (data.password) {
+            const passwordError = Array.isArray(data.password)
+                ? data.password[0]
+                : data.password;
+
+            const passwordErrorMessages = {
+                'This field may not be null.':
+                    'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру',
+                'This field may not be blank.':
+                    'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру',
+            };
+
+            if (passwordError === 'Password must be at least 10 characters long with at least one capital letter and one digit') {
+                return {
+                    field: 'credentials',
+                    error: 'Логін чи пароль невірні',
+                };
+            }
+
+            return {
+                field: 'password',
+                error: passwordErrorMessages[passwordError] || passwordError || 'Логін чи пароль невірні',
+            };
+        }
+
+        if (data.user) {
+            const userError = Array.isArray(data.user)
+                ? data.user[0]
+                : data.user;
+
+            return {
+                field: 'credentials',
+                error:
+                    userError === 'Username or Password is incorrect'
+                        ? 'Логін чи пароль невірні'
+                        : userError || 'Логін чи пароль невірні',
+            };
+        }
+
+        if (data?.id && data?.refresh_token) {
+            setTokens(data.access_token, data.refresh_token);
+        }
+
+        return data;
+    } catch (e) {
+        return { error: 'Сервер недоступний' };
     }
-
-    const tokens = makeDemoTokens(user.id);
-    const data = { ...user.profile, id: user.id, ...tokens };
-
-    setTokens(data.access_token, data.refresh_token);
-
-    return data;
 };
 
 /** 🔓 Logout */

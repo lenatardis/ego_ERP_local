@@ -10,7 +10,7 @@ import { setAuth, setProfile } from "../../../store/account-slice";
 import { loginUser } from "../../../api/authApi";
 import { setTokens, setUserId } from "../../../api/authStorage";
 import CustomSelect from "../../Common/CustomSelect/CustomSelect";
-import { DEMO_USERS } from "../../../mocks/demoUsers";
+import { DEMO_USERS } from "../../../mocks/data/demoUsers";
 
 const DEMO_ROLE_OPTIONS = DEMO_USERS.map((u) => ({ value: String(u.id), name: u.roleLabel }));
 

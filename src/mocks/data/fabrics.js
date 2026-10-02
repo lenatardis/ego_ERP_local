@@ -1,13 +1,8 @@
-// Local demo data for the Storage / Fabrics page (the original backend is unavailable).
-// Shapes mirror the original API responses consumed by FabricComposition.jsx,
-// EditableFabricTable.jsx and NewFabric.jsx:
-//   GET /warehouses/fabrics/                   -> { fabrics, total_pages, count }
-//   GET /warehouses/fabrics/types-tags/        -> { types, tags }
-//   GET /warehouses/fabrics/:id/fabric-rolls/  -> { "fabric-rolls", total_pages, count }
+// Seed data for the Storage / Fabrics page (the original backend is unavailable).
+// Record shapes mirror the original API, as consumed by FabricComposition.jsx,
+// EditableFabricTable.jsx and NewFabric.jsx; served by src/mocks/handlers/fabrics.js.
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
-export const FABRICS_PAGE_SIZE = 25;
-const DEFAULT_ROLLS_PAGE_SIZE = 20;
 const FABRICS_COUNT = 56;
 const IN_STOCK_COUNT = 8; // only the first fabrics have rolls; the rest are out of stock
 
@@ -160,72 +155,3 @@ for (let i = 0; i < FABRICS_COUNT; i++) {
         new_length_remainder: (newRolls.reduce((s, r) => s + r.current_length, 0)),
     });
 }
-
-// ---- Query helpers (emulate server-side filtering / pagination) ----
-
-const hasStock = (f) =>
-    f.new_fabricrolls_remainder > 0 || f.opened_length_remainder > 0;
-
-export const queryDemoFabrics = ({
-    page = 1,
-    type_id,
-    name,
-    new_fabricroll_remainder_min,
-    new_fabricroll_remainder_max,
-    in_stock,
-} = {}) => {
-    const search = name != null ? String(name).trim().toLowerCase() : '';
-
-    const filtered = DEMO_FABRICS.filter(f => {
-        if (type_id != null && type_id !== '' && f.type.id !== Number(type_id)) return false;
-        if (search && !f.name.toLowerCase().includes(search)) return false;
-        if (new_fabricroll_remainder_min != null && f.new_fabricrolls_remainder < Number(new_fabricroll_remainder_min)) return false;
-        if (new_fabricroll_remainder_max != null && f.new_fabricrolls_remainder > Number(new_fabricroll_remainder_max)) return false;
-        if (in_stock === true && !hasStock(f)) return false;
-        if (in_stock === false && hasStock(f)) return false;
-        return true;
-    });
-
-    const total_pages = Math.ceil(filtered.length / FABRICS_PAGE_SIZE);
-    const start = (Number(page) - 1) * FABRICS_PAGE_SIZE;
-
-    return {
-        count: filtered.length,
-        total_pages,
-        fabrics: filtered.slice(start, start + FABRICS_PAGE_SIZE),
-    };
-};
-
-export const queryDemoFabricRolls = (fabricId, { page = 1, page_size, status } = {}) => {
-    const size = Number(page_size) || DEFAULT_ROLLS_PAGE_SIZE;
-    const statuses = status == null ? null : (Array.isArray(status) ? status : [status]);
-
-    const rolls = (DEMO_FABRIC_ROLLS[fabricId] || [])
-        .filter(r => !statuses || statuses.includes(r.status));
-
-    const start = (Number(page) - 1) * size;
-
-    return {
-        count: rolls.length,
-        total_pages: Math.max(1, Math.ceil(rolls.length / size)),
-        'fabric-rolls': rolls.slice(start, start + size),
-    };
-};
-
-export const getDemoFabricFilters = () => ({
-    types: FABRIC_TYPES.map(({ id, type }) => ({ id, type })),
-    tags: FABRIC_TAGS,
-});
-
-// Small artificial latency so the existing Preloader / AbortController flow behaves as with a real server.
-export const mockDelay = (signal, ms = 250) => new Promise((resolve, reject) => {
-    if (signal?.aborted) {
-        reject(new DOMException('Aborted', 'AbortError'));
-        return;
-    }
-    const timer = setTimeout(resolve, ms);
-    signal?.addEventListener('abort', () => {
-        clearTimeout(timer);
-        reject(new DOMException('Aborted', 'AbortError'));
-    }, { once: true });
-});

@@ -1,13 +1,9 @@
-// Local demo data for the Storage / Finished products page (the original backend is unavailable).
-// Shapes mirror the original API responses consumed by StorageProduct.jsx,
-// NewProduct.jsx and EditableProductTable.jsx:
-//   GET /warehouses/warehouse-item-templates/            -> { warehouse_item_templates, total_pages, count }
-//   GET /warehouses/warehouse-item-templates/properties  -> { categories, colors, sizes }
+// Seed data for the Storage / Finished products page (the original backend is unavailable).
+// Record shapes mirror the original API, as consumed by StorageProduct.jsx,
+// NewProduct.jsx and EditableProductTable.jsx; served by src/mocks/handlers/products.js.
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
 import { mulberry32 } from './fabrics';
-
-export const PRODUCTS_PAGE_SIZE = 25;
 
 const rand = mulberry32(19031987);
 const randInt = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
@@ -139,51 +135,4 @@ export const DEMO_PRODUCTS = PRODUCT_SPECS.map((spec, i) => {
         images: [makeProductImage(category.id, colorById(spec.colors[0]).hex)],
         types,
     };
-});
-
-// ---- Query helpers (emulate server-side filtering / pagination) ----
-
-const isSet = (v) => v !== undefined && v !== null && String(v).trim() !== '';
-
-export const queryDemoProducts = ({
-    name,
-    category,
-    prices__color,
-    prices__size,
-    in_stock,
-    page = 1,
-} = {}) => {
-    const search = isSet(name) ? String(name).trim().toLowerCase() : '';
-
-    const filtered = DEMO_PRODUCTS
-        .filter(p => !isSet(category) || p.category.id === Number(category))
-        .filter(p => !search || p.name.toLowerCase().includes(search))
-        .map(p => ({
-            ...p,
-            // color / size filters narrow the variants shown for each product
-            types: p.types.filter(t =>
-                (!isSet(prices__color) || t.color.id === Number(prices__color))
-                && (!isSet(prices__size) || t.size.id === Number(prices__size))),
-        }))
-        .filter(p => (!isSet(prices__color) && !isSet(prices__size)) || p.types.length > 0)
-        .filter(p => {
-            const inStock = p.types.some(t => t.quantity > 0);
-            if (in_stock === true) return inStock;
-            if (in_stock === false) return !inStock;
-            return true;
-        });
-
-    const start = (Number(page) - 1) * PRODUCTS_PAGE_SIZE;
-
-    return {
-        count: filtered.length,
-        total_pages: Math.ceil(filtered.length / PRODUCTS_PAGE_SIZE),
-        warehouse_item_templates: filtered.slice(start, start + PRODUCTS_PAGE_SIZE),
-    };
-};
-
-export const getDemoProductProperties = () => ({
-    categories: PRODUCT_CATEGORIES,
-    colors: PRODUCT_COLORS,
-    sizes: PRODUCT_SIZES,
 });
