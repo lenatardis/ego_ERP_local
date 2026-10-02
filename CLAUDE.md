@@ -94,6 +94,22 @@ The original backend/dev server is no longer available. This repository is inten
 
 The goal is to preserve the existing frontend functionality, UI, business logic, and architecture as much as reasonably possible, while replacing backend-dependent behavior with local mock data / mocked API responses. The Architecture section above describes the original application's existing structure and behavior. It is reference information for understanding and preserving the existing frontend, not a specification to restore the original backend environment.
 
+### Goals
+
+- Publish the app as a static demo on **GitHub Pages** (no server at runtime; the app may be served from a sub-path, so respect `import.meta.env.BASE_URL`).
+- Partial data syncing with the eponymous Ego **CRM** demo, which will be hosted on the same github.io origin. Which entities are shared is not decided yet — keep mock data and storage keys in a shape that allows sharing later (e.g. CRM-facing endpoints under `CRM_BASE_URL` / `/api/v1`, Payment for CRM, product types).
+
+### Mock backend approach (use this for every restored page)
+
+- `src/api/*Api.js` keep making real `fetch` calls to same-origin paths (`/admin_panel/api/v1/...`, CRM: `/api/v1/...`). Do not replace API functions with direct mock imports.
+- Requests are answered in the browser by **MSW** (`src/mocks/browser.js`, started in `src/main.jsx` before render).
+- `src/mocks/data/<entity>.js` — deterministic seed data (seeded PRNG `mulberry32`), record shapes mirror what the components read.
+- `src/mocks/handlers/<entity>.js` — MSW handlers wrapped in `withAuth`, implementing the filters/pagination the API layer sends and the original response shape; register them in `src/mocks/handlers/index.js`.
+- `src/mocks/db.js` — `getCollection` / `saveCollection` persist changed collections to `localStorage` under the `ego-demo:erp:` prefix. Bump `DATA_VERSION` when seed data or record shapes of existing collections change.
+- Related records are stored by id and expanded into nested objects when a response is built, so edits (e.g. renaming a vendor) propagate.
+- Lists sort newest-created first, so a record created through a form appears at the top of page 1.
+- Demo login: users in `src/mocks/data/demoUsers.js` (password `DemoPass123`).
+
 ### Important working rules
 
 - Do not attempt to connect to or restore the original backend.
