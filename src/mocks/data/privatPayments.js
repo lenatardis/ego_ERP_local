@@ -1,6 +1,6 @@
-// Seed data for the "Оплата замовлень" page (the original backend is unavailable).
-// Record shapes mirror the original API, as consumed by PaymentForOrders.jsx and PrivatPaymentInfo.jsx;
-// served by src/mocks/handlers/privatPayments.js.
+// Seed data for the "Оплата замовлень" and "CRM платежі" pages (the original backend is unavailable).
+// Record shapes mirror the original API, as consumed by PaymentForOrders.jsx, PrivatPaymentInfo.jsx,
+// PaymentForCRM.jsx and CRMPaymentInfo.jsx; served by src/mocks/handlers/privatPayments.js and crmPayments.js.
 //
 // Three collections are generated together because they reference each other:
 //   - privatPayments  — incoming PrivatBank statement lines (ERP side)
@@ -238,6 +238,59 @@ const build = () => {
 };
 
 const seed = build();
+
+// --- CRM side of the bills ("CRM платежі", src/mocks/handlers/crmPayments.js) -------------------
+// Fields the CRM page reads besides the ones above: the fiscal receipt of an online payment,
+// the customer's own receipt (a transfer screenshot sent to the manager), the accountant's approval
+// and the payment service invoice. Separate PRNG, so the statement / order data above stays the same.
+
+const randCrm = mulberry32(5102026);
+const crmInt = (min, max) => Math.floor(randCrm() * (max - min + 1)) + min;
+const crmChars = (alphabet, n) => Array.from({ length: n }, () => alphabet[crmInt(0, alphabet.length - 1)]).join('');
+const HEX = '0123456789abcdef';
+const ALNUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const uuid = () => [8, 4, 4, 4, 12].map((n) => crmChars(HEX, n)).join('-');
+
+// fiscal receipts were Checkbox pages and invoices were Monobank pages: the demo links to their start pages
+const FISCAL_RECEIPT_URL = 'https://checkbox.ua/';
+const INVOICE_URL = 'https://www.monobank.ua/';
+// customer receipts were uploaded files; the demo serves one sample image (public/demo/)
+const CUSTOMER_RECEIPT_URL = `${window.location.origin}${import.meta.env.BASE_URL}demo/customer-receipt.svg`;
+
+// bills paid during the last two weeks may still wait for the accountant
+const RECENT_FROM = SEED_START + (SEED_DAYS - 14) * DAY;
+
+const crmFields = (bill) => {
+    const isPaid = bill.status === 'PAID';
+    const isRecent = new Date(bill.paid_datetime ?? bill.prepayment_datetime).getTime() >= RECENT_FROM;
+
+    // online payments go through the Monobank invoice; a paid one gets a fiscal receipt
+    const provider_payment = bill.type === 'ONLINE'
+        ? (() => {
+            const order_id = `${bill.prepayment_datetime.slice(2, 10).replace(/-/g, '')}${crmChars(ALNUM, 14)}`;
+            return { type: 'monobank', order_id, invoice_url: INVOICE_URL };
+        })()
+        : null;
+    const receipt_id = bill.type === 'ONLINE' && isPaid ? uuid() : null;
+
+    // transfers to the account: customers often send a screenshot of the payment
+    const hasCustomerReceipt = bill.type === 'IBAN' && randCrm() < (isPaid ? 0.6 : bill.status === 'PAY_WAIT' ? 0.35 : 0.25);
+
+    let customer_receipt_approved = null;
+    if (isPaid) customer_receipt_approved = isRecent && randCrm() < 0.5 ? 'IN_PROC' : 'APPROVED';
+    else if (bill.status === 'NOT_PAID' && hasCustomerReceipt) customer_receipt_approved = 'DECLINED';
+    else if (hasCustomerReceipt) customer_receipt_approved = 'IN_PROC';
+
+    return {
+        receipt_id,
+        receipt_url: receipt_id ? FISCAL_RECEIPT_URL : bill.receipt_url,
+        customer_receipt: hasCustomerReceipt ? CUSTOMER_RECEIPT_URL : null,
+        customer_receipt_approved,
+        provider_payment,
+    };
+};
+
+seed.paymentBills.forEach((bill) => Object.assign(bill, crmFields(bill)));
 
 export const DEMO_PRIVAT_PAYMENTS = seed.payments;
 export const DEMO_CRM_ORDERS = seed.crmOrders;
