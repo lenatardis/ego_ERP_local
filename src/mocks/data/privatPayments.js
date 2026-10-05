@@ -110,6 +110,26 @@ const SEED_DAYS = 124; // up to early October 2026
 const PAYMENTS_COUNT = 150;
 
 const atWorkingTime = (dayStart) => new Date(dayStart + randInt(8 * 60, 21 * 60) * 60 * 1000 + randInt(0, 59) * 1000);
+// Managers issue bills during working hours (08:00–21:59). A time outside them is moved by whole hours
+// (minutes kept, no extra PRNG draws), so the rest of the seed stays the same:
+//   'earlier' — to the previous evening (a bill issued before the payment stays before it);
+//   'later'   — to the next morning.
+const WORK_START_HOUR = 8;
+const WORK_END_HOUR = 21;
+const toWorkingHours = (date, direction) => {
+    const h = date.getHours();
+    if (h >= WORK_START_HOUR && h <= WORK_END_HOUR) return date;
+    const shifted = new Date(date);
+    if (direction === 'earlier') {
+        // 22–23 -> 20–21 the same day, 00–07 -> 14–21 the day before
+        shifted.setHours(h > WORK_END_HOUR ? h - 2 : h - 10);
+    } else {
+        // 22–23 -> 08–09 the next day, 00–07 -> 08–15 the same day
+        shifted.setHours(h > WORK_END_HOUR ? h + 10 : h + WORK_START_HOUR);
+    }
+    return shifted;
+};
+
 const amountPrepayment = () => pick([200, 200, 300, 300, 400, 500]);
 const amountFull = () => randInt(70, 450) * 10;
 
@@ -160,7 +180,7 @@ const build = () => {
         if (!isLinked && rand() < 0.2) return;
 
         // the bill is issued up to two days before the customer pays it
-        const billDate = new Date(datetime.getTime() - randInt(1, 48) * HOUR);
+        const billDate = toWorkingHours(new Date(datetime.getTime() - randInt(1, 48) * HOUR), 'earlier');
         // a not linked payment sometimes differs a little from its bill (fees, rounding)
         const billAmount = isLinked || rand() < 0.6 ? amount : amount + pick([-50, -20, -10, 10, 20, 50]);
         const bills = [{
@@ -205,7 +225,7 @@ const build = () => {
                 method: isPrepayment ? 'PREPAYMENT' : 'FULL',
                 status: isOld && rand() < 0.7 ? 'NOT_PAID' : 'PAY_WAIT',
                 prepayment_amount: money(isPrepayment ? amountPrepayment() : amountFull()),
-                prepayment_datetime: toIso(new Date(created.getTime() + randInt(0, 24) * HOUR)),
+                prepayment_datetime: toIso(toWorkingHours(new Date(created.getTime() + randInt(0, 24) * HOUR), 'later')),
                 paid_datetime: null,
                 payment_id: null,
                 linkedPayment: null,
