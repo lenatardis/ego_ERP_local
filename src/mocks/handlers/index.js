@@ -6,6 +6,7 @@ import { vendorHandlers } from './vendors';
 import { vendorPaymentHandlers } from './vendorPayments';
 import { privatPaymentHandlers } from './privatPayments';
 import { crmPaymentHandlers } from './crmPayments';
+import { pricelistHandlers } from './pricelists';
 
 export const handlers = [
     ...authHandlers,
@@ -17,4 +18,5 @@ export const handlers = [
     ...privatPaymentHandlers,
     // after privatPaymentHandlers: /payment_bill/:id/ would also match /payment_bill/coincidence
     ...crmPaymentHandlers,
+    ...pricelistHandlers,
 ];

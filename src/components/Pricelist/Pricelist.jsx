@@ -253,6 +253,17 @@ const Pricelist = () => {
         );
     };
 
+    const isDefaultPricelistDeleteError = (err) => {
+        const msgs = err?.data?.is_default;
+
+        if (!msgs) return false;
+
+        const arr = Array.isArray(msgs) ? msgs : [msgs];
+        return arr.some((m) =>
+            String(m).toLowerCase().includes("can not be deleted")
+        );
+    };
+
     const handleEditSave = async () => {
         if (!editingRowId) {
             closeEditPopup();
@@ -389,6 +400,16 @@ const Pricelist = () => {
             closeDeletePopup();
         } catch (e) {
             console.error("Failed to delete pricelist:", e);
+
+            if (isDefaultPricelistDeleteError(e)) {
+                closeDeletePopup();
+                window.alert(
+                    "Не можна видалити прайслист за замовчуванням.\n" +
+                    "Спочатку оберіть інший прайслист за замовчуванням, а потім повторіть видалення."
+                );
+                return;
+            }
+
             window.alert("Не вдалося видалити прайслист. Спробуй ще раз.");
         } finally {
             setIsDeleting(false);
@@ -477,7 +498,7 @@ const Pricelist = () => {
             };
 
             const newRow = mapApiPricelistToRow(created || fallback);
-            updateRows((prev) => [...prev, newRow]);
+            updateRows((prev) => [newRow, ...prev]);
 
             closeCreatePopup();
         } catch (e) {
