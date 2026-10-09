@@ -53,3 +53,30 @@ export const paginate = (items, page, pageSize) => {
     const start = (current - 1) * size;
     return { slice: items.slice(start, start + size), totalPages: Math.ceil(items.length / size), current };
 };
+
+const MAX_IMAGE_SIDE = 400;
+
+/**
+ * An uploaded image File as a data URL the browser can display (there is no file storage in the demo).
+ * Photos are scaled down to MAX_IMAGE_SIDE so they fit into the localStorage-backed demo db.
+ */
+export const imageFileToUrl = async (file) => {
+    try {
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(bitmap.width, bitmap.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+        canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        bitmap.close();
+        return canvas.toDataURL('image/jpeg', 0.85);
+    } catch {
+        // not decodable as a bitmap (e.g. SVG): keep the original bytes
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(file);
+        });
+    }
+};

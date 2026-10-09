@@ -1,0 +1,246 @@
+- generic [ref=f5e3]:
+  - generic [ref=f5e4]:
+    - link [ref=f5e5] [cursor=pointer]:
+      - /url: /
+      - img "logo" [ref=f5e6]
+    - list [ref=f5e7]:
+      - listitem [ref=f5e8]:
+        - button "Складський облік" [ref=f5e9] [cursor=pointer]
+        - generic:
+          - link "Товари" [ref=f5e11] [cursor=pointer]:
+            - /url: /storage
+          - link "Надходження" [ref=f5e13] [cursor=pointer]:
+            - /url: /arrivalList
+          - link "Постачальники" [ref=f5e15] [cursor=pointer]:
+            - /url: /vendorManagement
+      - listitem [ref=f5e17]:
+        - button "Виробництво" [ref=f5e18] [cursor=pointer]
+        - generic [ref=f5e20]:
+          - link "Шаблони постільної білизни" [ref=f5e21] [cursor=pointer]:
+            - /url: /optionParts
+          - link "Замовлення" [ref=f5e23] [cursor=pointer]:
+            - /url: /orders
+      - listitem [ref=f5e25]:
+        - button "Ціноутворення для товарів" [ref=f5e26] [cursor=pointer]
+        - generic:
+          - link "Ціни" [ref=f5e28] [cursor=pointer]:
+            - /url: /newPrices
+          - link "Прайслісти" [ref=f5e30] [cursor=pointer]:
+            - /url: /pricelist
+          - link "Джерела" [ref=f5e32] [cursor=pointer]:
+            - /url: /sources
+      - listitem [ref=f5e34]:
+        - button "Бухгалтерія" [ref=f5e35] [cursor=pointer]
+        - generic:
+          - link "Оплата замовлень" [ref=f5e37] [cursor=pointer]:
+            - /url: /payment-for-orders
+          - link "Взаєморозрахунок з постачальниками" [ref=f5e39] [cursor=pointer]:
+            - /url: /payment-for-vendors
+          - link "CRM платежі" [ref=f5e41] [cursor=pointer]:
+            - /url: /payment-for-crm
+    - generic [ref=f5e43]:
+      - link "Перейти в CRM" [ref=f5e44] [cursor=pointer]:
+        - /url: https://dev.egodevelopment.pp.ua/
+      - generic [ref=f5e45]:
+        - paragraph [ref=f5e48]: Олександр Демченко
+        - button "Log out" [ref=f5e50] [cursor=pointer]
+  - generic [ref=f5e53]:
+    - paragraph [ref=f5e54]:
+      - generic [ref=f5e55] [cursor=pointer]: Назад
+    - generic [ref=f5e57]:
+      - heading "Комплекти" [level=2] [ref=f5e59]
+      - searchbox "Пошук" [ref=f5e62]
+    - generic [ref=f5e63]:
+      - link "Частини опцій" [ref=f5e64] [cursor=pointer]:
+        - /url: /optionParts
+      - link "Опції" [ref=f5e66] [cursor=pointer]:
+        - /url: /componentOptions
+      - link "Типи компонентів" [ref=f5e68] [cursor=pointer]:
+        - /url: /componentTypes
+      - link "Компоненти" [ref=f5e70] [cursor=pointer]:
+        - /url: /componentTemplates
+      - link "Розміри комплектів" [ref=f5e72] [cursor=pointer]:
+        - /url: /kitSizes
+      - link "Комплекти" [ref=f5e74] [cursor=pointer]:
+        - /url: /kitTemplates
+    - button "Додати комплект" [ref=f5e77] [cursor=pointer]
+    - generic [ref=f5e81]:
+      - generic [ref=f5e82]: ID
+      - generic [ref=f5e83]: Назва
+      - generic [ref=f5e84]: Коротка назва
+      - generic [ref=f5e85]: Фото
+      - generic [ref=f5e86]: Дод. витрата
+      - generic [ref=f5e87]: Розмір
+      - generic [ref=f5e88]: Тип тканини
+      - generic [ref=f5e89]: Компоненти
+    - generic [ref=f5e94]:
+      - generic [ref=f5e95]:
+        - generic [ref=f5e96]: "27"
+        - generic "Polikoton Двоспальний 5x7" [ref=f5e98]
+        - generic "pol2.0 5×7" [ref=f5e100]
+        - generic "1" [ref=f5e102]
+        - generic "Двоспальний" [ref=f5e104]
+        - generic [ref=f5e105]: полікотон
+        - generic [ref=f5e106]: "4"
+        - generic [ref=f5e108]:
+          - button "Редагувати" [active] [ref=f5e109] [cursor=pointer]
+          - button "Видалити" [ref=f5e111] [cursor=pointer]
+      - generic [ref=f5e113]:
+        - generic [ref=f5e114]: "16"
+        - generic "Bazz Сімейний 5x7" [ref=f5e116]
+        - generic "baz7,Я 5x7" [ref=f5e118]
+        - generic "0" [ref=f5e120]
+        - generic "Сімейний" [ref=f5e122]
+        - generic [ref=f5e123]: бязь
+        - generic [ref=f5e124]: "5"
+        - generic [ref=f5e126]:
+          - button "Редагувати" [ref=f5e127] [cursor=pointer]
+          - button "Видалити" [ref=f5e129] [cursor=pointer]
+      - generic [ref=f5e131]:
+        - generic [ref=f5e132]: "2"
+        - generic "Satin Полуторний 7x7" [ref=f5e134]
+        - generic "sat1.5 7×7" [ref=f5e136]
+        - generic "0" [ref=f5e139]
+        - generic "Полуторний" [ref=f5e141]
+        - generic [ref=f5e142]: сатин
+        - generic [ref=f5e143]: "4"
+        - generic [ref=f5e145]:
+          - button "Редагувати" [ref=f5e146] [cursor=pointer]
+          - button "Видалити" [ref=f5e148] [cursor=pointer]
+      - generic [ref=f5e150]:
+        - generic [ref=f5e151]: "1"
+        - generic "Satin Полуторний 5x7" [ref=f5e153]
+        - generic "sat1.5 5×7" [ref=f5e155]
+        - generic "3" [ref=f5e158]
+        - generic "Полуторний" [ref=f5e160]
+        - generic [ref=f5e161]: сатин
+        - generic [ref=f5e162]: "4"
+        - generic [ref=f5e164]:
+          - button "Редагувати" [ref=f5e165] [cursor=pointer]
+          - button "Видалити" [ref=f5e167] [cursor=pointer]
+    - generic [ref=f5e169]:
+      - heading "Фільтр" [level=3] [ref=f5e170]
+      - button [ref=f5e172] [cursor=pointer]:
+        - img "remove_filters" [ref=f5e173]
+    - button
+    - generic [ref=f5e175]:
+      - generic [ref=f5e176]:
+        - paragraph [ref=f5e177]: Редагування комплекту
+        - button "Закрити" [ref=f5e178] [cursor=pointer]:
+          - paragraph [ref=f5e179]: Закрити
+      - generic [ref=f5e182]:
+        - generic [ref=f5e183]:
+          - generic [ref=f5e185]:
+            - text: Назва
+            - img "Не більше 100 символів" [ref=f5e186] [cursor=pointer]
+          - textbox "Назва Не більше 100 символів" [ref=f5e187]:
+            - /placeholder: Назва
+            - text: Polikoton Двоспальний 5x7
+        - generic [ref=f5e188]:
+          - generic [ref=f5e190]:
+            - text: Коротка назва
+            - img "Не більше 10 символів" [ref=f5e191] [cursor=pointer]
+          - textbox "Коротка назва Не більше 10 символів" [ref=f5e192]:
+            - /placeholder: Коротка назва
+            - text: pol2.0 5×7
+        - generic [ref=f5e193]:
+          - generic [ref=f5e195]:
+            - text: Додаткова ціна витрати тканини
+            - img "Не більше 10 символів" [ref=f5e196] [cursor=pointer]
+          - spinbutton "Додаткова ціна витрати тканини Не більше 10 символів" [ref=f5e197]: "1"
+        - generic [ref=f5e198]:
+          - generic [ref=f5e199]: Розмір комплекту
+          - generic [ref=f5e201]:
+            - combobox "Оберіть розмір" [ref=f5e202] [cursor=pointer]: Двоспальний
+            - textbox [aria-hidden]: "2"
+            - group [aria-hidden]
+        - generic [ref=f5e203]:
+          - generic [ref=f5e204]: Тип тканини
+          - generic [ref=f5e206]:
+            - combobox "Тип тканини" [ref=f5e207] [cursor=pointer]: полікотон
+            - textbox [aria-hidden]: "3"
+            - group [aria-hidden]
+        - generic [ref=f5e208]:
+          - generic [ref=f5e209]: Компоненти
+          - generic [ref=f5e210]: "Вибрано: 4 шт. — Наволочка 5x7 ×2, Підковдра 180x215, Простирадло 200x220"
+          - generic [ref=f5e211]:
+            - generic [ref=f5e212]:
+              - generic [ref=f5e214]:
+                - checkbox [ref=f5e215] [cursor=pointer]
+                - paragraph: Простирадло 7x7
+              - generic [ref=f5e216]:
+                - generic [ref=f5e217]: К-ть
+                - textbox [ref=f5e218]: "1"
+            - generic [ref=f5e219]:
+              - generic [ref=f5e221]:
+                - checkbox [ref=f5e222] [cursor=pointer]
+                - paragraph: Підковдра 7x7
+              - generic [ref=f5e223]:
+                - generic [ref=f5e224]: К-ть
+                - textbox [ref=f5e225]: "1"
+            - generic [ref=f5e226]:
+              - generic [ref=f5e228]:
+                - checkbox [ref=f5e229] [cursor=pointer]
+                - paragraph: Підковдра 200x215
+              - generic [ref=f5e230]:
+                - generic [ref=f5e231]: К-ть
+                - textbox [ref=f5e232]: "1"
+            - generic [ref=f5e233]:
+              - generic [ref=f5e235]:
+                - checkbox [ref=f5e236] [cursor=pointer]
+                - paragraph: Простирадло 220x240
+              - generic [ref=f5e237]:
+                - generic [ref=f5e238]: К-ть
+                - textbox [ref=f5e239]: "1"
+            - generic [ref=f5e240]:
+              - generic [ref=f5e242]:
+                - checkbox [checked] [ref=f5e243] [cursor=pointer]
+                - paragraph: Підковдра 180x215
+              - generic [ref=f5e244]:
+                - generic [ref=f5e245]: К-ть
+                - textbox [ref=f5e246]: "1"
+            - generic [ref=f5e247]:
+              - generic [ref=f5e249]:
+                - checkbox [ref=f5e250] [cursor=pointer]
+                - paragraph: Підковдра 150x215
+              - generic [ref=f5e251]:
+                - generic [ref=f5e252]: К-ть
+                - textbox [ref=f5e253]: "1"
+            - generic [ref=f5e254]:
+              - generic [ref=f5e256]:
+                - checkbox [checked] [ref=f5e257] [cursor=pointer]
+                - paragraph: Простирадло 200x220
+              - generic [ref=f5e258]:
+                - generic [ref=f5e259]: К-ть
+                - textbox [ref=f5e260]: "1"
+            - generic [ref=f5e261]:
+              - generic [ref=f5e263]:
+                - checkbox [ref=f5e264] [cursor=pointer]
+                - paragraph: Простирадло 150x215
+              - generic [ref=f5e265]:
+                - generic [ref=f5e266]: К-ть
+                - textbox [ref=f5e267]: "1"
+            - generic [ref=f5e268]:
+              - generic [ref=f5e270]:
+                - checkbox [ref=f5e271] [cursor=pointer]
+                - paragraph: Наволочка 7x7
+              - generic [ref=f5e272]:
+                - generic [ref=f5e273]: К-ть
+                - textbox [ref=f5e274]: "1"
+            - generic [ref=f5e275]:
+              - generic [ref=f5e277]:
+                - checkbox [ref=f5e278] [cursor=pointer]
+                - paragraph: Простирадло 5x7
+              - generic [ref=f5e279]:
+                - generic [ref=f5e280]: К-ть
+                - textbox [ref=f5e281]: "1"
+          - navigation "pagination navigation" [ref=f5e283]:
+            - list [ref=f5e284]:
+              - listitem [ref=f5e285]:
+                - button "page 1" [ref=f5e286] [cursor=pointer]: "1"
+              - listitem [ref=f5e287]:
+                - button "Go to page 2" [ref=f5e288] [cursor=pointer]: "2"
+        - generic [ref=f5e289]:
+          - generic [ref=f5e290]: Фото
+          - button "Choose File" [ref=f5e291]
+        - button "Зберегти" [ref=f5e292] [cursor=pointer]
