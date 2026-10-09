@@ -11,7 +11,7 @@ const PREFIX = 'ego-demo:erp:';
 const VERSION_KEY = `${PREFIX}version`;
 
 // Bump when seed data or record shapes change: previously stored demo data is then discarded.
-const DATA_VERSION = 17;
+const DATA_VERSION = 18;
 
 // localStorage can be unavailable (blocked storage, some private modes): fall back to memory only.
 const storage = {

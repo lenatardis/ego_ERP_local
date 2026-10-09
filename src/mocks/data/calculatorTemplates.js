@@ -73,7 +73,7 @@ export const DEMO_COMPONENT_TYPES = [
 
 export const DEMO_OPTION_PARTS = [
     { id: 1, name: 'Собачка', type: 'component', created: at(2025, 12, 1), deleted_at: null },
-    { id: 2, name: 'Накладка 1', type: 'component', created: at(2025, 12, 2), deleted_at: null },
+    { id: 2, name: 'Накладка', type: 'component', created: at(2025, 12, 2), deleted_at: null },
     { id: 4, name: 'Застібачка', type: 'component', created: at(2026, 2, 10), deleted_at: null },
     { id: 1, name: 'Собачка', type: 'kit', created: at(2025, 12, 1, 11), deleted_at: null },
 ];
@@ -92,6 +92,7 @@ export const DEMO_COMPONENT_OPTION_TEMPLATES = [
 export const DEMO_KIT_OPTION_TEMPLATES = [
     { id: 1, name: 'Подарункове пакування', description: 'Комплект у подарунковій коробці зі стрічкою', image: '', part_ids: [], created: at(2026, 1, 12) },
     { id: 2, name: 'Сумка-чохол', description: 'Тканинна сумка для зберігання комплекту', image: '', part_ids: [1], created: at(2026, 1, 14) },
+    { id: 3, name: 'Прокладка', description: '', image: '', part_ids: [], created: at(2026, 1, 16) },
 ].map((o) => ({ ...o, modified: o.created, deleted_at: null }));
 
 // ---- Компоненти. Shown newest-created first: 6, 5, 11, 12, 9, 7, 10, 8, 4, 3, 2, 1 ----
