@@ -1,0 +1,146 @@
+- generic [ref=e27]:
+  - generic [ref=e28]:
+    - link [ref=e302] [cursor=pointer]:
+      - /url: /
+      - img "logo" [ref=e303]
+    - list [ref=e31]:
+      - listitem [ref=e32]:
+        - button "Складський облік" [ref=e304] [cursor=pointer]
+        - generic:
+          - link "Товари" [ref=e305] [cursor=pointer]:
+            - /url: /storage
+          - link "Надходження" [ref=e306] [cursor=pointer]:
+            - /url: /arrivalList
+          - link "Постачальники" [ref=e307] [cursor=pointer]:
+            - /url: /vendorManagement
+      - listitem [ref=e41]:
+        - button "Виробництво" [ref=e308] [cursor=pointer]
+        - generic [ref=e44]:
+          - link "Шаблони постільної білизни" [ref=e309] [cursor=pointer]:
+            - /url: /optionParts
+          - link "Замовлення" [ref=e310] [cursor=pointer]:
+            - /url: /orders
+      - listitem [ref=e49]:
+        - button "Ціноутворення для товарів" [ref=e311] [cursor=pointer]
+        - generic:
+          - link "Ціни" [ref=e312] [cursor=pointer]:
+            - /url: /newPrices
+          - link "Прайслісти" [ref=e313] [cursor=pointer]:
+            - /url: /pricelist
+          - link "Джерела" [ref=e314] [cursor=pointer]:
+            - /url: /sources
+      - listitem [ref=e58]:
+        - button "Бухгалтерія" [ref=e315] [cursor=pointer]
+        - generic:
+          - link "Оплата замовлень" [ref=e316] [cursor=pointer]:
+            - /url: /payment-for-orders
+          - link "Взаєморозрахунок з постачальниками" [ref=e317] [cursor=pointer]:
+            - /url: /payment-for-vendors
+          - link "CRM платежі" [ref=e318] [cursor=pointer]:
+            - /url: /payment-for-crm
+    - generic [ref=e67]:
+      - link "Перейти в CRM" [ref=e319] [cursor=pointer]:
+        - /url: https://dev.egodevelopment.pp.ua/
+      - generic [ref=e69]:
+        - paragraph [ref=e72]: Олександр Демченко
+        - button "Log out" [ref=e320] [cursor=pointer]
+  - generic [ref=e77]:
+    - paragraph [ref=e78]:
+      - generic [ref=e79] [cursor=pointer]: Назад
+    - generic [ref=e81]:
+      - heading "Опції компонентів" [level=2] [ref=e321]
+      - generic [ref=e84]:
+        - searchbox "Пошук" [ref=e322]
+        - button "Фільтр" [ref=e323] [cursor=pointer]
+    - generic [ref=e89]:
+      - link "Частини опцій" [ref=e324] [cursor=pointer]:
+        - /url: /optionParts
+      - link "Опції" [ref=e325] [cursor=pointer]:
+        - /url: /componentOptions
+      - link "Типи компонентів" [ref=e326] [cursor=pointer]:
+        - /url: /componentTypes
+      - link "Компоненти" [ref=e327] [cursor=pointer]:
+        - /url: /componentTemplates
+      - link "Розміри комплектів" [ref=e328] [cursor=pointer]:
+        - /url: /kitSizes
+      - link "Комплекти" [ref=e329] [cursor=pointer]:
+        - /url: /kitTemplates
+    - generic [ref=e102]:
+      - link "Опції компонентів" [ref=e330] [cursor=pointer]:
+        - /url: /componentOptions
+      - link "Опції комплектів" [ref=e331] [cursor=pointer]:
+        - /url: /kitOptions
+    - button "Додати опцію компонентів" [ref=e332] [cursor=pointer]
+    - generic [ref=e112]:
+      - generic [ref=e113]: ID
+      - generic [ref=e114]: Назва
+      - generic [ref=e115]: Опис
+      - generic [ref=e116]: Тип
+      - generic [ref=e117]: Частини
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: "8"
+        - generic "Тест опція" [ref=e363]
+        - generic "Тестовий опис" [ref=e364]
+        - generic [ref=e129]: Наволочка
+        - generic "-" [ref=e335]
+        - generic [ref=e133]:
+          - button "Редагувати" [ref=e336] [cursor=pointer]
+          - button "Видалити" [ref=e337] [cursor=pointer]
+      - generic [ref=e138]:
+        - generic [ref=e139]: "7"
+        - generic "Вушка" [ref=e365]
+        - generic "Вушка до наволочки" [ref=e366]
+        - generic [ref=e144]: Наволочка
+        - generic "-" [ref=e340]
+        - generic [ref=e148]:
+          - button "Редагувати" [ref=e341] [cursor=pointer]
+          - button "Видалити" [ref=e342] [cursor=pointer]
+      - generic [ref=e153]:
+        - generic [ref=e154]: "1"
+        - generic "Замок" [ref=e367]
+        - generic "Замок для наволочки" [ref=e368]
+        - generic [ref=e159]: Наволочка
+        - generic "-" [ref=e345]
+        - generic [ref=e163]:
+          - button "Редагувати" [ref=e346] [cursor=pointer]
+          - button "Видалити" [ref=e347] [cursor=pointer]
+      - generic [ref=e168]:
+        - generic [ref=e169]: "4"
+        - generic "Протектор" [ref=e369]
+        - generic "Додатковий Протектор для підковдри" [ref=e370]
+        - generic [ref=e174]: Простирадло
+        - generic "-" [ref=e350]
+        - generic [ref=e178]:
+          - button "Редагувати" [ref=e351] [cursor=pointer]
+          - button "Видалити" [ref=e352] [cursor=pointer]
+      - generic [ref=e371]:
+        - generic [ref=e372]: "3"
+        - generic "Одношарове з текстурою" [ref=e374]
+        - generic "Одношарова накладка для простирадла" [ref=e376]
+        - generic [ref=e377]: Підковдра
+        - generic "-" [ref=e379]
+        - generic [ref=e381]:
+          - button "Редагувати" [ref=e382] [cursor=pointer]
+          - button "Видалити" [ref=e384] [cursor=pointer]
+    - generic [ref=e183]:
+      - heading "Фільтр" [level=3] [ref=e353]
+      - generic [ref=e185]:
+        - button [ref=e354] [cursor=pointer]:
+          - img "remove_filters" [ref=e355]
+        - generic [ref=e188]:
+          - paragraph [ref=e189]: "Типи:"
+          - generic [ref=e190]:
+            - generic [ref=e192]:
+              - checkbox [ref=e193] [cursor=pointer]
+              - paragraph: Підковдра
+            - generic [ref=e195]:
+              - checkbox [ref=e196] [cursor=pointer]
+              - paragraph: Простирадло
+            - generic [ref=e198]:
+              - checkbox [ref=e199] [cursor=pointer]
+              - paragraph: Наволочка
+        - generic [ref=e200]:
+          - paragraph [ref=e201]: "Частини:"
+          - generic [ref=e202]: Немає частин
+    - button

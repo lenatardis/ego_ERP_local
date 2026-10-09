@@ -1,0 +1,203 @@
+- generic [ref=e1]:
+  - generic [ref=e27]:
+    - generic [ref=e28]:
+      - link [ref=e235] [cursor=pointer]:
+        - /url: /
+      - list [ref=e31]:
+        - listitem [ref=e32]:
+          - button [ref=e237] [cursor=pointer]:
+            - generic [ref=e34]: Складський облік
+          - link [ref=e238] [cursor=pointer]:
+            - /url: /storage
+            - generic [ref=e36]: Товари
+          - link [ref=e239] [cursor=pointer]:
+            - /url: /arrivalList
+            - generic [ref=e38]: Надходження
+          - link [ref=e240] [cursor=pointer]:
+            - /url: /vendorManagement
+            - generic [ref=e40]: Постачальники
+        - listitem [ref=e41]:
+          - button [ref=e241] [cursor=pointer]:
+            - generic [ref=e43]: Виробництво
+          - generic [ref=e44]:
+            - link [ref=e242] [cursor=pointer]:
+              - /url: /optionParts
+              - generic [ref=e46]: Шаблони постільної білизни
+            - link [ref=e243] [cursor=pointer]:
+              - /url: /orders
+              - generic [ref=e48]: Замовлення
+        - listitem [ref=e49]:
+          - button [ref=e244] [cursor=pointer]:
+            - generic [ref=e51]: Ціноутворення для товарів
+          - link [ref=e245] [cursor=pointer]:
+            - /url: /newPrices
+            - generic [ref=e53]: Ціни
+          - link [ref=e246] [cursor=pointer]:
+            - /url: /pricelist
+            - generic [ref=e55]: Прайслісти
+          - link [ref=e247] [cursor=pointer]:
+            - /url: /sources
+            - generic [ref=e57]: Джерела
+        - listitem [ref=e58]:
+          - button [ref=e248] [cursor=pointer]:
+            - generic [ref=e60]: Бухгалтерія
+          - link [ref=e249] [cursor=pointer]:
+            - /url: /payment-for-orders
+            - generic [ref=e62]: Оплата замовлень
+          - link [ref=e250] [cursor=pointer]:
+            - /url: /payment-for-vendors
+            - generic [ref=e64]: Взаєморозрахунок з постачальниками
+          - link [ref=e251] [cursor=pointer]:
+            - /url: /payment-for-crm
+            - generic [ref=e66]: CRM платежі
+      - generic [ref=e67]:
+        - link [ref=e252] [cursor=pointer]:
+          - /url: https://dev.egodevelopment.pp.ua/
+          - text: Перейти в CRM
+        - generic [ref=e69]:
+          - paragraph [ref=e72]: Олександр Демченко
+          - button [ref=e253] [cursor=pointer]:
+            - generic [ref=e75]: Log out
+    - generic [ref=e77]:
+      - paragraph [ref=e78]:
+        - generic [ref=e79] [cursor=pointer]: Назад
+      - generic [ref=e81]:
+        - heading [level=2] [ref=e254]: Опції компонентів
+        - generic [ref=e84]:
+          - searchbox [ref=e255]
+          - button [ref=e256] [cursor=pointer]:
+            - generic [ref=e88]: Фільтр
+      - generic [ref=e89]:
+        - link [ref=e257] [cursor=pointer]:
+          - /url: /optionParts
+          - generic [ref=e91]: Частини опцій
+        - link [ref=e258] [cursor=pointer]:
+          - /url: /componentOptions
+          - generic [ref=e93]: Опції
+        - link [ref=e259] [cursor=pointer]:
+          - /url: /componentTypes
+          - generic [ref=e95]: Типи компонентів
+        - link [ref=e260] [cursor=pointer]:
+          - /url: /componentTemplates
+          - generic [ref=e97]: Компоненти
+        - link [ref=e261] [cursor=pointer]:
+          - /url: /kitSizes
+          - generic [ref=e99]: Розміри комплектів
+        - link [ref=e262] [cursor=pointer]:
+          - /url: /kitTemplates
+          - generic [ref=e101]: Комплекти
+      - generic [ref=e102]:
+        - link [ref=e263] [cursor=pointer]:
+          - /url: /componentOptions
+          - generic [ref=e104]: Опції компонентів
+        - link [ref=e264] [cursor=pointer]:
+          - /url: /kitOptions
+          - generic [ref=e106]: Опції комплектів
+      - button [ref=e265] [cursor=pointer]:
+        - generic [ref=e109]: Додати опцію компонентів
+      - generic [ref=e112]:
+        - generic [ref=e113]: ID
+        - generic [ref=e114]: Назва
+        - generic [ref=e115]: Опис
+        - generic [ref=e116]: Тип
+        - generic [ref=e117]: Частини
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]: "7"
+          - generic [ref=e125]: Вушка
+          - generic [ref=e127]: Вушка до наволочки
+          - generic [ref=e129]: Наволочка
+          - generic [ref=e130]: "-"
+          - generic [ref=e133]:
+            - button [ref=e269] [cursor=pointer]:
+              - generic [ref=e135]: Редагувати
+            - button [ref=e270] [cursor=pointer]:
+              - generic [ref=e137]: Видалити
+        - generic [ref=e138]:
+          - generic [ref=e139]: "1"
+          - generic [ref=e140]: Замок
+          - generic [ref=e142]: Замок для наволочки
+          - generic [ref=e144]: Наволочка
+          - generic [ref=e145]: "-"
+          - generic [ref=e148]:
+            - button [ref=e274] [cursor=pointer]:
+              - generic [ref=e150]: Редагувати
+            - button [ref=e275] [cursor=pointer]:
+              - generic [ref=e152]: Видалити
+        - generic [ref=e153]:
+          - generic [ref=e154]: "4"
+          - generic [ref=e155]: Протектор
+          - generic [ref=e157]: Додатковий Протектор для підковдри
+          - generic [ref=e159]: Простирадло
+          - generic [ref=e160]: "-"
+          - generic [ref=e163]:
+            - button [ref=e279] [cursor=pointer]:
+              - generic [ref=e165]: Редагувати
+            - button [ref=e280] [cursor=pointer]:
+              - generic [ref=e167]: Видалити
+        - generic [ref=e168]:
+          - generic [ref=e169]: "3"
+          - generic [ref=e170]: Одношарове з текстурою
+          - generic [ref=e172]: Одношарова накладка для простирадла
+          - generic [ref=e174]: Підковдра
+          - generic [ref=e175]: "-"
+          - generic [ref=e178]:
+            - button [ref=e284] [cursor=pointer]:
+              - generic [ref=e180]: Редагувати
+            - button [ref=e285] [cursor=pointer]:
+              - generic [ref=e182]: Видалити
+      - generic [ref=e183]:
+        - heading [level=3] [ref=e286]: Фільтр
+        - generic [ref=e185]:
+          - button [ref=e287] [cursor=pointer]
+          - generic [ref=e188]:
+            - paragraph [ref=e189]: "Типи:"
+            - generic [ref=e190]:
+              - generic [ref=e192]:
+                - checkbox [ref=e193] [cursor=pointer]
+                - paragraph: Підковдра
+              - generic [ref=e195]:
+                - checkbox [ref=e196] [cursor=pointer]
+                - paragraph: Простирадло
+              - generic [ref=e198]:
+                - checkbox [ref=e199] [cursor=pointer]
+                - paragraph: Наволочка
+          - generic [ref=e200]:
+            - paragraph [ref=e201]: "Частини:"
+            - generic [ref=e202]: Немає частин
+      - button
+      - generic [ref=e205]:
+        - generic [ref=e206]:
+          - paragraph [ref=e207]: Додавання опції компонентів
+          - button [ref=e289] [cursor=pointer]:
+            - paragraph [ref=e209]: Закрити
+        - generic [ref=e212]:
+          - generic [ref=e213]:
+            - generic [ref=e215]:
+              - text: Назва
+              - img [ref=e290] [cursor=pointer]
+            - textbox [ref=e291]:
+              - /placeholder: Назва опції
+              - text: Тест опція
+          - generic [ref=e218]:
+            - generic [ref=e220]:
+              - text: Опис
+              - img [ref=e292] [cursor=pointer]
+            - textbox [ref=e293]:
+              - /placeholder: Опис опції
+              - text: Тестовий опис
+          - generic [ref=e225]:
+            - combobox [expanded] [ref=e294] [cursor=pointer]:
+              - emphasis [ref=e227]: Тип
+            - textbox [aria-hidden]
+            - group [aria-hidden]
+          - generic [ref=e228]:
+            - paragraph [ref=e229]: "Оберіть частини опції:"
+            - generic [ref=e230]: Немає доступних частин
+            - generic [ref=e231]: Немає доступних частин
+          - button [ref=e295] [cursor=pointer]:
+            - generic [ref=e234]: Зберегти
+  - listbox [ref=e298]:
+    - option "Підковдра" [active] [ref=e299] [cursor=pointer]
+    - option "Простирадло" [ref=e300] [cursor=pointer]
+    - option "Наволочка" [ref=e301] [cursor=pointer]
