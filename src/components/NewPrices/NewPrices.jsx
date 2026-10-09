@@ -68,6 +68,18 @@ const TABS = [
     },
 ];
 
+// активний таб переживає перезавантаження сторінки (у межах вкладки браузера)
+const ACTIVE_TAB_STORAGE_KEY = "newPrices:activeTab";
+
+const readSavedTab = () => {
+    try {
+        const saved = sessionStorage.getItem(ACTIVE_TAB_STORAGE_KEY);
+        return TABS.some((tab) => tab.key === saved) ? saved : TABS[0].key;
+    } catch {
+        return TABS[0].key;
+    }
+};
+
 const TAB_FLAGS = TABS.reduce((acc, tab) => {
     acc[tab.key] = tab.flag || {};
     return acc;
@@ -574,7 +586,15 @@ const NewPrices = () => {
     const [currentUsdSaleRate, setCurrentUsdSaleRate] = useState(null);
 
     // таби
-    const [activeTab, setActiveTab] = useState("products");
+    const [activeTab, setActiveTab] = useState(readSavedTab);
+
+    useEffect(() => {
+        try {
+            sessionStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTab);
+        } catch {
+            // storage недоступний — після перезавантаження просто відкриється перший таб
+        }
+    }, [activeTab]);
 
     const [tabState, setTabState] = useState(() => {
         const initial = {};
