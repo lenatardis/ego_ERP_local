@@ -8,6 +8,7 @@ import { privatPaymentHandlers } from './privatPayments';
 import { crmPaymentHandlers } from './crmPayments';
 import { pricelistHandlers } from './pricelists';
 import { calculatorTemplateHandlers } from './calculatorTemplates';
+import { priceHandlers } from './prices';
 
 export const handlers = [
     ...authHandlers,
@@ -21,4 +22,5 @@ export const handlers = [
     ...crmPaymentHandlers,
     ...pricelistHandlers,
     ...calculatorTemplateHandlers,
+    ...priceHandlers,
 ];

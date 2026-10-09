@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toBoolOrUndefined, paginate, notFound } from './utils';
 import { getCollection, saveCollection, nextId } from '../db';
-import { DEMO_PRICELISTS, DEMO_SOURCES, emptyPriceCount } from '../data/pricelists';
+import { DEMO_PRICELISTS, DEMO_SOURCES } from '../data/pricelists';
+import { priceCountFor } from './prices';
 import { toIso } from '../data/vendors';
 
 // Response shapes follow the original API, as consumed by Pricelist.jsx, Sources.jsx and NewPrices.jsx:
@@ -40,7 +41,7 @@ const serializePricelist = (pl) => ({
     description: pl.description,
     status: pl.status,
     is_default: pl.is_default,
-    price_count: { ...pl.price_count },
+    price_count: priceCountFor(pl.id),
     sources: sources()
         .filter((s) => s.prices_list_id === pl.id && !s.deleted_at)
         .sort((a, b) => a.id - b.id)
@@ -146,7 +147,6 @@ export const pricelistHandlers = [
             description: String(payload.description ?? '').trim(),
             status: payload.status ?? 'ACTIVE',
             is_default: !!payload.is_default,
-            price_count: emptyPriceCount(),
             created: now,
             modified: now,
             deleted_at: null,

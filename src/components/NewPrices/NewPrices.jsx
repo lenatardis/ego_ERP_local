@@ -344,6 +344,24 @@ const NO_ARRIVALS_TOTAL_TOOLTIP =
 const isNoArrivalsRow = (tabKey, row) =>
     RAW_MATERIAL_LOCK_TABS.has(tabKey) && (row?.rawMaterialUahNoData || row?.rawMaterialUsdNoData);
 
+const NO_COST_DATA_TOOLTIP =
+    "Неможливо порахувати собівартість, адже немає введених даних";
+
+// надходження є, але собівартість не збережена (або всі її складові видалені)
+const isNoCostDataRow = (tabKey, row) =>
+    RAW_MATERIAL_LOCK_TABS.has(tabKey) && !isNoArrivalsRow(tabKey, row) && !row?.costPriceRef?.id;
+
+// підказка, чого бракує у збереженій собівартості, щоб порахувати загальну
+const getNoCostDataTooltip = (row) => {
+    if (row?.costPriceRef?.id) {
+        const qty = parseNumber(row.baseCostRawMaterialQty);
+        const unit = parseNumber(row.baseCostRawMaterialUah);
+        if (qty > 0 && unit <= 0) return `${NO_COST_DATA_TOOLTIP}. Введіть хоча б вартість одиниці сировини`;
+        if (unit > 0 && qty <= 0) return `${NO_COST_DATA_TOOLTIP}. Введіть кількість сировини`;
+    }
+    return NO_COST_DATA_TOOLTIP;
+};
+
 
 
 
@@ -705,6 +723,40 @@ const NewPrices = () => {
         [updateTabSlice]
     );
 
+    /* ====== запит items для табу (з варіантами регістру name) ====== */
+    const requestItems = useCallback(async (token, tabKey, params) => {
+        const flags = TAB_FLAGS[tabKey] || {};
+        const currentPage = params?.page ?? 1;
+
+        // формуємо максимум 2 варіанти для name: "Ковдра" → ["Ковдра", "ковдра"]
+        const nameVariants = buildNameVariants(params?.name);
+        // якщо name не заданий – просто один прохід без name
+        const variantsToTry = nameVariants.length ? nameVariants : [undefined];
+
+        for (const nameVariant of variantsToTry) {
+            const apiParams = {
+                page: currentPage,
+                name: nameVariant,                      // undefined → параметр name не піде в запит
+                hasPrice: params?.hasPrice ?? undefined,
+                ...flags,
+            };
+
+            const data = await fetchPricesItems(token, apiParams);
+            const items = data?.items ?? data?.results ?? [];
+
+            // якщо щось знайшли або це варіант без name – беремо його й зупиняємося
+            if (items.length > 0 || nameVariant === undefined) {
+                return {
+                    items,
+                    page: data?.current_page ?? data?.currentPage ?? currentPage,
+                    totalPages: data?.total_pages ?? data?.totalPages ?? 1,
+                };
+            }
+        }
+
+        return {items: [], page: currentPage, totalPages: 1};
+    }, []);
+
     /* ====== реальне завантаження даних для конкретного табу з бекенду ====== */
     const fetchData = useCallback(
         async (tabKey, params) => {
@@ -727,37 +779,11 @@ const NewPrices = () => {
                     return;
                 }
 
-                const flags = TAB_FLAGS[tabKey] || {};
-                const currentPage = params?.page ?? 1;
-
-                // формуємо максимум 2 варіанти для name: "Ковдра" → ["Ковдра", "ковдра"]
-                const nameVariants = buildNameVariants(params?.name);
-                // якщо name не заданий – просто один прохід без name
-                const variantsToTry = nameVariants.length ? nameVariants : [undefined];
-
-                let finalItems = [];
-                let finalPage = currentPage;
-                let finalTotalPages = 1;
-
-                for (const nameVariant of variantsToTry) {
-                    const apiParams = {
-                        page: currentPage,
-                        name: nameVariant,                      // undefined → параметр name не піде в запит
-                        hasPrice: params?.hasPrice ?? undefined,
-                        ...flags,
-                    };
-
-                    const data = await fetchPricesItems(token, apiParams);
-                    const items = data?.items ?? data?.results ?? [];
-
-                    // якщо щось знайшли або це варіант без name – беремо його й зупиняємося
-                    if (items.length > 0 || nameVariant === undefined) {
-                        finalItems = items;
-                        finalPage = data?.current_page ?? data?.currentPage ?? currentPage;
-                        finalTotalPages = data?.total_pages ?? data?.totalPages ?? 1;
-                        break;
-                    }
-                }
+                const {
+                    items: finalItems,
+                    page: finalPage,
+                    totalPages: finalTotalPages,
+                } = await requestItems(token, tabKey, params);
 
                 const mapped = finalItems.map((item) =>
                     mapApiPriceItemToRow(item, pricelistsMeta)
@@ -787,8 +813,44 @@ const NewPrices = () => {
                 setIsLoading(false);
             }
         },
-        [priceCols, pricelistsMeta]
+        [priceCols, pricelistsMeta, requestItems]
     );
+
+    /**
+     * Після збереження собівартості: бекенд перераховує загальну собівартість,
+     * тому перезапитуємо поточну сторінку і оновлюємо в рядках тільки суми
+     * (решта полів, у т.ч. незбережені правки в інших рядках, не чіпається).
+     */
+    const refreshCostTotals = useCallback(async () => {
+        const token = getAccessToken();
+        if (!token) return;
+
+        try {
+            const {items} = await requestItems(token, activeTab, filterParams);
+            const freshById = new Map(
+                items.map((item) => [item.id, mapApiPriceItemToRow(item, pricelistsMeta)])
+            );
+
+            setRowsForTab(activeTab, (prevRows) =>
+                prevRows.map((r) => {
+                    const fresh = freshById.get(r.id);
+                    if (!fresh) return r;
+                    return {
+                        ...r,
+                        totalCostUah: fresh.totalCostUah,
+                        totalCostUsd: fresh.totalCostUsd,
+                        costPriceRef: {
+                            ...(r.costPriceRef || {}),
+                            autoUah: fresh.costPriceRef.autoUah,
+                            autoUsd: fresh.costPriceRef.autoUsd,
+                        },
+                    };
+                })
+            );
+        } catch (e) {
+            console.error("Failed to refresh cost totals:", e);
+        }
+    }, [activeTab, filterParams, pricelistsMeta, requestItems, setRowsForTab]);
 
 
     // перше завантаження для активного табу — тільки після того, як є прайслисти
@@ -898,18 +960,19 @@ const NewPrices = () => {
         [rows]
     );
 
+    // без збереженої собівартості суми не рахуємо (маржа/націнка теж "-")
     const getBackendTotalCostUah = useCallback(
-        (row) => Number.isFinite(Number(row?.totalCostUah))
+        (row) => !isNoCostDataRow(activeTab, row) && Number.isFinite(Number(row?.totalCostUah))
             ? Number(row.totalCostUah)
             : 0,
-        []
+        [activeTab]
     );
 
     const getBackendTotalCostUsd = useCallback(
-        (row) => Number.isFinite(Number(row?.totalCostUsd))
+        (row) => !isNoCostDataRow(activeTab, row) && Number.isFinite(Number(row?.totalCostUsd))
             ? Number(row.totalCostUsd)
             : 0,
-        []
+        [activeTab]
     );
 
     const hasBackendTotalCost = useCallback((row) => {
@@ -1197,16 +1260,16 @@ const NewPrices = () => {
     // збереження собівартості для одного рядка (POST/PATCH/DELETE)
     const saveCostForRow = useCallback(
         async (row) => {
-            if (!row) return;
+            if (!row) return false;
             const dirtyFields = getRowCostDirtyFields(row);
-            if (!dirtyFields.length) return;
+            if (!dirtyFields.length) return false;
 
             const token = getAccessToken();
             if (!token) {
                 window.alert(
                     "Не вдалося отримати токен доступу. Авторизуйся знову і повтори спробу."
                 );
-                return;
+                return false;
             }
 
             const allEmpty = COST_FIELDS.every((field) => {
@@ -1220,6 +1283,7 @@ const NewPrices = () => {
             // вмикаємо лоадер для всіх cost-клітинок цього рядка
             setSavingCostRows((prev) => ({ ...prev, [rowIndex]: true }));
 
+            let saved = false;
             try {
                 if (existingId && allEmpty) {
                     // DELETE /production/cost_prices/{id}/
@@ -1243,18 +1307,19 @@ const NewPrices = () => {
                             next[idx] = current;
                             return next;
                         });
+                        saved = true;
                     }
                 } else if (!allEmpty) {
                     const payload = buildCostPayloadForRow(row);
-                    let saved;
+                    let savedItem;
                     if (existingId) {
-                        saved = await editCostPrice(token, existingId, payload);
+                        savedItem = await editCostPrice(token, existingId, payload);
                     } else {
-                        saved = await createCostPrice(token, payload);
+                        savedItem = await createCostPrice(token, payload);
                     }
 
-                    const newId = saved?.id ?? existingId ?? null;
-                    const materialName = saved?.material ?? row.costMaterialName;
+                    const newId = savedItem?.id ?? existingId ?? null;
+                    const materialName = savedItem?.material ?? row.costMaterialName;
 
                     setRowsForTab(activeTab, (prevRows) => {
                         const next = prevRows.map((r) => ({...r}));
@@ -1275,6 +1340,7 @@ const NewPrices = () => {
                         next[idx] = current;
                         return next;
                     });
+                    saved = true;
                 }
             } catch (err) {
                 console.error("Failed to save cost price", err);
@@ -1287,6 +1353,7 @@ const NewPrices = () => {
                     return clone;
                 });
             }
+            return saved;
         },
         [activeTab, buildCostPayloadForRow, setRowsForTab]
     );
@@ -1307,8 +1374,8 @@ const NewPrices = () => {
         if (cells.length) {
             await saveCells(cells);
         }
-        if (hasCostDirty) {
-            await saveCostForRow(row);
+        if (hasCostDirty && (await saveCostForRow(row))) {
+            await refreshCostTotals();
         }
     };
 
@@ -1352,12 +1419,14 @@ const NewPrices = () => {
         }
 
         if (costRows.length) {
+            let anyCostSaved = false;
             for (const row of costRows) {
                 // послідовно, щоб не плодити зайвих паралельних PATCH/POST
                 // (за потреби можна буде оптимізувати)
                 // eslint-disable-next-line no-await-in-loop
-                await saveCostForRow(row);
+                if (await saveCostForRow(row)) anyCostSaved = true;
             }
+            if (anyCostSaved) await refreshCostTotals();
         }
     };
 
@@ -1436,7 +1505,7 @@ const NewPrices = () => {
         const totalUsd = getBackendTotalCostUsd(row);
 
         if (totalUsd <= 0) {
-            return renderNoArrivalsDash();
+            return renderMissingTotal(row);
         }
 
         return neCell(formatMoney(totalUsd));
@@ -1459,6 +1528,10 @@ const NewPrices = () => {
     const calcLastArrivalUsdDiff = useCallback((row) => {
         if (isNoArrivalsRow(activeTab, row)) {
             return { kind: "noArrivals" };
+        }
+
+        if (isNoCostDataRow(activeTab, row)) {
+            return { kind: "noCostData" };
         }
 
         const lastRate = parseNumber(row?.costPriceRef?.lastExchangeRate);
@@ -1514,6 +1587,9 @@ const NewPrices = () => {
         const r = calcLastArrivalUsdDiff(row);
 
         if (r.kind === "noArrivals") return renderNoArrivalsDash();
+        if (r.kind === "noCostData" || r.kind === "noTotal") {
+            return renderDashWithTooltip(getNoCostDataTooltip(row));
+        }
         if (r.kind === "noRate") return renderDashWithTooltip(NO_LAST_RATE_TOOLTIP);
         if (r.kind !== "ok") return neCell("-");
 
@@ -1758,6 +1834,12 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
             { relative: true }
         );
 
+    // загальна собівартість не порахована: немає надходжень або немає (достатньо) введених даних
+    const renderMissingTotal = (row) =>
+        isNoArrivalsRow(activeTab, row)
+            ? renderNoArrivalsDash()
+            : renderDashWithTooltip(getNoCostDataTooltip(row));
+
     const columns = useMemo(() => {
         const cols = [
             {
@@ -1851,7 +1933,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
             const totalUah = getBackendTotalCostUah(row);
 
             if (totalUah <= 0) {
-                return renderNoArrivalsDash();
+                return renderMissingTotal(row);
             }
 
             return neCell(formatMoney(totalUah));

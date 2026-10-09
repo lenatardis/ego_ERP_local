@@ -28,7 +28,8 @@ import { toIso } from '../data/vendors';
 // Deletes are soft (deleted_at); related records keep pointing to a deleted record and receive it with its
 // deleted_at (the option pages hide deleted parts). Changes are persisted in the visitor's browser (src/mocks/db.js).
 
-const C = {
+// exported for the prices handler (Ціни lists kits / components / options with their prices)
+export const C = {
     productTypes: 'crmProductTypes',
     componentTypes: 'componentTypes',
     optionParts: 'optionParts',
@@ -50,7 +51,7 @@ const SEEDS = {
     [C.kitTemplates]: DEMO_KIT_TEMPLATES,
 };
 
-const col = (name) => getCollection(name, SEEDS[name]);
+export const col = (name) => getCollection(name, SEEDS[name]);
 const findIn = (name, id) => col(name).find((x) => x.id === Number(id));
 const findActiveIn = (name, id) => col(name).find((x) => x.id === Number(id) && !x.deleted_at);
 

@@ -14,8 +14,10 @@ const pick = (arr) => arr[Math.floor(rand() * arr.length)];
 
 const ARRIVALS_COUNT = 20;
 
-// Current USD cash rate shown by CurrencyRateInfo (GET /warehouses/fabric-arrivals/currencies/)
-export const DEMO_USD_RATE = { buy: '41.35', sale: '41.85' };
+// USD cash rate: PrivatBank's on 09.10.2026 (api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5).
+// Seed amounts are converted with it; CurrencyRateInfo shows today's live rate and falls back to this one
+// (see src/mocks/handlers/fabricArrivals.js).
+export const DEMO_USD_RATE = { buy: '44.50', sale: '45.10' };
 
 const pad = (n) => String(n).padStart(2, '0');
 // arrival_date uses the backend's DD.MM.YYYY format (see toBackendDate in IncomingArrivalFabric.jsx)
@@ -32,7 +34,8 @@ const SEED_STEP = 9 * 24 * 60 * 60 * 1000;
 export const DEMO_FABRIC_ARRIVALS = Array.from({ length: ARRIVALS_COUNT }, (_, i) => {
     const vendor = pick(PAYABLE_VENDORS);
     const receiver = pick(RECEIVERS);
-    const exchangeRate = 40.8 + randInt(0, 110) / 100;
+    // the hryvnia slowly weakens: ~43.6–44.2 in April, ~44.5–45.2 by the end of September
+    const exchangeRate = 43.6 + i * 0.05 + randInt(0, 60) / 100;
     const usd = randInt(30, 900) * 5;
 
     return {

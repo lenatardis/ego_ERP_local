@@ -1,0 +1,385 @@
+- generic [ref=f4e3]:
+  - generic [ref=f4e4]:
+    - link [ref=f4e5] [cursor=pointer]:
+      - /url: /
+      - img "logo" [ref=f4e6]
+    - list [ref=f4e7]:
+      - listitem [ref=f4e8]:
+        - button "Ціноутворення для товарів" [ref=f4e9] [cursor=pointer]
+        - generic [ref=f4e11]:
+          - link "Ціни" [ref=f4e12] [cursor=pointer]:
+            - /url: /newPrices
+          - link "Прайслісти" [ref=f4e14] [cursor=pointer]:
+            - /url: /pricelist
+          - link "Джерела" [ref=f4e16] [cursor=pointer]:
+            - /url: /sources
+      - listitem [ref=f4e18]:
+        - button "Бухгалтерія" [ref=f4e19] [cursor=pointer]
+        - generic:
+          - link "Оплата замовлень" [ref=f4e21] [cursor=pointer]:
+            - /url: /payment-for-orders
+          - link "Взаєморозрахунок з постачальниками" [ref=f4e23] [cursor=pointer]:
+            - /url: /payment-for-vendors
+          - link "CRM платежі" [ref=f4e25] [cursor=pointer]:
+            - /url: /payment-for-crm
+    - generic [ref=f4e27]:
+      - link "Перейти в CRM" [ref=f4e28] [cursor=pointer]:
+        - /url: https://dev.egodevelopment.pp.ua/
+      - generic [ref=f4e29]:
+        - paragraph [ref=f4e32]: Ірина Бондар
+        - button "Log out" [ref=f4e34] [cursor=pointer]
+  - generic [ref=f4e37]:
+    - paragraph [ref=f4e38]:
+      - generic [ref=f4e39] [cursor=pointer]: Назад
+    - generic [ref=f4e41]:
+      - heading "Ціни" [level=2] [ref=f4e43]
+      - generic [ref=f4e44]:
+        - searchbox "Пошук" [ref=f4e46]
+        - button "Фільтр" [ref=f4e47] [cursor=pointer]
+    - generic [ref=f4e49]:
+      - button "Товари" [ref=f4e50] [cursor=pointer]
+      - button "Комплекти" [active] [ref=f4e52] [cursor=pointer]
+      - button "Опції комплектів" [ref=f4e54] [cursor=pointer]
+      - button "Компоненти" [ref=f4e56] [cursor=pointer]
+      - button "Опції компонентів" [ref=f4e58] [cursor=pointer]
+    - generic [ref=f4e60]:
+      - generic [ref=f4e61]: "Поточний курс $ в грн:"
+      - generic [ref=f4e62]:
+        - generic [ref=f4e63]:
+          - generic [ref=f4e64]: "Купівля:"
+          - generic [ref=f4e65]: "41.35"
+        - generic [ref=f4e66]:
+          - generic [ref=f4e67]: "Продаж:"
+          - generic [ref=f4e68]: "41.85"
+    - generic [ref=f4e71]:
+      - generic [ref=f4e72]: ID
+      - generic [ref=f4e73]: Тип
+      - generic [ref=f4e74]: Назва
+      - generic [ref=f4e75]: Розмір
+      - generic [ref=f4e76]: Тип тканини
+      - generic [ref=f4e78]:
+        - button "Показати додаткові гривневі колонки собівартості" [ref=f4e79] [cursor=pointer]
+        - generic [ref=f4e83]: Загальна собівартість, грн
+      - generic [ref=f4e85]:
+        - button "Показати додаткові доларові колонки собівартості" [ref=f4e86] [cursor=pointer]
+        - generic [ref=f4e90]: Загальна собівартість, $
+      - generic [ref=f4e92]:
+        - button "Показати маржу/націнку" [ref=f4e93] [cursor=pointer]
+        - generic [ref=f4e97]:
+          - text: Шоуруми
+          - generic [ref=f4e98]: активний
+      - generic [ref=f4e100]:
+        - button "Показати маржу/націнку" [ref=f4e101] [cursor=pointer]
+        - generic [ref=f4e105]:
+          - text: Готелі
+          - generic [ref=f4e106]: активний
+      - generic [ref=f4e108]:
+        - button "Показати маржу/націнку" [ref=f4e109] [cursor=pointer]
+        - generic [ref=f4e113]:
+          - text: Дропшипінг
+          - generic [ref=f4e114]: активний
+      - generic [ref=f4e116]:
+        - button "Показати маржу/націнку" [ref=f4e117] [cursor=pointer]
+        - generic [ref=f4e121]:
+          - text: Соцмережі і месенджери
+          - generic [ref=f4e122]: активний
+      - generic [ref=f4e124]:
+        - button "Показати маржу/націнку" [ref=f4e125] [cursor=pointer]
+        - generic [ref=f4e129]:
+          - text: Маркетплейси
+          - generic [ref=f4e130]: активний
+      - generic [ref=f4e132]:
+        - button "Показати маржу/націнку" [ref=f4e133] [cursor=pointer]
+        - generic [ref=f4e137]:
+          - text: Оптовий
+          - generic [ref=f4e138]: активний
+      - generic [ref=f4e140]:
+        - button "Показати маржу/націнку" [ref=f4e141] [cursor=pointer]
+        - generic [ref=f4e145]:
+          - text: Стандартний список
+          - generic [ref=f4e146]: активний
+    - generic [ref=f4e151]:
+      - generic [ref=f4e152]:
+        - generic [ref=f4e153]: "27"
+        - generic [ref=f4e155]: Комплект
+        - generic [ref=f4e157]: Polikoton Двоспальний 5x7
+        - generic [ref=f4e159]: Двоспальний
+        - generic [ref=f4e161]: полікотон
+        - generic [ref=f4e163]: "1324.00"
+        - generic [ref=f4e165]: "32.02"
+        - textbox [ref=f4e169]
+        - textbox [ref=f4e172]
+        - textbox [ref=f4e175]: "1920.00"
+        - textbox [ref=f4e178]
+        - textbox [ref=f4e181]
+        - textbox [ref=f4e184]
+        - textbox [ref=f4e187]: "2400.00"
+        - generic [ref=f4e190]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e191]:
+        - generic [ref=f4e192]: "21"
+        - generic [ref=f4e194]: Комплект
+        - generic [ref=f4e196]: Polikoton Євро 7x7
+        - generic [ref=f4e198]: Євро
+        - generic [ref=f4e200]: полікотон
+        - generic [ref=f4e204]:
+          - generic [ref=f4e205]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f4e206]
+        - generic [ref=f4e209]:
+          - generic [ref=f4e210]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f4e211]
+        - textbox [ref=f4e214]: "2820.00"
+        - textbox [ref=f4e217]
+        - textbox [ref=f4e220]
+        - textbox [ref=f4e223]
+        - textbox [ref=f4e226]
+        - textbox [ref=f4e229]
+        - textbox [ref=f4e232]: "2680.00"
+        - generic [ref=f4e235]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e236]:
+        - generic [ref=f4e237]: "20"
+        - generic [ref=f4e239]: Комплект
+        - generic [ref=f4e241]: Polikoton Полуторний 7x7
+        - generic [ref=f4e243]: Полуторний
+        - generic [ref=f4e245]: полікотон
+        - generic [ref=f4e247]: "1274.60"
+        - generic [ref=f4e249]: "30.82"
+        - textbox [ref=f4e253]
+        - textbox [ref=f4e256]
+        - textbox [ref=f4e259]: "1930.00"
+        - textbox [ref=f4e262]
+        - textbox [ref=f4e265]: "2720.00"
+        - textbox [ref=f4e268]: "1780.00"
+        - textbox [ref=f4e271]: "2310.00"
+        - generic [ref=f4e274]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e275]:
+        - generic [ref=f4e276]: "16"
+        - generic [ref=f4e278]: Комплект
+        - generic [ref=f4e280]: Bazz Сімейний 5x7
+        - generic [ref=f4e282]: Сімейний
+        - generic [ref=f4e284]: бязь
+        - generic [ref=f4e286]: "2083.30"
+        - generic [ref=f4e288]: "50.38"
+        - textbox [ref=f4e292]
+        - textbox [ref=f4e295]
+        - textbox [ref=f4e298]
+        - textbox [ref=f4e301]: "3710.00"
+        - textbox [ref=f4e304]
+        - textbox [ref=f4e307]
+        - textbox [ref=f4e310]: "3890.00"
+        - generic [ref=f4e313]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e314]:
+        - generic [ref=f4e315]: "12"
+        - generic [ref=f4e317]: Комплект
+        - generic [ref=f4e319]: Bazz Євро 5x7
+        - generic [ref=f4e321]: Євро
+        - generic [ref=f4e323]: бязь
+        - generic [ref=f4e325]: "1577.00"
+        - generic [ref=f4e327]: "38.14"
+        - textbox [ref=f4e331]: "2990.00"
+        - textbox [ref=f4e334]
+        - textbox [ref=f4e337]
+        - textbox [ref=f4e340]: "2750.00"
+        - textbox [ref=f4e343]: "3370.00"
+        - textbox [ref=f4e346]
+        - textbox [ref=f4e349]: "2990.00"
+        - generic [ref=f4e352]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e353]:
+        - generic [ref=f4e354]: "11"
+        - generic [ref=f4e356]: Комплект
+        - generic [ref=f4e358]: Bazz Двоспальний 7x7
+        - generic [ref=f4e360]: Двоспальний
+        - generic [ref=f4e362]: бязь
+        - generic [ref=f4e364]: "1505.80"
+        - generic [ref=f4e366]: "36.42"
+        - textbox [ref=f4e370]
+        - textbox [ref=f4e373]
+        - textbox [ref=f4e376]
+        - textbox [ref=f4e379]
+        - textbox [ref=f4e382]
+        - textbox [ref=f4e385]
+        - textbox [ref=f4e388]
+        - generic [ref=f4e391]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e392]:
+        - generic [ref=f4e393]: "10"
+        - generic [ref=f4e395]: Комплект
+        - generic [ref=f4e397]: Bazz Полуторний 5x7
+        - generic [ref=f4e399]: Полуторний
+        - generic [ref=f4e401]: бязь
+        - generic [ref=f4e403]: "1333.50"
+        - generic [ref=f4e405]: "32.25"
+        - textbox [ref=f4e409]: "2650.00"
+        - textbox [ref=f4e412]
+        - textbox [ref=f4e415]
+        - textbox [ref=f4e418]
+        - textbox [ref=f4e421]: "2760.00"
+        - textbox [ref=f4e424]
+        - textbox [ref=f4e427]: "2530.00"
+        - generic [ref=f4e430]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e431]:
+        - generic [ref=f4e432]: "8"
+        - generic [ref=f4e434]: Комплект
+        - generic [ref=f4e436]: Satin Сімейний 5x7
+        - generic [ref=f4e438]: Сімейний
+        - generic [ref=f4e440]: сатин
+        - generic [ref=f4e442]: "3172.60"
+        - generic [ref=f4e444]: "76.73"
+        - textbox [ref=f4e448]
+        - textbox [ref=f4e451]: "4650.00"
+        - textbox [ref=f4e454]
+        - textbox [ref=f4e457]: "5560.00"
+        - textbox [ref=f4e460]: "6590.00"
+        - textbox [ref=f4e463]
+        - textbox [ref=f4e466]: "5710.00"
+        - generic [ref=f4e469]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e470]:
+        - generic [ref=f4e471]: "7"
+        - generic [ref=f4e473]: Комплект
+        - generic [ref=f4e475]: Satin Євро Макс 7x7
+        - generic [ref=f4e477]: Євро Макс
+        - generic [ref=f4e479]: сатин
+        - generic [ref=f4e481]: "2874.30"
+        - generic [ref=f4e483]: "69.51"
+        - textbox [ref=f4e487]: "5520.00"
+        - textbox [ref=f4e490]
+        - textbox [ref=f4e493]
+        - textbox [ref=f4e496]: "4950.00"
+        - textbox [ref=f4e499]: "6130.00"
+        - textbox [ref=f4e502]
+        - textbox [ref=f4e505]: "5350.00"
+        - generic [ref=f4e508]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e509]:
+        - generic [ref=f4e510]: "6"
+        - generic [ref=f4e512]: Комплект
+        - generic [ref=f4e514]: Satin Євро 7x7
+        - generic [ref=f4e516]: Євро
+        - generic [ref=f4e518]: сатин
+        - generic [ref=f4e520]: "2387.30"
+        - generic [ref=f4e522]: "57.73"
+        - textbox [ref=f4e526]
+        - textbox [ref=f4e529]
+        - textbox [ref=f4e532]
+        - textbox [ref=f4e535]: "4270.00"
+        - textbox [ref=f4e538]
+        - textbox [ref=f4e541]
+        - textbox [ref=f4e544]
+        - generic [ref=f4e547]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e548]:
+        - generic [ref=f4e549]: "5"
+        - generic [ref=f4e551]: Комплект
+        - generic [ref=f4e553]: Satin Євро 5x7
+        - generic [ref=f4e555]: Євро
+        - generic [ref=f4e557]: сатин
+        - generic [ref=f4e559]: "2249.90"
+        - generic [ref=f4e561]: "54.41"
+        - textbox [ref=f4e565]: "4310.00"
+        - textbox [ref=f4e568]
+        - textbox [ref=f4e571]
+        - textbox [ref=f4e574]: "3830.00"
+        - textbox [ref=f4e577]
+        - textbox [ref=f4e580]
+        - textbox [ref=f4e583]: "4170.00"
+        - generic [ref=f4e586]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e587]:
+        - generic [ref=f4e588]: "4"
+        - generic [ref=f4e590]: Комплект
+        - generic [ref=f4e592]: Satin Двоспальний 7x7
+        - generic [ref=f4e594]: Двоспальний
+        - generic [ref=f4e596]: сатин
+        - generic [ref=f4e598]: "2149.80"
+        - generic [ref=f4e600]: "51.99"
+        - textbox [ref=f4e604]
+        - textbox [ref=f4e607]: "3100.00"
+        - textbox [ref=f4e610]: "3290.00"
+        - textbox [ref=f4e613]
+        - textbox [ref=f4e616]: "4600.00"
+        - textbox [ref=f4e619]
+        - textbox [ref=f4e622]: "4070.00"
+        - generic [ref=f4e625]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e626]:
+        - generic [ref=f4e627]: "3"
+        - generic [ref=f4e629]: Комплект
+        - generic [ref=f4e631]: Satin Двоспальний 5x7
+        - generic [ref=f4e633]: Двоспальний
+        - generic [ref=f4e635]: сатин
+        - generic [ref=f4e637]: "2210.80"
+        - generic [ref=f4e639]: "53.47"
+        - textbox [ref=f4e643]: "4270.00"
+        - textbox [ref=f4e646]
+        - textbox [ref=f4e649]: "3390.00"
+        - textbox [ref=f4e652]
+        - textbox [ref=f4e655]
+        - textbox [ref=f4e658]
+        - textbox [ref=f4e661]: "4140.00"
+        - generic [ref=f4e664]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e665]:
+        - generic [ref=f4e666]: "2"
+        - generic [ref=f4e668]: Комплект
+        - generic [ref=f4e670]: Satin Полуторний 7x7
+        - generic [ref=f4e672]: Полуторний
+        - generic [ref=f4e674]: сатин
+        - generic [ref=f4e676]: "1993.00"
+        - generic [ref=f4e678]: "48.20"
+        - textbox [ref=f4e682]
+        - textbox [ref=f4e685]
+        - textbox [ref=f4e688]
+        - textbox [ref=f4e691]
+        - textbox [ref=f4e694]
+        - textbox [ref=f4e697]
+        - textbox [ref=f4e700]: "3650.00"
+        - generic [ref=f4e703]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f4e704]:
+        - generic [ref=f4e705]: "1"
+        - generic [ref=f4e707]: Комплект
+        - generic [ref=f4e709]: Satin Полуторний 5x7
+        - generic [ref=f4e711]: Полуторний
+        - generic [ref=f4e713]: сатин
+        - generic [ref=f4e715]: "2029.40"
+        - generic [ref=f4e717]: "49.08"
+        - textbox [ref=f4e721]: "4050.00"
+        - textbox [ref=f4e724]: "2950.00"
+        - textbox [ref=f4e727]: "3030.00"
+        - textbox [ref=f4e730]: "3450.00"
+        - textbox [ref=f4e733]
+        - textbox [ref=f4e736]
+        - textbox [ref=f4e739]: "3690.00"
+        - generic [ref=f4e742]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+    - generic [ref=f4e746]:
+      - heading "Фільтр" [level=3] [ref=f4e747]
+      - generic [ref=f4e748]:
+        - button [ref=f4e749] [cursor=pointer]:
+          - img "remove_filters" [ref=f4e750]
+        - generic [ref=f4e753]:
+          - combobox "З цінами" [ref=f4e754] [cursor=pointer]: Усі
+          - textbox [aria-hidden]
+          - group [aria-hidden]
+    - button

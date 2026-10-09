@@ -1,0 +1,786 @@
+- generic [ref=f12e3]:
+  - generic [ref=f12e4]:
+    - link [ref=f12e5] [cursor=pointer]:
+      - /url: /
+      - img "logo" [ref=f12e6]
+    - list [ref=f12e7]:
+      - listitem [ref=f12e8]:
+        - button "Ціноутворення для товарів" [ref=f12e9] [cursor=pointer]
+        - generic [ref=f12e11]:
+          - link "Ціни" [ref=f12e12] [cursor=pointer]:
+            - /url: /newPrices
+          - link "Прайслісти" [ref=f12e14] [cursor=pointer]:
+            - /url: /pricelist
+          - link "Джерела" [ref=f12e16] [cursor=pointer]:
+            - /url: /sources
+      - listitem [ref=f12e18]:
+        - button "Бухгалтерія" [ref=f12e19] [cursor=pointer]
+        - generic:
+          - link "Оплата замовлень" [ref=f12e21] [cursor=pointer]:
+            - /url: /payment-for-orders
+          - link "Взаєморозрахунок з постачальниками" [ref=f12e23] [cursor=pointer]:
+            - /url: /payment-for-vendors
+          - link "CRM платежі" [ref=f12e25] [cursor=pointer]:
+            - /url: /payment-for-crm
+    - generic [ref=f12e27]:
+      - link "Перейти в CRM" [ref=f12e28] [cursor=pointer]:
+        - /url: https://dev.egodevelopment.pp.ua/
+      - generic [ref=f12e29]:
+        - paragraph [ref=f12e32]: Ірина Бондар
+        - button "Log out" [ref=f12e34] [cursor=pointer]
+  - generic [ref=f12e37]:
+    - paragraph [ref=f12e38]:
+      - generic [ref=f12e39] [cursor=pointer]: Назад
+    - generic [ref=f12e41]:
+      - heading "Ціни" [level=2] [ref=f12e43]
+      - generic [ref=f12e44]:
+        - searchbox "Пошук" [ref=f12e46]
+        - button "Фільтр" [ref=f12e47] [cursor=pointer]
+    - generic [ref=f12e49]:
+      - button "Товари" [ref=f12e50] [cursor=pointer]
+      - button "Комплекти" [ref=f12e52] [cursor=pointer]
+      - button "Опції комплектів" [ref=f12e54] [cursor=pointer]
+      - button "Компоненти" [ref=f12e56] [cursor=pointer]
+      - button "Опції компонентів" [ref=f12e58] [cursor=pointer]
+    - generic [ref=f12e60]:
+      - generic [ref=f12e61]: "Поточний курс $ в грн:"
+      - generic [ref=f12e62]:
+        - generic [ref=f12e63]:
+          - generic [ref=f12e64]: "Купівля:"
+          - generic [ref=f12e65]: "41.35"
+        - generic [ref=f12e66]:
+          - generic [ref=f12e67]: "Продаж:"
+          - generic [ref=f12e68]: "41.85"
+    - generic [ref=f12e71]:
+      - generic [ref=f12e72]: ID
+      - generic [ref=f12e73]: Тип
+      - generic [ref=f12e74]: Назва
+      - generic [ref=f12e75]: Розмір
+      - generic [ref=f12e76]: Колір
+      - generic [ref=f12e78]:
+        - button "Згорнути додаткові гривневі колонки собівартості" [ref=f12e79] [cursor=pointer]
+        - generic [ref=f12e82]: Загальна собівартість, грн
+      - generic [ref=f12e83]: К-ть сировини
+      - generic [ref=f12e84]: В-ть одиниці сировини, грн
+      - generic [ref=f12e85]: В-ть роботи, грн
+      - generic [ref=f12e86]: В-ть пакування, грн
+      - generic [ref=f12e87]: Заг соб-тьза курсом $ ост. надходж.
+      - generic [ref=f12e89]:
+        - button "Показати додаткові доларові колонки собівартості" [ref=f12e90] [cursor=pointer]
+        - generic [ref=f12e94]: Загальна собівартість, $
+      - generic [ref=f12e1718]:
+        - button "Показати маржу/націнку" [ref=f12e1719] [cursor=pointer]
+        - generic [ref=f12e1723]:
+          - text: Шоуруми
+          - generic [ref=f12e1724]: активний
+      - generic [ref=f12e1725]:
+        - button "Показати маржу/націнку" [ref=f12e1726] [cursor=pointer]
+        - generic [ref=f12e1730]:
+          - text: Готелі
+          - generic [ref=f12e1731]: активний
+      - generic [ref=f12e1732]:
+        - button "Показати маржу/націнку" [ref=f12e1733] [cursor=pointer]
+        - generic [ref=f12e1737]:
+          - text: Дропшипінг
+          - generic [ref=f12e1738]: активний
+      - generic [ref=f12e1739]:
+        - button "Показати маржу/націнку" [ref=f12e1740] [cursor=pointer]
+        - generic [ref=f12e1744]:
+          - text: Соцмережі і месенджери
+          - generic [ref=f12e1745]: активний
+      - generic [ref=f12e1746]:
+        - button "Показати маржу/націнку" [ref=f12e1747] [cursor=pointer]
+        - generic [ref=f12e1751]:
+          - text: Маркетплейси
+          - generic [ref=f12e1752]: активний
+      - generic [ref=f12e1753]:
+        - button "Показати маржу/націнку" [ref=f12e1754] [cursor=pointer]
+        - generic [ref=f12e1758]:
+          - text: Оптовий
+          - generic [ref=f12e1759]: активний
+      - generic [ref=f12e1760]:
+        - button "Показати маржу/націнку" [ref=f12e1761] [cursor=pointer]
+        - generic [ref=f12e1765]:
+          - text: Стандартний список
+          - generic [ref=f12e1766]: активний
+    - generic [ref=f12e155]:
+      - generic [ref=f12e156]:
+        - generic [ref=f12e157]: "44"
+        - generic [ref=f12e159]: Подушка
+        - generic [ref=f12e161]: Подушка Анатомічна
+        - generic [ref=f12e163]: 40x60
+        - generic [ref=f12e1767]:
+          - generic [ref=f12e1768]: "-"
+          - img "Неможливо порахувати собівартість, адже немає введених даних. Введіть хоча б вартість одиниці сировини" [ref=f12e1769]
+        - textbox [ref=f12e177]: "2"
+        - textbox [ref=f12e180]
+        - textbox [ref=f12e183]
+        - textbox [ref=f12e186]
+        - generic [ref=f12e189]:
+          - generic [ref=f12e1770]: "-"
+          - img "Неможливо порахувати собівартість, адже немає введених даних. Введіть хоча б вартість одиниці сировини" [ref=f12e1771]
+        - generic [ref=f12e1772]:
+          - generic [ref=f12e1773]: "-"
+          - img "Неможливо порахувати собівартість, адже немає введених даних. Введіть хоча б вартість одиниці сировини" [ref=f12e1774]
+        - textbox [ref=f12e199]
+        - textbox [ref=f12e202]
+        - textbox [ref=f12e205]: "560.00"
+        - textbox [ref=f12e208]
+        - textbox [ref=f12e211]
+        - textbox [ref=f12e214]
+        - textbox [ref=f12e217]: "680.00"
+        - generic [ref=f12e220]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e221]:
+        - generic [ref=f12e222]: "40"
+        - generic [ref=f12e224]: Ковдра
+        - generic [ref=f12e226]: Ковдра Вовняна
+        - generic [ref=f12e228]: 140x205
+        - generic [ref=f12e235]: "1064.00"
+        - textbox [ref=f12e239]: "1.00"
+        - textbox [ref=f12e242]: "948.00"
+        - textbox [ref=f12e245]: "90.00"
+        - textbox [ref=f12e248]: "26.00"
+        - generic [ref=f12e251]:
+          - generic [ref=f12e252]:
+            - generic [ref=f12e253]: "25.53"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e254]'
+          - generic [ref=f12e255]: "-0.78%"
+        - generic [ref=f12e256]: "25.73"
+        - textbox [ref=f12e260]
+        - textbox [ref=f12e263]
+        - textbox [ref=f12e266]
+        - textbox [ref=f12e269]
+        - textbox [ref=f12e272]
+        - textbox [ref=f12e275]
+        - textbox [ref=f12e278]
+        - generic [ref=f12e281]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e282]:
+        - generic [ref=f12e283]: "41"
+        - generic [ref=f12e285]: Ковдра
+        - generic [ref=f12e287]: Ковдра Вовняна
+        - generic [ref=f12e289]: 200x220
+        - generic [ref=f12e296]: "1356.00"
+        - textbox [ref=f12e300]: "1.00"
+        - textbox [ref=f12e303]: "1271.00"
+        - textbox [ref=f12e306]: "50.00"
+        - textbox [ref=f12e309]: "35.00"
+        - generic [ref=f12e312]:
+          - generic [ref=f12e313]:
+            - generic [ref=f12e314]: "33.06"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e315]'
+          - generic [ref=f12e316]: +0.82%
+        - generic [ref=f12e317]: "32.79"
+        - textbox [ref=f12e321]: "2670.00"
+        - textbox [ref=f12e324]: "1950.00"
+        - textbox [ref=f12e327]: "2030.00"
+        - textbox [ref=f12e330]: "2430.00"
+        - textbox [ref=f12e333]
+        - textbox [ref=f12e336]
+        - textbox [ref=f12e339]: "2470.00"
+        - generic [ref=f12e342]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e343]:
+        - generic [ref=f12e344]: "42"
+        - generic [ref=f12e346]: Ковдра
+        - generic [ref=f12e348]: Ковдра Вовняна
+        - generic [ref=f12e350]: 140x205
+        - generic [ref=f12e357]: "1049.00"
+        - textbox [ref=f12e361]: "1.00"
+        - textbox [ref=f12e364]: "930.00"
+        - textbox [ref=f12e367]: "100.00"
+        - textbox [ref=f12e370]: "19.00"
+        - generic [ref=f12e373]:
+          - generic [ref=f12e374]:
+            - generic [ref=f12e375]: "25.05"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e376]'
+          - generic [ref=f12e377]: "-1.26%"
+        - generic [ref=f12e378]: "25.37"
+        - textbox [ref=f12e382]
+        - textbox [ref=f12e385]: "1480.00"
+        - textbox [ref=f12e388]: "1610.00"
+        - textbox [ref=f12e391]: "1890.00"
+        - textbox [ref=f12e394]: "2270.00"
+        - textbox [ref=f12e397]: "1470.00"
+        - textbox [ref=f12e400]: "1940.00"
+        - generic [ref=f12e403]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e404]:
+        - generic [ref=f12e405]: "43"
+        - generic [ref=f12e407]: Ковдра
+        - generic [ref=f12e409]: Ковдра Вовняна
+        - generic [ref=f12e411]: 200x220
+        - generic [ref=f12e418]: "1371.00"
+        - textbox [ref=f12e422]: "1.00"
+        - textbox [ref=f12e425]: "1287.00"
+        - textbox [ref=f12e428]: "60.00"
+        - textbox [ref=f12e431]: "24.00"
+        - generic [ref=f12e434]:
+          - generic [ref=f12e435]:
+            - generic [ref=f12e436]: "33.42"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e437]'
+          - generic [ref=f12e438]: +0.78%
+        - generic [ref=f12e439]: "33.16"
+        - textbox [ref=f12e443]
+        - textbox [ref=f12e446]: "2010.00"
+        - textbox [ref=f12e449]
+        - textbox [ref=f12e452]
+        - textbox [ref=f12e455]: "2810.00"
+        - textbox [ref=f12e458]
+        - textbox [ref=f12e461]: "2610.00"
+        - generic [ref=f12e464]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e465]:
+        - generic [ref=f12e466]: "38"
+        - generic [ref=f12e468]: Подушка
+        - generic [ref=f12e470]: Подушка Бамбук
+        - generic [ref=f12e472]: 50x70
+        - generic [ref=f12e481]:
+          - generic [ref=f12e482]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e483]
+        - textbox [ref=f12e486]
+        - generic [ref=f12e488]:
+          - textbox [ref=f12e489]: Немає даних
+          - img "По цьому товару немає надходжень" [ref=f12e490]
+        - textbox [ref=f12e493]
+        - textbox [ref=f12e496]
+        - generic [ref=f12e499]:
+          - generic [ref=f12e500]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e501]
+        - generic [ref=f12e504]:
+          - generic [ref=f12e505]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e506]
+        - textbox [ref=f12e509]: "790.00"
+        - textbox [ref=f12e512]: "580.00"
+        - textbox [ref=f12e515]
+        - textbox [ref=f12e518]
+        - textbox [ref=f12e521]: "870.00"
+        - textbox [ref=f12e524]: "580.00"
+        - textbox [ref=f12e527]: "770.00"
+        - generic [ref=f12e530]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e531]:
+        - generic [ref=f12e532]: "39"
+        - generic [ref=f12e534]: Подушка
+        - generic [ref=f12e536]: Подушка Бамбук
+        - generic [ref=f12e538]: 70x70
+        - generic [ref=f12e547]:
+          - generic [ref=f12e548]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e549]
+        - textbox [ref=f12e552]
+        - generic [ref=f12e554]:
+          - textbox [ref=f12e555]: Немає даних
+          - img "По цьому товару немає надходжень" [ref=f12e556]
+        - textbox [ref=f12e559]
+        - textbox [ref=f12e562]
+        - generic [ref=f12e565]:
+          - generic [ref=f12e566]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e567]
+        - generic [ref=f12e570]:
+          - generic [ref=f12e571]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e572]
+        - textbox [ref=f12e575]
+        - textbox [ref=f12e578]: "690.00"
+        - textbox [ref=f12e581]: "730.00"
+        - textbox [ref=f12e584]
+        - textbox [ref=f12e587]: "980.00"
+        - textbox [ref=f12e590]
+        - textbox [ref=f12e593]: "900.00"
+        - generic [ref=f12e596]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e597]:
+        - generic [ref=f12e598]: "37"
+        - generic [ref=f12e600]: Ковдра
+        - generic [ref=f12e602]: Ковдра Бамбук
+        - generic [ref=f12e604]: 172x205
+        - generic [ref=f12e613]:
+          - generic [ref=f12e614]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e615]
+        - textbox [ref=f12e618]
+        - generic [ref=f12e620]:
+          - textbox [ref=f12e621]: Немає даних
+          - img "По цьому товару немає надходжень" [ref=f12e622]
+        - textbox [ref=f12e625]
+        - textbox [ref=f12e628]
+        - generic [ref=f12e631]:
+          - generic [ref=f12e632]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e633]
+        - generic [ref=f12e636]:
+          - generic [ref=f12e637]: "-"
+          - img "Немає надходжень, тому неможливо порахувати загальну собівартість" [ref=f12e638]
+        - textbox [ref=f12e641]
+        - textbox [ref=f12e644]: "1780.00"
+        - textbox [ref=f12e647]: "1860.00"
+        - textbox [ref=f12e650]: "2180.00"
+        - textbox [ref=f12e653]
+        - textbox [ref=f12e656]
+        - textbox [ref=f12e659]: "2300.00"
+        - generic [ref=f12e662]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e663]:
+        - generic [ref=f12e664]: "36"
+        - generic [ref=f12e666]: Подушка
+        - generic [ref=f12e668]: Подушка Дитяча
+        - generic [ref=f12e670]: 40x60
+        - generic [ref=f12e677]: "439.00"
+        - textbox [ref=f12e681]: "1.00"
+        - textbox [ref=f12e684]: "307.00"
+        - textbox [ref=f12e687]: "90.00"
+        - textbox [ref=f12e690]: "42.00"
+        - generic [ref=f12e693]:
+          - generic [ref=f12e694]:
+            - generic [ref=f12e695]: "10.48"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e696]'
+          - generic [ref=f12e697]: "-1.32%"
+        - generic [ref=f12e698]: "10.62"
+        - textbox [ref=f12e702]: "880.00"
+        - textbox [ref=f12e705]
+        - textbox [ref=f12e708]
+        - textbox [ref=f12e711]: "790.00"
+        - textbox [ref=f12e714]: "940.00"
+        - textbox [ref=f12e717]: "610.00"
+        - textbox [ref=f12e720]: "820.00"
+        - generic [ref=f12e723]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e724]:
+        - generic [ref=f12e725]: "32"
+        - generic [ref=f12e727]: Ковдра
+        - generic [ref=f12e729]: Ковдра Дитяча
+        - generic [ref=f12e731]: 100x100
+        - generic [ref=f12e738]: "631.00"
+        - textbox [ref=f12e742]: "1.00"
+        - textbox [ref=f12e745]: "496.00"
+        - textbox [ref=f12e748]: "90.00"
+        - textbox [ref=f12e751]: "45.00"
+        - generic [ref=f12e754]:
+          - generic [ref=f12e755]:
+            - generic [ref=f12e756]: "15.14"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e757]'
+          - generic [ref=f12e758]: "-0.79%"
+        - generic [ref=f12e759]: "15.26"
+        - textbox [ref=f12e763]
+        - textbox [ref=f12e766]
+        - textbox [ref=f12e769]
+        - textbox [ref=f12e772]
+        - textbox [ref=f12e775]
+        - textbox [ref=f12e778]: "870.00"
+        - textbox [ref=f12e781]: "1170.00"
+        - generic [ref=f12e784]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e785]:
+        - generic [ref=f12e786]: "33"
+        - generic [ref=f12e788]: Ковдра
+        - generic [ref=f12e790]: Ковдра Дитяча
+        - generic [ref=f12e792]: 110x140
+        - generic [ref=f12e799]: "678.00"
+        - textbox [ref=f12e803]: "1.00"
+        - textbox [ref=f12e806]: "601.00"
+        - textbox [ref=f12e809]: "50.00"
+        - textbox [ref=f12e812]: "27.00"
+        - generic [ref=f12e815]:
+          - generic [ref=f12e816]:
+            - generic [ref=f12e817]: "16.53"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e818]'
+          - generic [ref=f12e819]: +0.79%
+        - generic [ref=f12e820]: "16.40"
+        - textbox [ref=f12e824]: "1340.00"
+        - textbox [ref=f12e827]
+        - textbox [ref=f12e830]: "1000.00"
+        - textbox [ref=f12e833]: "1220.00"
+        - textbox [ref=f12e836]
+        - textbox [ref=f12e839]
+        - textbox [ref=f12e842]: "1260.00"
+        - generic [ref=f12e845]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e846]:
+        - generic [ref=f12e847]: "34"
+        - generic [ref=f12e849]: Ковдра
+        - generic [ref=f12e851]: Ковдра Дитяча
+        - generic [ref=f12e853]: 100x100
+        - generic [ref=f12e860]: "641.00"
+        - textbox [ref=f12e864]: "1.00"
+        - textbox [ref=f12e867]: "499.00"
+        - textbox [ref=f12e870]: "100.00"
+        - textbox [ref=f12e873]: "42.00"
+        - generic [ref=f12e876]:
+          - generic [ref=f12e877]:
+            - generic [ref=f12e878]: "15.41"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e879]'
+          - generic [ref=f12e880]: "-0.58%"
+        - generic [ref=f12e881]: "15.50"
+        - textbox [ref=f12e885]: "1230.00"
+        - textbox [ref=f12e888]: "950.00"
+        - textbox [ref=f12e891]
+        - textbox [ref=f12e894]: "1120.00"
+        - textbox [ref=f12e897]: "1340.00"
+        - textbox [ref=f12e900]
+        - textbox [ref=f12e903]: "1160.00"
+        - generic [ref=f12e906]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e907]:
+        - generic [ref=f12e908]: "35"
+        - generic [ref=f12e910]: Ковдра
+        - generic [ref=f12e912]: Ковдра Дитяча
+        - generic [ref=f12e914]: 110x140
+        - generic [ref=f12e921]: "679.00"
+        - textbox [ref=f12e925]: "1.00"
+        - textbox [ref=f12e928]: "591.00"
+        - textbox [ref=f12e931]: "50.00"
+        - textbox [ref=f12e934]: "38.00"
+        - generic [ref=f12e937]:
+          - generic [ref=f12e938]:
+            - generic [ref=f12e939]: "16.55"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e940]'
+          - generic [ref=f12e941]: +0.79%
+        - generic [ref=f12e942]: "16.42"
+        - textbox [ref=f12e946]: "1310.00"
+        - textbox [ref=f12e949]: "980.00"
+        - textbox [ref=f12e952]
+        - textbox [ref=f12e955]
+        - textbox [ref=f12e958]: "1410.00"
+        - textbox [ref=f12e961]
+        - textbox [ref=f12e964]: "1250.00"
+        - generic [ref=f12e967]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e968]:
+        - generic [ref=f12e969]: "28"
+        - generic [ref=f12e971]: Ковдра
+        - generic [ref=f12e973]: Ковдра Літня
+        - generic [ref=f12e975]: 90x180
+        - generic [ref=f12e982]: "743.00"
+        - textbox [ref=f12e986]: "1.00"
+        - textbox [ref=f12e989]: "635.00"
+        - textbox [ref=f12e992]: "90.00"
+        - textbox [ref=f12e995]: "18.00"
+        - generic [ref=f12e998]:
+          - generic [ref=f12e999]:
+            - generic [ref=f12e1000]: "17.75"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1001]'
+          - generic [ref=f12e1002]: "-1.22%"
+        - generic [ref=f12e1003]: "17.97"
+        - textbox [ref=f12e1007]: "1450.00"
+        - textbox [ref=f12e1010]: "1080.00"
+        - textbox [ref=f12e1013]: "1130.00"
+        - textbox [ref=f12e1016]: "1320.00"
+        - textbox [ref=f12e1019]: "1530.00"
+        - textbox [ref=f12e1022]: "1040.00"
+        - textbox [ref=f12e1025]: "1340.00"
+        - generic [ref=f12e1028]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1029]:
+        - generic [ref=f12e1030]: "29"
+        - generic [ref=f12e1032]: Ковдра
+        - generic [ref=f12e1034]: Ковдра Літня
+        - generic [ref=f12e1036]: 140x205
+        - generic [ref=f12e1043]: "1046.00"
+        - textbox [ref=f12e1047]: "1.00"
+        - textbox [ref=f12e1050]: "914.00"
+        - textbox [ref=f12e1053]: "90.00"
+        - textbox [ref=f12e1056]: "42.00"
+        - generic [ref=f12e1059]:
+          - generic [ref=f12e1060]:
+            - generic [ref=f12e1061]: "24.99"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1062]'
+          - generic [ref=f12e1063]: "-1.23%"
+        - generic [ref=f12e1064]: "25.30"
+        - textbox [ref=f12e1068]
+        - textbox [ref=f12e1071]
+        - textbox [ref=f12e1074]
+        - textbox [ref=f12e1077]
+        - textbox [ref=f12e1080]
+        - textbox [ref=f12e1083]
+        - textbox [ref=f12e1086]: "1880.00"
+        - generic [ref=f12e1089]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1090]:
+        - generic [ref=f12e1091]: "30"
+        - generic [ref=f12e1093]: Ковдра
+        - generic [ref=f12e1095]: Ковдра Літня
+        - generic [ref=f12e1097]: 90x180
+        - generic [ref=f12e1104]: "789.00"
+        - textbox [ref=f12e1108]: "1.00"
+        - textbox [ref=f12e1111]: "650.00"
+        - textbox [ref=f12e1114]: "110.00"
+        - textbox [ref=f12e1117]: "29.00"
+        - generic [ref=f12e1120]:
+          - generic [ref=f12e1121]:
+            - generic [ref=f12e1122]: "19.23"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1123]'
+          - generic [ref=f12e1124]: +0.79%
+        - generic [ref=f12e1125]: "19.08"
+        - textbox [ref=f12e1129]
+        - textbox [ref=f12e1132]: "1150.00"
+        - textbox [ref=f12e1135]
+        - textbox [ref=f12e1138]
+        - textbox [ref=f12e1141]: "1690.00"
+        - textbox [ref=f12e1144]: "1070.00"
+        - textbox [ref=f12e1147]: "1470.00"
+        - generic [ref=f12e1150]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1151]:
+        - generic [ref=f12e1152]: "31"
+        - generic [ref=f12e1154]: Ковдра
+        - generic [ref=f12e1156]: Ковдра Літня
+        - generic [ref=f12e1158]: 140x205
+        - generic [ref=f12e1165]: "995.00"
+        - textbox [ref=f12e1169]: "1.00"
+        - textbox [ref=f12e1172]: "907.00"
+        - textbox [ref=f12e1175]: "50.00"
+        - textbox [ref=f12e1178]: "38.00"
+        - generic [ref=f12e1181]:
+          - generic [ref=f12e1182]:
+            - generic [ref=f12e1183]: "23.98"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1184]'
+          - generic [ref=f12e1185]: "-0.33%"
+        - generic [ref=f12e1186]: "24.06"
+        - textbox [ref=f12e1190]: "1890.00"
+        - textbox [ref=f12e1193]
+        - textbox [ref=f12e1196]
+        - textbox [ref=f12e1199]
+        - textbox [ref=f12e1202]: "2100.00"
+        - textbox [ref=f12e1205]: "1350.00"
+        - textbox [ref=f12e1208]: "1810.00"
+        - generic [ref=f12e1211]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1212]:
+        - generic [ref=f12e1213]: "26"
+        - generic [ref=f12e1215]: Подушка
+        - generic [ref=f12e1217]: Подушка Літня
+        - generic [ref=f12e1219]: 50x70
+        - generic [ref=f12e1226]: "497.00"
+        - textbox [ref=f12e1230]: "1.00"
+        - textbox [ref=f12e1233]: "376.00"
+        - textbox [ref=f12e1236]: "100.00"
+        - textbox [ref=f12e1239]: "21.00"
+        - generic [ref=f12e1242]:
+          - generic [ref=f12e1243]:
+            - generic [ref=f12e1244]: "12.14"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1245]'
+          - generic [ref=f12e1246]: +1.00%
+        - generic [ref=f12e1247]: "12.02"
+        - textbox [ref=f12e1251]
+        - textbox [ref=f12e1254]
+        - textbox [ref=f12e1257]
+        - textbox [ref=f12e1260]
+        - textbox [ref=f12e1263]
+        - textbox [ref=f12e1266]
+        - textbox [ref=f12e1269]
+        - generic [ref=f12e1272]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1273]:
+        - generic [ref=f12e1274]: "27"
+        - generic [ref=f12e1276]: Подушка
+        - generic [ref=f12e1278]: Подушка Літня
+        - generic [ref=f12e1280]: 50x70
+        - generic [ref=f12e1287]: "482.00"
+        - textbox [ref=f12e1291]: "1.00"
+        - textbox [ref=f12e1294]: "361.00"
+        - textbox [ref=f12e1297]: "80.00"
+        - textbox [ref=f12e1300]: "41.00"
+        - generic [ref=f12e1303]:
+          - generic [ref=f12e1304]:
+            - generic [ref=f12e1305]: "11.56"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1306]'
+          - generic [ref=f12e1307]: "-0.86%"
+        - generic [ref=f12e1308]: "11.66"
+        - textbox [ref=f12e1312]: "920.00"
+        - textbox [ref=f12e1315]
+        - textbox [ref=f12e1318]: "740.00"
+        - textbox [ref=f12e1321]
+        - textbox [ref=f12e1324]: "1000.00"
+        - textbox [ref=f12e1327]
+        - textbox [ref=f12e1330]: "910.00"
+        - generic [ref=f12e1333]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1334]:
+        - generic [ref=f12e1335]: "20"
+        - generic [ref=f12e1337]: Подушка
+        - generic [ref=f12e1339]: Подушка Еко Пух
+        - generic [ref=f12e1341]: 50x50
+        - generic [ref=f12e1348]: "431.00"
+        - textbox [ref=f12e1352]: "1.00"
+        - textbox [ref=f12e1355]: "300.00"
+        - textbox [ref=f12e1358]: "110.00"
+        - textbox [ref=f12e1361]: "21.00"
+        - generic [ref=f12e1364]:
+          - generic [ref=f12e1365]:
+            - generic [ref=f12e1366]: "10.40"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1367]'
+          - generic [ref=f12e1368]: "-0.19%"
+        - generic [ref=f12e1369]: "10.42"
+        - textbox [ref=f12e1373]
+        - textbox [ref=f12e1376]
+        - textbox [ref=f12e1379]
+        - textbox [ref=f12e1382]: "760.00"
+        - textbox [ref=f12e1385]: "890.00"
+        - textbox [ref=f12e1388]
+        - textbox [ref=f12e1391]
+        - generic [ref=f12e1394]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1395]:
+        - generic [ref=f12e1396]: "21"
+        - generic [ref=f12e1398]: Подушка
+        - generic [ref=f12e1400]: Подушка Еко Пух
+        - generic [ref=f12e1402]: 50x70
+        - generic [ref=f12e1409]: "498.00"
+        - textbox [ref=f12e1413]: "1.00"
+        - textbox [ref=f12e1416]: "369.00"
+        - textbox [ref=f12e1419]: "100.00"
+        - textbox [ref=f12e1422]: "29.00"
+        - generic [ref=f12e1425]:
+          - generic [ref=f12e1426]:
+            - generic [ref=f12e1427]: "11.90"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1428]'
+          - generic [ref=f12e1429]: "-1.16%"
+        - generic [ref=f12e1430]: "12.04"
+        - textbox [ref=f12e1434]
+        - textbox [ref=f12e1437]
+        - textbox [ref=f12e1440]
+        - textbox [ref=f12e1443]
+        - textbox [ref=f12e1446]
+        - textbox [ref=f12e1449]
+        - textbox [ref=f12e1452]
+        - generic [ref=f12e1455]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1456]:
+        - generic [ref=f12e1457]: "22"
+        - generic [ref=f12e1459]: Подушка
+        - generic [ref=f12e1461]: Подушка Еко Пух
+        - generic [ref=f12e1463]: 70x70
+        - generic [ref=f12e1470]: "546.00"
+        - textbox [ref=f12e1474]: "1.00"
+        - textbox [ref=f12e1477]: "432.00"
+        - textbox [ref=f12e1480]: "80.00"
+        - textbox [ref=f12e1483]: "34.00"
+        - generic [ref=f12e1486]:
+          - generic [ref=f12e1487]:
+            - generic [ref=f12e1488]: "13.04"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1489]'
+          - generic [ref=f12e1490]: "-1.21%"
+        - generic [ref=f12e1491]: "13.20"
+        - textbox [ref=f12e1495]
+        - textbox [ref=f12e1498]
+        - textbox [ref=f12e1501]
+        - textbox [ref=f12e1504]
+        - textbox [ref=f12e1507]
+        - textbox [ref=f12e1510]
+        - textbox [ref=f12e1513]
+        - generic [ref=f12e1516]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1517]:
+        - generic [ref=f12e1518]: "23"
+        - generic [ref=f12e1520]: Подушка
+        - generic [ref=f12e1522]: Подушка Еко Пух
+        - generic [ref=f12e1524]: 50x50
+        - generic [ref=f12e1531]: "448.00"
+        - textbox [ref=f12e1535]: "1.00"
+        - textbox [ref=f12e1538]: "304.00"
+        - textbox [ref=f12e1541]: "110.00"
+        - textbox [ref=f12e1544]: "34.00"
+        - generic [ref=f12e1547]:
+          - generic [ref=f12e1548]:
+            - generic [ref=f12e1549]: "10.92"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1550]'
+          - generic [ref=f12e1551]: +0.83%
+        - generic [ref=f12e1552]: "10.83"
+        - textbox [ref=f12e1556]: "890.00"
+        - textbox [ref=f12e1559]
+        - textbox [ref=f12e1562]
+        - textbox [ref=f12e1565]: "760.00"
+        - textbox [ref=f12e1568]
+        - textbox [ref=f12e1571]
+        - textbox [ref=f12e1574]: "840.00"
+        - generic [ref=f12e1577]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1578]:
+        - generic [ref=f12e1579]: "24"
+        - generic [ref=f12e1581]: Подушка
+        - generic [ref=f12e1583]: Подушка Еко Пух
+        - generic [ref=f12e1585]: 50x70
+        - generic [ref=f12e1592]: "506.00"
+        - textbox [ref=f12e1596]: "1.00"
+        - textbox [ref=f12e1599]: "365.00"
+        - textbox [ref=f12e1602]: "120.00"
+        - textbox [ref=f12e1605]: "21.00"
+        - generic [ref=f12e1608]:
+          - generic [ref=f12e1609]:
+            - generic [ref=f12e1610]: "12.14"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1611]'
+          - generic [ref=f12e1612]: "-0.82%"
+        - generic [ref=f12e1613]: "12.24"
+        - textbox [ref=f12e1617]
+        - textbox [ref=f12e1620]
+        - textbox [ref=f12e1623]: "760.00"
+        - textbox [ref=f12e1626]: "890.00"
+        - textbox [ref=f12e1629]
+        - textbox [ref=f12e1632]: "700.00"
+        - textbox [ref=f12e1635]: "960.00"
+        - generic [ref=f12e1638]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+      - generic [ref=f12e1639]:
+        - generic [ref=f12e1640]: "25"
+        - generic [ref=f12e1642]: Подушка
+        - generic [ref=f12e1644]: Подушка Еко Пух
+        - generic [ref=f12e1646]: 70x70
+        - generic [ref=f12e1653]: "565.00"
+        - textbox [ref=f12e1657]: "1.00"
+        - textbox [ref=f12e1660]: "469.00"
+        - textbox [ref=f12e1663]: "70.00"
+        - textbox [ref=f12e1666]: "26.00"
+        - generic [ref=f12e1669]:
+          - generic [ref=f12e1670]:
+            - generic [ref=f12e1671]: "13.77"
+            - 'img "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate." [ref=f12e1672]'
+          - generic [ref=f12e1673]: +0.81%
+        - generic [ref=f12e1674]: "13.66"
+        - textbox [ref=f12e1678]
+        - textbox [ref=f12e1681]: "830.00"
+        - textbox [ref=f12e1684]: "840.00"
+        - textbox [ref=f12e1687]: "980.00"
+        - textbox [ref=f12e1690]: "1160.00"
+        - textbox [ref=f12e1693]
+        - textbox [ref=f12e1696]: "1070.00"
+        - generic [ref=f12e1699]:
+          - button "Немає змін для збереження" [disabled]
+          - button "Відновити рядок" [disabled]
+    - generic [ref=f12e1703]:
+      - heading "Фільтр" [level=3] [ref=f12e1704]
+      - generic [ref=f12e1705]:
+        - button [ref=f12e1706] [cursor=pointer]:
+          - img "remove_filters" [ref=f12e1707]
+        - generic [ref=f12e1710]:
+          - combobox "З цінами" [ref=f12e1711] [cursor=pointer]: Усі
+          - textbox [aria-hidden]
+          - group [aria-hidden]
+    - button
+    - navigation "pagination navigation" [ref=f12e1712]:
+      - list [ref=f12e1713]:
+        - listitem [ref=f12e1714]:
+          - button "page 1" [ref=f12e1715] [cursor=pointer]: "1"
+        - listitem [ref=f12e1716]:
+          - button "Go to page 2" [ref=f12e1717] [cursor=pointer]: "2"

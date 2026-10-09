@@ -4,6 +4,7 @@
 // A source references its pricelist by `prices_list_id`; the handler expands it into `prices_list`
 // and builds each pricelist's `sources`, so renames propagate. Sources are the order (lead) sources
 // shared with the CRM; `orders_count` is how many orders use a source (drives the delete warning).
+// `price_count` is not stored: the handler counts the prices of src/mocks/data/prices.js.
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
 import { mulberry32 } from './fabrics';
@@ -19,8 +20,6 @@ export const PRICE_COUNT_KEYS = [
     'kit_component_template',
     'component_option_template',
 ];
-
-export const emptyPriceCount = () => Object.fromEntries(PRICE_COUNT_KEYS.map((key) => [key, 0]));
 
 // [title, description, status, is_default, deleted]
 const PRICELIST_SPECS = [
@@ -59,20 +58,12 @@ const createdAt = (i, step) => new Date(SEED_START + i * step * DAY + randInt(0,
 export const DEMO_PRICELISTS = PRICELIST_SPECS.map(([title, description, status, is_default, deleted], i) => {
     const created = createdAt(i, 55);
     const modified = new Date(created.getTime() + randInt(0, 40) * DAY);
-    const scale = status === 'ACTIVE' ? 1 : 0.4;
     return {
         id: i + 1,
         title,
         description,
         status,
         is_default,
-        price_count: {
-            warehouse_item_type: Math.round(randInt(4, 18) * scale),
-            kit_template: Math.round(randInt(10, 46) * scale),
-            kit_option_template: Math.round(randInt(0, 24) * scale),
-            kit_component_template: Math.round(randInt(6, 32) * scale),
-            component_option_template: Math.round(randInt(0, 20) * scale),
-        },
         created: toIso(created),
         modified: toIso(modified),
         deleted_at: deleted ? toIso(new Date(modified.getTime() + 30 * DAY)) : null,

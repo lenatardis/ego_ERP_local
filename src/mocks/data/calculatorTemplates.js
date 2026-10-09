@@ -145,7 +145,7 @@ export const DEMO_KIT_SIZES = [
     deleted_at: null,
 }));
 
-// ---- Комплекти. Shown newest-created first: 27, 16, 2, 1 ----
+// ---- Комплекти. 1, 2, 16, 27 are from screenshots, the rest are illustrative (follow the same naming). ----
 // `component_ids` repeats an id once per piece (Наволочка ×2 -> [1, 1, ...]), as the original API did.
 
 export const DEMO_KIT_TEMPLATES = [
@@ -171,6 +171,22 @@ export const DEMO_KIT_TEMPLATES = [
         image: KIT_IMAGE,
         created: at(2025, 12, 23),
     },
+    // [id, name, short_name, additional_fabric_consumption_price, kit_size_id, fabric_type_id, component_ids, created]
+    ...[
+        [3, 'Satin Двоспальний 5x7', 'sat2.0 5×7', '2', 2, 1, [1, 1, 9, 10], at(2025, 12, 23, 14)],
+        [4, 'Satin Двоспальний 7x7', 'sat2.0 7×7', '2', 2, 1, [4, 4, 9, 10], at(2025, 12, 24)],
+        [5, 'Satin Євро 5x7', 'satЄ 5×7', '2', 3, 1, [1, 1, 11, 12], at(2025, 12, 24, 15)],
+        [6, 'Satin Євро 7x7', 'satЄ 7×7', '2', 3, 1, [4, 4, 11, 12], at(2025, 12, 25)],
+        [7, 'Satin Євро Макс 7x7', 'satЄmax7×7', '4', 4, 1, [4, 4, 4, 4, 11, 12], at(2025, 12, 25, 16)],
+        [8, 'Satin Сімейний 5x7', 'sat7,Я 5x7', '3', 5, 1, [1, 1, 7, 7, 10], at(2025, 12, 26)],
+        [10, 'Bazz Полуторний 5x7', 'baz1.5 5×7', '0', 1, 2, [1, 1, 7, 8], at(2025, 12, 27)],
+        [11, 'Bazz Двоспальний 7x7', 'baz2.0 7×7', '0', 2, 2, [4, 4, 9, 10], at(2025, 12, 27, 13)],
+        [12, 'Bazz Євро 5x7', 'bazЄ 5×7', '1', 3, 2, [1, 1, 11, 12], at(2025, 12, 28)],
+    ].map(([id, name, short_name, additional_fabric_consumption_price, kit_size_id, fabric_type_id, component_ids, created]) => ({
+        id, name, short_name, additional_fabric_consumption_price, kit_size_id, fabric_type_id, component_ids,
+        image: fabric_type_id === 1 ? KIT_IMAGE : '',
+        created,
+    })),
     {
         id: 16,
         name: 'Bazz Сімейний 5x7',
@@ -192,5 +208,27 @@ export const DEMO_KIT_TEMPLATES = [
         component_ids: [1, 1, 9, 10],
         image: '',
         created: at(2026, 1, 5),
+    },
+    {
+        id: 20,
+        name: 'Polikoton Полуторний 7x7',
+        short_name: 'pol1.5 7×7',
+        additional_fabric_consumption_price: '1',
+        kit_size_id: 1,
+        fabric_type_id: 3,
+        component_ids: [4, 4, 7, 8],
+        image: '',
+        created: at(2025, 12, 30),
+    },
+    {
+        id: 21,
+        name: 'Polikoton Євро 7x7',
+        short_name: 'polЄ 7×7',
+        additional_fabric_consumption_price: '1',
+        kit_size_id: 3,
+        fabric_type_id: 3,
+        component_ids: [4, 4, 11, 12],
+        image: '',
+        created: at(2025, 12, 31),
     },
 ].map((k) => ({ ...k, modified: k.created, deleted_at: null }));
