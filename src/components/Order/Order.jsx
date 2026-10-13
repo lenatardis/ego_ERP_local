@@ -7,7 +7,6 @@ import CheckboxList from "./CheckboxList/CheckboxList.jsx";
 import ProtectedImage from "../Common/ProtectedImage/ProtectedImage";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { setIsActivePopup } from "../../store/main-slice.js";
-import SidePopup from "../Common/SidePopup/SidePopup.jsx";
 import { getProfile } from "../../store/selectors";
 import { fetchOrderById, updateOrder } from "../../api/ordersApi";
 import CutterFabricPopup from "./CutterFabricPopup/CutterFabricPopup.jsx";
@@ -407,7 +406,6 @@ const Order = () => {
 
     const [orderData, setOrderData] = useState(routeOrder);
     const [selectedItems, setSelectedItems] = useState([]);
-    const [showSidePopup, setShowSidePopup] = useState(false);
     const [showCutterPopup, setShowCutterPopup] = useState(false);
     const [showWarehouseItemPopup, setShowWarehouseItemPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(!routeOrder && !!routeOrderId);
@@ -634,16 +632,6 @@ const Order = () => {
         order?.kit?.component,
         checkboxArray,
     ]);
-
-    const openSidePopup = () => {
-        setShowSidePopup(true);
-        dispatch(setIsActivePopup(true));
-    };
-
-    const closeSidePopup = () => {
-        setShowSidePopup(false);
-        dispatch(setIsActivePopup(false));
-    };
 
     const openCutterPopup = () => {
         if (!canUpdateOrder) return;
@@ -905,20 +893,6 @@ const Order = () => {
                                 <Clock />
                             </div>
                         </div>
-
-                        <div className={styles.btnBlock}>
-                            <button className={"btnDark"} type="button">
-                                <span>Історія роботи</span>
-                            </button>
-
-                            <button
-                                className={styles.btnGrey}
-                                type="button"
-                                onClick={openSidePopup}
-                            >
-                                <span>Задачі</span>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1135,10 +1109,6 @@ const Order = () => {
                     </div>
                 </div>
             </div>
-
-            {showSidePopup && (
-                <SidePopup title={"Задачі"} onClose={closeSidePopup} />
-            )}
 
             {showCutterPopup && (
                 <CutterFabricPopup

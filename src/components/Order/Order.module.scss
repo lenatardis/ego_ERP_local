@@ -157,12 +157,6 @@
     column-gap: 35px;
   }
 
-  .btnBlock {
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-  }
-
   .grid {
     display: grid;
     grid-template-columns: 2.5fr 1fr;
@@ -396,19 +390,6 @@
 
     div:nth-child(3n + 2) {
       font-weight: 300;
-    }
-  }
-
-  .btnGrey {
-    padding: 8px 50px;
-    border-radius: var(--border-radius-S);
-    background-color: var(--bg-second);
-
-    span {
-      color: var(--text-primary);
-      line-height: 22px;
-      white-space: nowrap;
-      font-size: 14px;
     }
   }
 
