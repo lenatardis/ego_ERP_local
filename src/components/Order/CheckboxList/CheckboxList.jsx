@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './CheckboxList.module.scss';
 
-const CheckboxList = ({array, selectedItems, setSelectedItems}) => {
+const CheckboxList = ({array, selectedItems, setSelectedItems, disabled = false}) => {
 
     const handleChange = (item) => {
         if (selectedItems.some((el) => el.id === item.id)) {
@@ -18,6 +18,7 @@ const CheckboxList = ({array, selectedItems, setSelectedItems}) => {
                     <input
                         type="checkbox"
                         onChange={() => handleChange(item)}
+                        disabled={disabled}
                         checked={selectedItems.some((el) => el.id === item.id)}
                     />
                     <span/>

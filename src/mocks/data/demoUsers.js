@@ -44,7 +44,24 @@ export const findDemoUserByCredentials = (username, password) =>
 export const findDemoUserById = (id) =>
     DEMO_USERS.find((u) => String(u.id) === String(id)) || null;
 
+// Tokens are JWT-shaped (unsigned) because the Orders pages read `user_id` from the access token payload
+// (Orders.helpers.js / Order.jsx getUserIdFromToken), as they did with the original backend's JWTs.
+const base64Url = (value) => btoa(JSON.stringify(value)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const makeDemoJwt = (id, token_type) => `${base64Url({ alg: 'none', typ: 'JWT' })}.${base64Url({ token_type, user_id: Number(id) })}.demo`;
+
 export const makeDemoTokens = (id) => ({
-    access_token: `demo-access-${id}`,
-    refresh_token: `demo-refresh-${id}`,
+    access_token: makeDemoJwt(id, 'access'),
+    refresh_token: makeDemoJwt(id, 'refresh'),
 });
+
+/** User id from a demo token of the given type, or null. Accepts the earlier `demo-<type>-<id>` format too. */
+export const parseDemoToken = (token, token_type) => {
+    const legacy = new RegExp(`^demo-${token_type}-(\\d+)$`).exec(token || '');
+    if (legacy) return legacy[1];
+    try {
+        const payload = JSON.parse(atob(String(token).split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        return payload.token_type === token_type && payload.user_id != null ? String(payload.user_id) : null;
+    } catch {
+        return null;
+    }
+};

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./Order.module.scss";
 import IconUserPlaceholder from "../../assets/icons/user.svg";
@@ -240,6 +240,8 @@ const getCompletionItems = (order) => {
     return ["—"];
 };
 
+const FINISHED_ORDER_STATUSES = ["SHIPMENT_READY", "DELIVERED"];
+
 const getCheckboxItems = (order) => {
     if (Array.isArray(order?.kit?.component) && order.kit.component.length > 0) {
         return order.kit.component.map((component, index) => ({
@@ -411,6 +413,7 @@ const Order = () => {
     const [isLoading, setIsLoading] = useState(!routeOrder && !!routeOrderId);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorText, setErrorText] = useState("");
+    const errorTextRef = useRef(null);
     const [showCompleteWorkPopup, setShowCompleteWorkPopup] = useState(false);
     const [isFinishingWork, setIsFinishingWork] = useState(false);
     const [completeWorkRole, setCompleteWorkRole] = useState("");
@@ -429,6 +432,8 @@ const Order = () => {
 
     const canUpdateOrder = useMemo(() => {
         if (!order || !currentUserId) return false;
+        // Finished orders (ready for shipment / delivered) are read-only.
+        if (FINISHED_ORDER_STATUSES.includes(order?.status)) return false;
 
         if (isCutter) return Number(getWorkerId(order?.cutter)) === Number(currentUserId);
         if (isSewer) return Number(getWorkerId(order?.sewer)) === Number(currentUserId);
@@ -460,6 +465,46 @@ const Order = () => {
         order?.warehouse_item?.is_packed,
     ]);
 
+    const cuttingCosts = Array.isArray(order?.costs) ? order.costs : [];
+
+    // What still has to be done (and saved) before the current role may finish its stage.
+    const completeWorkBlocker = useMemo(() => {
+        if (!order) return "";
+
+        const components = Array.isArray(order?.kit?.component) ? order.kit.component : [];
+        const listMissing = (field) =>
+            components.filter((component) => !component?.[field]).map((component) => component?.name || "—");
+
+        if (isCutter) {
+            return cuttingCosts.length === 0
+                ? "Спочатку покроїть тканину: натисніть «Вибір тканини» та внесіть довжину крою."
+                : "";
+        }
+
+        if (isSewer) {
+            const notSewn = listMissing("is_sewn");
+            return notSewn.length > 0
+                ? `Спочатку позначте всі компоненти як пошиті та натисніть «Внести виконану роботу». Не пошито: ${notSewn.join(", ")}.`
+                : "";
+        }
+
+        if (isPacker) {
+            if (isWarehouseOrder) {
+                if (!hasWarehouseCell) return "Спочатку оберіть товар на складі: натисніть «Вибір товару».";
+                return order.warehouse_item.is_packed
+                    ? ""
+                    : "Спочатку позначте товар як спакований та натисніть «Внести виконану роботу».";
+            }
+
+            const notPacked = listMissing("is_packed");
+            return notPacked.length > 0
+                ? `Спочатку позначте всі компоненти як спаковані та натисніть «Внести виконану роботу». Не спаковано: ${notPacked.join(", ")}.`
+                : "";
+        }
+
+        return "";
+    }, [order, isCutter, isSewer, isPacker, isWarehouseOrder, hasWarehouseCell, cuttingCosts.length]);
+
     const orderNumber = getOrderNumber(order);
     const imageUrl = getImageUrl(order);
     const setSize = getSetSizeValue(order);
@@ -475,7 +520,6 @@ const Order = () => {
     const warehouseCategory = getTextValue(order?.warehouse_item?.category);
     const warehouseColor = getTextValue(order?.warehouse_item?.color);
     const warehouseSize = getTextValue(order?.warehouse_item?.size);
-    const cuttingCosts = Array.isArray(order?.costs) ? order.costs : [];
     const cuttingCostItems = useMemo(() => getCuttingCostItems(order), [order]);
 
 
@@ -635,6 +679,25 @@ const Order = () => {
         dispatch(setIsActivePopup(true));
     };
 
+    const hideCompleteWorkPopupOnError = (text) => {
+        setErrorText(text);
+        setShowCompleteWorkPopup(false);
+        setCompleteWorkRole("");
+        dispatch(setIsActivePopup(false));
+    };
+
+    // The error text is rendered at the top of the page, the action buttons are at the bottom.
+    useEffect(() => {
+        if (!errorText) return undefined;
+
+        // Wait for a closing popup to unmount before scrolling.
+        const timeoutId = setTimeout(() => {
+            errorTextRef.current?.scrollIntoView({ block: "center" });
+        }, 0);
+
+        return () => clearTimeout(timeoutId);
+    }, [errorText]);
+
     const closeCompleteWorkPopup = () => {
         if (isFinishingWork) return;
 
@@ -751,7 +814,7 @@ const Order = () => {
             redirectToMyActiveOrders();
         } catch (error) {
             console.error("Complete cutter work error:", error);
-            setErrorText("Не вдалося завершити роботу та передати замовлення швачці.");
+            hideCompleteWorkPopupOnError("Не вдалося завершити роботу та передати замовлення швачці.");
         } finally {
             setIsFinishingWork(false);
         }
@@ -771,7 +834,7 @@ const Order = () => {
             redirectToMyActiveOrders();
         } catch (error) {
             console.error("Complete sewer work error:", error);
-            setErrorText("Не вдалося завершити роботу та передати замовлення пакувальнику.");
+            hideCompleteWorkPopupOnError("Не вдалося завершити роботу та передати замовлення пакувальнику.");
         } finally {
             setIsFinishingWork(false);
         }
@@ -791,7 +854,7 @@ const Order = () => {
             redirectToMyActiveOrders();
         } catch (error) {
             console.error("Complete packer work error:", error);
-            setErrorText("Не вдалося завершити роботу та перевести замовлення в готовність до відправки.");
+            hideCompleteWorkPopupOnError("Не вдалося завершити роботу та перевести замовлення в готовність до відправки.");
         } finally {
             setIsFinishingWork(false);
         }
@@ -861,7 +924,7 @@ const Order = () => {
             </div>
 
             <div className={styles.order__content}>
-                {errorText ? <p>{errorText}</p> : null}
+                {errorText ? <p ref={errorTextRef} className={styles.errorText}>{errorText}</p> : null}
 
                 <div className={styles.grid}>
                     <div>
@@ -985,6 +1048,7 @@ const Order = () => {
                                         className={"btnDark"}
                                         type="button"
                                         onClick={openCutterPopup}
+                                        disabled={!canUpdateOrder}
                                     >
                                         <span>Вибір тканини</span>
                                     </button>
@@ -1004,6 +1068,7 @@ const Order = () => {
                                         array={checkboxArray}
                                         selectedItems={selectedItems}
                                         setSelectedItems={setSelectedItems}
+                                        disabled={!canUpdateOrder}
                                     />
 
                                     <button
@@ -1113,6 +1178,7 @@ const Order = () => {
                                 : handleCompleteCutterWork
                     }
                     isSubmitting={isFinishingWork}
+                    blockerText={completeWorkBlocker}
                     text={
                         completeWorkRole === "packer"
                             ? "Після завершення дане замовлення буде переведено в готовність до відправки."

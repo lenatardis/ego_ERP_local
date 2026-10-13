@@ -1,5 +1,5 @@
 import { HttpResponse, delay } from 'msw';
-import { findDemoUserById } from '../data/demoUsers';
+import { findDemoUserById, parseDemoToken } from '../data/demoUsers';
 
 // Same paths the API layer uses (src/api/*Api.js API_BASE_URL); the token refresh endpoint
 // lived outside /admin_panel in the original backend.
@@ -9,12 +9,13 @@ export const AUTH_API = '/api/v1';
 // Small artificial latency so loaders / AbortController flows behave as with a real server.
 const LATENCY_MS = 250;
 
-const ACCESS_TOKEN_RE = /^Bearer demo-access-(\d+)$/;
-
 /** The demo user behind the request's bearer token, or null. */
 export const getRequestUser = (request) => {
-    const match = ACCESS_TOKEN_RE.exec(request.headers.get('Authorization') || '');
-    return match ? findDemoUserById(match[1]) : null;
+    const header = request.headers.get('Authorization') || '';
+    // an access token issued before the JWT-shaped format: rejected, so the client refreshes it
+    if (/^Bearer demo-access-/.test(header)) return null;
+    const id = header.startsWith('Bearer ') ? parseDemoToken(header.slice(7), 'access') : null;
+    return id ? findDemoUserById(id) : null;
 };
 
 export const unauthorized = () =>

@@ -7,6 +7,7 @@ const CompleteWorkPopup = ({
     isSubmitting = false,
     title = "Завершення роботи",
     text,
+    blockerText = "",
     confirmText = "Так",
     cancelText = "Ні",
 }) => {
@@ -24,31 +25,52 @@ const CompleteWorkPopup = ({
                     textAlign: "center",
                 }}
             >
-                <h3 style={{ paddingBottom: 0 }}>
-                    Ви дійсно бажаєте завершити роботу?
-                </h3>
+                {blockerText ? (
+                    <>
+                        <h3 style={{ paddingBottom: 0 }}>
+                            Роботу ще не можна завершити
+                        </h3>
 
-                <p>{text}</p>
+                        <p>{blockerText}</p>
 
-                <button
-                    type="button"
-                    className="btnDark"
-                    style={{ width: "200px" }}
-                    onClick={onConfirm}
-                    disabled={isSubmitting}
-                >
-                    <span>{isSubmitting ? "Завершення..." : confirmText}</span>
-                </button>
+                        <button
+                            type="button"
+                            className="btnDark"
+                            style={{ width: "200px" }}
+                            onClick={onClose}
+                        >
+                            <span>Зрозуміло</span>
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <h3 style={{ paddingBottom: 0 }}>
+                            Ви дійсно бажаєте завершити роботу?
+                        </h3>
 
-                <button
-                    type="button"
-                    className="btnLight"
-                    style={{ width: "200px" }}
-                    onClick={onClose}
-                    disabled={isSubmitting}
-                >
-                    <span>{cancelText}</span>
-                </button>
+                        <p>{text}</p>
+
+                        <button
+                            type="button"
+                            className="btnDark"
+                            style={{ width: "200px" }}
+                            onClick={onConfirm}
+                            disabled={isSubmitting}
+                        >
+                            <span>{isSubmitting ? "Завершення..." : confirmText}</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="btnLight"
+                            style={{ width: "200px" }}
+                            onClick={onClose}
+                            disabled={isSubmitting}
+                        >
+                            <span>{cancelText}</span>
+                        </button>
+                    </>
+                )}
             </div>
         </CentralPopup>
     );

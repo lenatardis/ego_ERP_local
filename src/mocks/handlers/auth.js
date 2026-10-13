@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { API, AUTH_API, withAuth, withLatency, notFound } from './utils';
-import { findDemoUserByCredentials, findDemoUserById, makeDemoTokens } from '../data/demoUsers';
+import { findDemoUserByCredentials, findDemoUserById, makeDemoTokens, parseDemoToken } from '../data/demoUsers';
 
 // Response shapes follow what src/api/authApi.js reads:
 //   login   -> profile fields + id + access_token / refresh_token, or { user: [message] } on bad credentials
@@ -24,13 +24,13 @@ export const authHandlers = [
 
     http.post(`${AUTH_API}/users/token/refresh/`, withLatency(async ({ request }) => {
         const { refresh } = await request.json();
-        const match = /^demo-refresh-(\d+)$/.exec(refresh || '');
+        const userId = parseDemoToken(refresh, 'refresh');
 
-        if (!match || !findDemoUserById(match[1])) {
+        if (!userId || !findDemoUserById(userId)) {
             return HttpResponse.json({ detail: 'Token is invalid or expired', code: 'token_not_valid' }, { status: 401 });
         }
 
-        const { access_token, refresh_token } = makeDemoTokens(match[1]);
+        const { access_token, refresh_token } = makeDemoTokens(userId);
         return HttpResponse.json({ access: access_token, refresh: refresh_token });
     })),
 ];

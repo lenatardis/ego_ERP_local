@@ -61,7 +61,8 @@ export const fabricHandlers = [
         return HttpResponse.json({
             count: rolls.length,
             total_pages: Math.max(1, Math.ceil(rolls.length / size)),
-            'fabric-rolls': slice,
+            // `number` is what the cutter's roll picker (Order/CutterFabricPopup) prints for the cell
+            'fabric-rolls': slice.map((r) => ({ ...r, cell: r.cell && { ...r.cell, number: r.cell.number ?? r.cell.name } })),
         });
     })),
 ];
