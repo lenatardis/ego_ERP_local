@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import Preloader from "../../../Common/Preloader/Preloader.jsx";
 import { useNavigate } from "react-router-dom";
+import ArrBack from "../../../Common/ArrBack/ArrBack.jsx";
 
 /* Yup: обов'язкові поля name, type, monoType */
 const schema = Yup.object({
