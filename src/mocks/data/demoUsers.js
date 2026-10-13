@@ -32,10 +32,10 @@ export const DEMO_USERS = [
     makeUser(1, 'Адміністратор (повний доступ)', 'demo_admin', 'Олександр', 'Демченко', [],
         { is_staff: true, is_superuser: true }),
     makeUser(3, 'Бухгалтер', 'demo_accountant', 'Ірина', 'Бондар', ['Бухгалтер']),
-    makeUser(4, 'Складовщик', 'demo_storage', 'Петро', 'Савчук', ['Складовщик']),
     makeUser(5, 'Закрійник', 'demo_cutter', 'Андрій', 'Мельник', ['Закрійник']),
     makeUser(6, 'Швачка', 'demo_seamstress', 'Оксана', 'Ткаченко', ['Швачка']),
     makeUser(8, 'Пакувальник', 'demo_packer', 'Віктор', 'Кравчук', ['Пакувальник']),
+    makeUser(4, 'Складовщик', 'demo_storage', 'Петро', 'Савчук', ['Складовщик']),
 ];
 
 export const findDemoUserByCredentials = (username, password) =>
