@@ -4,7 +4,10 @@
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
 const FABRICS_COUNT = 56;
-const IN_STOCK_COUNT = 8; // only the first fabrics have rolls; the rest are out of stock
+const IN_STOCK_COUNT = 8; // the first fabrics have rolls from the main PRNG (manufacturing seeds rely on them)
+// Most of the other fabrics also have rolls (separate PRNG, so codes and other seed data stay unchanged);
+// every 7th one stays out of stock.
+const isOutOfStock = (index) => index >= IN_STOCK_COUNT && index % 7 === 6;
 
 export const mulberry32 = (seed) => () => {
     seed |= 0;
@@ -135,6 +138,10 @@ for (let i = 0; i < FABRICS_COUNT; i++) {
         if (rand() < 0.75) rolls.push(makeRoll(id, 'OPENED', randInt(1, 9)));
         // every in-stock fabric gets an opened roll; a separate PRNG keeps the rest of the data unchanged
         else rolls.push(makeRoll(id, 'OPENED', randIntExtra(1, 9), randExtra));
+    } else if (!isOutOfStock(i)) {
+        const closedCount = randIntExtra(1, 5);
+        for (let r = 0; r < closedCount; r++) rolls.push(makeRoll(id, 'NEW', randIntExtra(40, 60), randExtra));
+        if (randExtra() < 0.7) rolls.push(makeRoll(id, 'OPENED', randIntExtra(1, 9), randExtra));
     }
     DEMO_FABRIC_ROLLS[id] = rolls;
 

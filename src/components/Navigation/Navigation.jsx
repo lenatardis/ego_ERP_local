@@ -168,7 +168,7 @@ const Navigation = () => {
 
     const visibleNavGroups = allNavGroups.filter((group) => {
         if (isProductionWorker) {
-            return group.id === "production";
+            return group.id === "production" || group.id === "storage";
         }
 
         if (isStorageWorker) {
@@ -187,7 +187,12 @@ const Navigation = () => {
         }
 
         return true;
-    });
+    }).map((group) => (
+        // Production workers only look up stock: no arrivals or vendors.
+        isProductionWorker && group.id === "storage"
+            ? { ...group, links: group.links.filter((link) => link.src === "/storage") }
+            : group
+    ));
 
     const isLinkActive = (link) => {
         const isStorageActive =

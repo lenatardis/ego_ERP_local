@@ -26,9 +26,14 @@ const Orders = () => {
     const location = useLocation();
     const { groups } = useAppSelector(getProfile);
 
-    const [activeTab, setActiveTab] = useState(
-        location.state?.activeTab === "my" ? "my" : "all"
-    );
+    // Production workers start on their own active orders; others (e.g. admin) have no "my" orders.
+    const [activeTab, setActiveTab] = useState(() => {
+        const userGroups = Array.isArray(groups) ? groups : [];
+        const isProductionWorker = ["Закрійник", "Швачка", "Швея", "Пакувальник"]
+            .some((group) => userGroups.includes(group));
+
+        return location.state?.activeTab === "my" || isProductionWorker ? "my" : "all";
+    });
     const [activeOrderType, setActiveOrderType] = useState("kit");
     const [searchValue, setSearchValue] = useState(null);
     const [filterParams, setFilterParams] = useState({
