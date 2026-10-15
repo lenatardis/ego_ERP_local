@@ -107,7 +107,8 @@ const patternSvg = (pattern, [base, accent]) => {
         case 'stripe':
             return `<pattern id="p" width="14" height="10" patternUnits="userSpaceOnUse"><rect width="7" height="10" fill="${accent}" opacity=".35"/></pattern>`;
         case 'sheen':
-            return `<linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".05"/><stop offset=".45" stop-color="#fff" stop-opacity=".45"/><stop offset=".55" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="${accent}" stop-opacity=".4"/></linearGradient>`;
+            // satin weave: fine diagonal floats, no glare
+            return `<pattern id="p" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><rect width="6" height="2" fill="${accent}" opacity=".18"/></pattern>`;
         case 'print':
             return `<pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="6" fill="${accent}" opacity=".7"/><circle cx="10" cy="10" r="2.5" fill="${base}"/><circle cx="30" cy="30" r="8" fill="none" stroke="${accent}" stroke-width="2" opacity=".6"/><path d="M28 6 q6 4 0 10 q-6-4 0-10z" fill="${accent}" opacity=".5"/></pattern>`;
         case 'grid':
@@ -126,11 +127,9 @@ const patternSvg = (pattern, [base, accent]) => {
 
 const makeFabricImage = (pattern, colors) => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">`
-        + `<defs>${patternSvg(pattern, colors)}`
-        + `<linearGradient id="fold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".12"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".6" stop-color="#000" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".1"/></linearGradient></defs>`
+        + `<defs>${patternSvg(pattern, colors)}</defs>`
         + `<rect width="200" height="200" fill="${colors[0]}"/>`
         + `<rect width="200" height="200" fill="url(#p)"/>`
-        + `<rect width="200" height="200" fill="url(#fold)"/>`
         + `</svg>`;
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };

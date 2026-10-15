@@ -47,44 +47,25 @@ export const PRODUCT_SIZES = [
 const colorById = (id) => PRODUCT_COLORS.find(c => c.id === id);
 const sizeById = (id) => PRODUCT_SIZES.find(s => s.id === id);
 
-// colors / sizes are ids; photo -> real photo in public/demo/media/products/ (the rest get a procedural SVG); outOfStock -> every variant has quantity 0 and no units
+// colors / sizes are ids; photo -> public/demo/media/products/<photo>.jpg (the company's own product photos,
+// recolored to the product's first color where there was no original); outOfStock -> every variant has quantity 0 and no units
 const PRODUCT_SPECS = [
-    { name: 'Red Pillow', category: 2, colors: [6], sizes: [3] },
-    { name: 'Ковдра Холофайбер', category: 1, colors: [1, 2], sizes: [8, 9, 10] },
-    { name: 'Ковдра ЕкоПух', category: 1, colors: [1], sizes: [8, 9] },
+    { name: 'Red Pillow', category: 2, colors: [6], sizes: [3], photo: 'red-pillow' },
+    { name: 'Ковдра Холофайбер', category: 1, colors: [1, 2], sizes: [8, 9, 10], photo: 'blanket-holofiber' },
+    { name: 'Ковдра ЕкоПух', category: 1, colors: [1], sizes: [8, 9], photo: 'blanket-ekopukh' },
     { name: 'Ковдра 4 сезони', category: 1, colors: [3, 1], sizes: [8, 9, 10], photo: 'blanket-4-seasons' },
-    { name: 'Подушка 4 сезони', category: 2, colors: [3, 1], sizes: [3, 4] },
+    { name: 'Подушка 4 сезони', category: 2, colors: [3, 1], sizes: [3, 4], photo: 'pillow-4-seasons' },
     { name: 'Подушка Еко Пух', category: 2, colors: [2, 1], sizes: [2, 3, 4], photo: 'pillow-ekopukh' },
-    { name: 'Подушка Літня', category: 2, colors: [4, 7], sizes: [3] },
-    { name: 'Ковдра Літня', category: 1, colors: [4, 7], sizes: [7, 8] },
-    { name: 'Ковдра Дитяча', category: 1, colors: [5, 4], sizes: [5, 6] },
-    { name: 'Подушка Дитяча', category: 2, colors: [5], sizes: [1] },
-    { name: 'Ковдра Бамбук', category: 1, colors: [2], sizes: [9], outOfStock: true },
-    { name: 'Подушка Бамбук', category: 2, colors: [2], sizes: [3, 4], outOfStock: true },
-    { name: 'Ковдра Вовняна', category: 1, colors: [3, 2], sizes: [8, 10] },
-    { name: 'Подушка Анатомічна', category: 2, colors: [3], sizes: [1] },
+    { name: 'Подушка Літня', category: 2, colors: [4, 7], sizes: [3], photo: 'pillow-summer' },
+    { name: 'Ковдра Літня', category: 1, colors: [4, 7], sizes: [7, 8], photo: 'blanket-summer' },
+    { name: 'Ковдра Дитяча', category: 1, colors: [5, 4], sizes: [5, 6], photo: 'blanket-kids' },
+    { name: 'Подушка Дитяча', category: 2, colors: [5], sizes: [1], photo: 'pillow-kids' },
+    { name: 'Ковдра Бамбук', category: 1, colors: [2], sizes: [9], outOfStock: true, photo: 'blanket-bamboo' },
+    { name: 'Подушка Бамбук', category: 2, colors: [2], sizes: [3, 4], outOfStock: true, photo: 'pillow-bamboo' },
+    { name: 'Ковдра Вовняна', category: 1, colors: [3, 2], sizes: [8, 10], photo: 'blanket-wool' },
+    { name: 'Подушка Анатомічна', category: 2, colors: [3], sizes: [1], photo: 'pillow-anatomic' },
     { name: 'Наматрацник Моніка', category: 3, colors: [1], sizes: [11, 12], photo: 'mattress-protector-monika' },
 ];
-
-// ---- Product "photos": small procedural SVGs (quilted blanket / puffy pillow) ----
-
-const makeProductImage = (categoryId, color) => {
-    const body = categoryId === 1
-        // blanket: folded quilt with diamond stitching
-        ? `<pattern id="q" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0H22M0 0V22" stroke="#000" stroke-opacity=".18" stroke-width="1" stroke-dasharray="3 2"/></pattern></defs>`
-          + `<rect x="22" y="40" width="156" height="120" rx="10" fill="${color}" stroke="#000" stroke-opacity=".15"/>`
-          + `<rect x="22" y="40" width="156" height="120" rx="10" fill="url(#q)"/>`
-          + `<path d="M22 118 H178" stroke="#000" stroke-opacity=".2" stroke-width="2"/>`
-          + `<rect x="22" y="118" width="156" height="42" rx="10" fill="#000" fill-opacity=".06"/>`
-        // pillow: puffy cushion with pinched corners and a centre highlight
-        : `<radialGradient id="h" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient></defs>`
-          + `<path d="M30 45 Q100 62 170 45 Q155 100 170 155 Q100 138 30 155 Q45 100 30 45Z" fill="${color}" stroke="#000" stroke-opacity=".18"/>`
-          + `<path d="M30 45 Q100 62 170 45 Q155 100 170 155 Q100 138 30 155 Q45 100 30 45Z" fill="url(#h)"/>`;
-
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">`
-        + `<rect width="200" height="200" fill="#f4f1f7"/><defs>${body}</svg>`;
-    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-};
 
 // ---- Generation ----
 
@@ -137,9 +118,7 @@ export const DEMO_PRODUCTS = PRODUCT_SPECS.map((spec, i) => {
         id: i + 1,
         name: spec.name,
         category,
-        images: [spec.photo
-            ? `${import.meta.env.BASE_URL}demo/media/products/${spec.photo}.jpg`
-            : makeProductImage(category.id, colorById(spec.colors[0]).hex)],
+        images: [`${import.meta.env.BASE_URL}demo/media/products/${spec.photo}.jpg`],
         types,
     };
 });
