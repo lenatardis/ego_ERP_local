@@ -94,10 +94,10 @@ const addCost = (owner, id, { unitUah, qty, laborUah, packUah, material, hasArri
 
 // finished products: bought / sewn per piece, raw material = one unit
 DEMO_PRODUCTS.forEach((product) => {
-    const isBlanket = product.category.id === 1;
+    const isPillow = product.category.id === 2; // blankets and mattress protectors are priced by area alike
     product.types.forEach((type) => {
         const area = (type.size.width * type.size.length) / 10000;
-        const unitUah = Math.round((isBlanket ? 260 + area * 230 : 150 + area * 600) + randInt(-30, 30));
+        const unitUah = Math.round((isPillow ? 150 + area * 600 : 260 + area * 230) + randInt(-30, 30));
         const outOfStock = !type.units.length && type.quantity === 0;
         addCost('warehouse_item_type', type.id, {
             unitUah,

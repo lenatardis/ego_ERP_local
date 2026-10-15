@@ -135,6 +135,16 @@ const makeFabricImage = (pattern, colors) => {
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };
 
+// ---- Real photos (public/demo/media/fabrics/) for the first fabrics: [code, tag id] ----
+// The photo file name is the fabric code, as in the original panel; the rest use the procedural textures.
+
+const DEMO_MEDIA_URL = `${import.meta.env.BASE_URL}demo/media`;
+
+const FABRIC_PHOTOS = [
+    ['1M', 23], ['10M', 46], ['3M', 48], ['829Z', 20], ['8M', 24], ['9M', 21],
+    ['12M', 7], ['2M', 39], ['4M', 49], ['7M', 22], ['11M', 46],
+];
+
 // ---- Generation ----
 
 const CODE_CHARS = '0123456789ABCDEFGHJKLMNPRSTUVWXYZ';
@@ -198,15 +208,20 @@ for (let i = 0; i < FABRICS_COUNT; i++) {
     const newRolls = rolls.filter(r => r.status === 'NEW');
     const openedRolls = rolls.filter(r => r.status === 'OPENED');
 
+    // generated values are always drawn, so the PRNG sequence (and the rest of the seed data) stays unchanged
+    const code = makeCode(usedCodes);
+    const tag = pick(FABRIC_TAGS).id;
+    const photo = FABRIC_PHOTOS[i];
+
     DEMO_FABRICS.push({
         id,
-        name: makeCode(usedCodes),
+        name: photo ? photo[0] : code,
         description: '',
         type: { id: type.id, type: type.type },
-        tags: [pick(FABRIC_TAGS).id],
+        tags: [photo ? photo[1] : tag],
         mono_fabric_type: pick(MONO_TYPES),
         is_available: true,
-        images: [makeFabricImage(type.pattern, colors)],
+        images: [photo ? `${DEMO_MEDIA_URL}/fabrics/${photo[0]}.jpg` : makeFabricImage(type.pattern, colors)],
         opened_length_remainder: (openedRolls.reduce((s, r) => s + r.current_length, 0)),
         new_fabricrolls_remainder: newRolls.length,
         new_length_remainder: (newRolls.reduce((s, r) => s + r.current_length, 0)),

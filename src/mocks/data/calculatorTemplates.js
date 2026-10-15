@@ -11,47 +11,28 @@ import { toIso } from './vendors';
 
 const at = (y, m, d, h = 10, min = 0) => toIso(new Date(y, m - 1, d, h, min, 0));
 
-// ---- "Photos": small procedural SVGs (pillowcase / sheet / duvet cover / kit) ----
+// ---- Photos (public/demo/media/) ----
 
-const svgUrl = (body) => {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">`
-        + `<rect width="200" height="200" fill="#f4f1f7"/>${body}</svg>`;
-    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-};
+const media = (path) => `${import.meta.env.BASE_URL}demo/media/${path}.jpg`;
 
-const pillowPath = (x, y, w, h) =>
-    `M${x} ${y} Q${x + w / 2} ${y + h * 0.15} ${x + w} ${y} Q${x + w - w * 0.08} ${y + h / 2} ${x + w} ${y + h}`
-    + ` Q${x + w / 2} ${y + h * 0.85} ${x} ${y + h} Q${x + w * 0.08} ${y + h / 2} ${x} ${y}Z`;
-
-const pillowSvg = (x, y, w, h, color) =>
-    `<path d="${pillowPath(x, y, w, h)}" fill="${color}" stroke="#000" stroke-opacity=".15"/>`
-    + `<path d="${pillowPath(x, y, w, h)}" fill="url(#h)"/>`;
-
-const HIGHLIGHT = `<defs><radialGradient id="h" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient></defs>`;
-
-// two stacked pillows
-const PILLOWCASE_IMAGE = svgUrl(HIGHLIGHT + pillowSvg(40, 40, 120, 80, '#ffffff') + pillowSvg(30, 85, 130, 85, '#fbfbfd'));
-
-// folded sheet: a stack of white layers
-const SHEET_IMAGE = svgUrl(
-    [0, 1, 2, 3].map((i) =>
-        `<rect x="${35 - i * 2}" y="${55 + i * 22}" width="${130 + i * 4}" height="30" rx="6" fill="#fff" stroke="#000" stroke-opacity=".12"/>`
-    ).join('')
-);
-
-// folded duvet cover on a bed: dusty pink with a turned-down edge
-const DUVET_IMAGE = svgUrl(
-    `<rect x="20" y="60" width="160" height="110" rx="8" fill="#d9b8bd" stroke="#000" stroke-opacity=".12"/>`
-    + `<rect x="20" y="60" width="160" height="28" rx="8" fill="#ead3d6"/>`
-    + `<path d="M20 88 H180" stroke="#000" stroke-opacity=".15"/>`
-    + `<path d="M50 120 q20 -8 40 0 t40 0 t40 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>`
-    + HIGHLIGHT + pillowSvg(35, 35, 60, 38, '#f2e4e6') + pillowSvg(105, 35, 60, 38, '#f2e4e6')
-);
-
-// kit "photo": a red satin cushion
-const KIT_IMAGE = svgUrl(HIGHLIGHT + pillowSvg(35, 35, 130, 130, '#d0111c'));
+const PILLOWCASE_IMAGE = media('component-types/pillowcase');
+const SHEET_IMAGE = media('component-types/sheet');
+const DUVET_IMAGE = media('component-types/duvet-cover');
 
 const TYPE_IMAGES = { 1: PILLOWCASE_IMAGE, 2: SHEET_IMAGE, 3: DUVET_IMAGE };
+
+// the 5x7 / 7x7 components have their own photos; the other sizes show their type's photo
+const SIZED_COMPONENT_IMAGES = {
+    1: { '5×7': media('components/pillowcase-5x7'), '7×7': media('components/pillowcase-7x7') },
+    2: { '5×7': media('components/sheet'), '7×7': media('components/sheet') },
+    3: { '5×7': media('components/duvet-cover'), '7×7': media('components/duvet-cover') },
+};
+const componentImage = (type_id, size) => SIZED_COMPONENT_IMAGES[type_id][size] ?? TYPE_IMAGES[type_id];
+
+// satin kits show the satin photo of their pillowcase size; other fabrics have no photo
+const kitImage = (name) => (!name.startsWith('Satin') ? ''
+    : name.endsWith('5x7') ? media('kits/satin-5x7')
+        : name.endsWith('7x7') ? media('kits/satin-7x7') : '');
 
 // ---- CRM fabric types (GET /api/v1/products/type/), shared with the Ego CRM demo ----
 
@@ -93,6 +74,7 @@ export const DEMO_KIT_OPTION_TEMPLATES = [
     { id: 1, name: 'Подарункове пакування', description: 'Комплект у подарунковій коробці зі стрічкою', image: '', part_ids: [], created: at(2026, 1, 12) },
     { id: 2, name: 'Сумка-чохол', description: 'Тканинна сумка для зберігання комплекту', image: '', part_ids: [1], created: at(2026, 1, 14) },
     { id: 3, name: 'Прокладка', description: '', image: '', part_ids: [], created: at(2026, 1, 16) },
+    { id: 4, name: 'Чохол на матрац', description: 'Стьобаний чохол на матрац з тканини комплекту', image: media('kit-options/mattress-cover'), part_ids: [], created: at(2026, 1, 20) },
 ].map((o) => ({ ...o, modified: o.created, deleted_at: null }));
 
 // ---- Компоненти. Shown newest-created first: 6, 5, 11, 12, 9, 7, 10, 8, 4, 3, 2, 1 ----
@@ -122,7 +104,7 @@ export const DEMO_COMPONENT_TEMPLATES = COMPONENT_SPECS.map(([id, name, short_na
     fabric_type_id: 1, // сатин
     fabric_a_count: 1,
     fabric_b_count: 1,
-    image: TYPE_IMAGES[type_id],
+    image: componentImage(type_id, size),
     created: at(2025, 12, 15, 9 + i),
     modified: at(2025, 12, 15, 9 + i),
     deleted_at: null,
@@ -157,7 +139,7 @@ export const DEMO_KIT_TEMPLATES = [
         kit_size_id: 1,
         fabric_type_id: 1,
         component_ids: [1, 1, 7, 8],
-        image: KIT_IMAGE,
+        image: kitImage('Satin Полуторний 5x7'),
         created: at(2025, 12, 22),
     },
     {
@@ -168,7 +150,7 @@ export const DEMO_KIT_TEMPLATES = [
         kit_size_id: 1,
         fabric_type_id: 1,
         component_ids: [4, 4, 7, 8],
-        image: KIT_IMAGE,
+        image: kitImage('Satin Полуторний 7x7'),
         created: at(2025, 12, 23),
     },
     // [id, name, short_name, additional_fabric_consumption_price, kit_size_id, fabric_type_id, component_ids, created]
@@ -184,7 +166,7 @@ export const DEMO_KIT_TEMPLATES = [
         [12, 'Bazz Євро 5x7', 'bazЄ 5×7', '1', 3, 2, [1, 1, 11, 12], at(2025, 12, 28)],
     ].map(([id, name, short_name, additional_fabric_consumption_price, kit_size_id, fabric_type_id, component_ids, created]) => ({
         id, name, short_name, additional_fabric_consumption_price, kit_size_id, fabric_type_id, component_ids,
-        image: fabric_type_id === 1 ? KIT_IMAGE : '',
+        image: kitImage(name),
         created,
     })),
     {

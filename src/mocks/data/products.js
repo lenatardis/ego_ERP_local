@@ -12,6 +12,7 @@ const pick = (arr) => arr[Math.floor(rand() * arr.length)];
 export const PRODUCT_CATEGORIES = [
     { id: 1, name: 'Ковдра' },
     { id: 2, name: 'Подушка' },
+    { id: 3, name: 'Наматрацник' },
 ];
 
 // `name` is shown to users (filters, location popup); `hex` is the swatch color rendered by ColorRow.
@@ -38,19 +39,22 @@ export const PRODUCT_SIZES = [
     { id: 8, width: 140, length: 205 },
     { id: 9, width: 172, length: 205 },
     { id: 10, width: 200, length: 220 },
+    // mattress protectors
+    { id: 11, width: 160, length: 200 },
+    { id: 12, width: 180, length: 200 },
 ];
 
 const colorById = (id) => PRODUCT_COLORS.find(c => c.id === id);
 const sizeById = (id) => PRODUCT_SIZES.find(s => s.id === id);
 
-// colors / sizes are ids; outOfStock -> every variant has quantity 0 and no units
+// colors / sizes are ids; photo -> real photo in public/demo/media/products/ (the rest get a procedural SVG); outOfStock -> every variant has quantity 0 and no units
 const PRODUCT_SPECS = [
     { name: 'Red Pillow', category: 2, colors: [6], sizes: [3] },
     { name: 'Ковдра Холофайбер', category: 1, colors: [1, 2], sizes: [8, 9, 10] },
     { name: 'Ковдра ЕкоПух', category: 1, colors: [1], sizes: [8, 9] },
-    { name: 'Ковдра 4 сезони', category: 1, colors: [3, 1], sizes: [8, 9, 10] },
+    { name: 'Ковдра 4 сезони', category: 1, colors: [3, 1], sizes: [8, 9, 10], photo: 'blanket-4-seasons' },
     { name: 'Подушка 4 сезони', category: 2, colors: [3, 1], sizes: [3, 4] },
-    { name: 'Подушка Еко Пух', category: 2, colors: [2, 1], sizes: [2, 3, 4] },
+    { name: 'Подушка Еко Пух', category: 2, colors: [2, 1], sizes: [2, 3, 4], photo: 'pillow-ekopukh' },
     { name: 'Подушка Літня', category: 2, colors: [4, 7], sizes: [3] },
     { name: 'Ковдра Літня', category: 1, colors: [4, 7], sizes: [7, 8] },
     { name: 'Ковдра Дитяча', category: 1, colors: [5, 4], sizes: [5, 6] },
@@ -59,6 +63,7 @@ const PRODUCT_SPECS = [
     { name: 'Подушка Бамбук', category: 2, colors: [2], sizes: [3, 4], outOfStock: true },
     { name: 'Ковдра Вовняна', category: 1, colors: [3, 2], sizes: [8, 10] },
     { name: 'Подушка Анатомічна', category: 2, colors: [3], sizes: [1] },
+    { name: 'Наматрацник Моніка', category: 3, colors: [1], sizes: [11, 12], photo: 'mattress-protector-monika' },
 ];
 
 // ---- Product "photos": small procedural SVGs (quilted blanket / puffy pillow) ----
@@ -132,7 +137,9 @@ export const DEMO_PRODUCTS = PRODUCT_SPECS.map((spec, i) => {
         id: i + 1,
         name: spec.name,
         category,
-        images: [makeProductImage(category.id, colorById(spec.colors[0]).hex)],
+        images: [spec.photo
+            ? `${import.meta.env.BASE_URL}demo/media/products/${spec.photo}.jpg`
+            : makeProductImage(category.id, colorById(spec.colors[0]).hex)],
         types,
     };
 });
