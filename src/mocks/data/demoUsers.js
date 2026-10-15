@@ -35,7 +35,7 @@ export const DEMO_USERS = [
     makeUser(5, 'Закрійник', 'demo_cutter', 'Андрій', 'Мельник', ['Закрійник']),
     makeUser(6, 'Швачка', 'demo_seamstress', 'Оксана', 'Ткаченко', ['Швачка']),
     makeUser(8, 'Пакувальник', 'demo_packer', 'Віктор', 'Кравчук', ['Пакувальник']),
-    makeUser(4, 'Складовщик', 'demo_storage', 'Петро', 'Савчук', ['Складовщик']),
+    makeUser(4, 'Комірник (менеджер складу)', 'demo_storage', 'Петро', 'Савчук', ['Комірник']),
 ];
 
 export const findDemoUserByCredentials = (username, password) =>

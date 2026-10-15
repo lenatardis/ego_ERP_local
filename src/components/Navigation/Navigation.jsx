@@ -114,7 +114,7 @@ const Navigation = () => {
     const isSewer = userGroups.includes("Швачка") || userGroups.includes("Швея");
     const isPacker = userGroups.includes("Пакувальник");
 
-    const isStorageWorker = userGroups.includes("Складовщик");
+    const isStorageWorker = userGroups.includes("Комірник");
     const isAccountant = userGroups.includes("Бухгалтер");
     const isManager = userGroups.includes("Менеджер");
 
@@ -174,7 +174,7 @@ const Navigation = () => {
         if (isStorageWorker) {
             return group.id === "storage";
 
-            // Якщо все ж таки складовщик має бачити ще й виробництво:
+            // Якщо все ж таки комірник має бачити ще й виробництво:
             // return group.id === "storage" || group.id === "production";
         }
 
