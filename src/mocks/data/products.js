@@ -4,6 +4,7 @@
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
 import { mulberry32 } from './fabrics';
+import { WAREHOUSES, unitCellAt } from './warehouse';
 
 const rand = mulberry32(19031987);
 const randInt = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
@@ -69,14 +70,9 @@ const PRODUCT_SPECS = [
 
 // ---- Generation ----
 
-const WAREHOUSES = [
-    { id: 1, name: 'Основний склад' },
-    { id: 2, name: 'Склад №2' },
-];
-const RACKS = WAREHOUSES.flatMap((w, wi) =>
-    ['D', 'E'].map((letter, ri) => ({ id: wi * 10 + ri + 1, name: letter, warehouse: w })));
+// units are kept on racks D–E of the shared warehouse structure (src/mocks/data/warehouse.js)
+const RACKS = WAREHOUSES.flatMap((w) => ['D', 'E'].map((name) => ({ name, warehouse: w })));
 
-let nextCellId = 1;
 let nextUnitId = 1;
 let nextTypeId = 1;
 
@@ -88,10 +84,12 @@ const makeUnits = (quantity) => {
     for (let i = 0; i < parts; i++) {
         const q = i === parts - 1 ? left : randInt(1, left - (parts - i - 1));
         left -= q;
+        const cellNumber = randInt(1, 20);
+        const rack = pick(RACKS);
         units.push({
             id: nextUnitId++,
             current_quantity: q,
-            cell: { id: nextCellId++, number: randInt(1, 20), rack: pick(RACKS) },
+            cell: unitCellAt(rack.warehouse.id, rack.name, cellNumber),
         });
     }
     return units;

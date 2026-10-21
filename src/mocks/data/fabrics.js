@@ -3,6 +3,8 @@
 // EditableFabricTable.jsx and NewFabric.jsx; served by src/mocks/handlers/fabrics.js.
 // Data is generated with a seeded PRNG so it is identical on every reload.
 
+import { WAREHOUSES, rollCellAt } from './warehouse';
+
 const FABRICS_COUNT = 56;
 const IN_STOCK_COUNT = 8; // the first fabrics have rolls from the main PRNG (manufacturing seeds rely on them)
 // Most of the other fabrics also have rolls (separate PRNG, so codes and other seed data stay unchanged);
@@ -159,24 +161,28 @@ const makeCode = (used) => {
     return code;
 };
 
-const WAREHOUSES = [
-    { id: 1, name: 'Основний склад' },
-    { id: 2, name: 'Склад №2' },
-];
-const RACKS = WAREHOUSES.flatMap((w, wi) =>
-    ['A', 'B', 'C'].map((letter, ri) => ({ id: wi * 10 + ri + 1, name: letter, warehouse: w })));
+// rolls are kept on racks A–C of the shared warehouse structure (src/mocks/data/warehouse.js)
+const RACKS = WAREHOUSES.flatMap((w) => ['A', 'B', 'C'].map((name) => ({ name, warehouse: w })));
 
 let nextRollId = 1;
 const makeRoll = (fabricId, status, length, rng = rand) => {
     const rack = pick(RACKS, rng);
-    const cellId = randInt(1, 12, rng);
+    const cellNumber = randInt(1, 12, rng);
     return {
         id: nextRollId++,
         fabric: fabricId,
         status,
         current_length: Math.round(length),
-        cell: { id: cellId, name: String(cellId), rack },
+        cell: rollCellAt(rack.warehouse.id, rack.name, cellNumber),
     };
+};
+
+/** Storage remainders of a fabric, derived from its rolls (also after arrivals / cutting change them). */
+export const recountFabricRemainders = (fabric, rolls) => {
+    const newRolls = rolls.filter((r) => r.status === 'NEW');
+    fabric.opened_length_remainder = rolls.filter((r) => r.status === 'OPENED').reduce((s, r) => s + r.current_length, 0);
+    fabric.new_fabricrolls_remainder = newRolls.length;
+    fabric.new_length_remainder = newRolls.reduce((s, r) => s + r.current_length, 0);
 };
 
 const usedCodes = new Set();

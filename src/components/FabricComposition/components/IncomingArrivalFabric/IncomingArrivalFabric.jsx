@@ -388,7 +388,7 @@ const IncomingArrivalFabric = () => {
             const capacityInfo = fabrics.capacityValidationInfo;
 
             if (capacityInfo?.hasErrors) {
-                setBannerMsg('Перевірте кількість у тканинах, де в комірці на складі перевищено доступну місткість');
+                setBannerMsg(`Перевірте кількість у тканинах, де в комірці на складі перевищено доступну місткість${getCapacityMaxText(capacityInfo.violations)}`);
                 setPendingCapacityPopupInfo(capacityInfo);
             } else {
                 setBannerMsg(FAIL_BANNER);
@@ -547,6 +547,15 @@ const IncomingArrivalFabric = () => {
         return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(2)));
     };
 
+    // " (максимум N)" для однієї комірки, або максимум по кожній комірці, якщо їх кілька
+    const getCapacityMaxText = (violations = []) => {
+        if (!violations.length) return '';
+        if (violations.length === 1) return ` (максимум ${formatCapacityNumber(violations[0].capacityLimit)})`;
+        return ` (максимум: ${violations
+            .map(item => `${item.cellLabel} — ${formatCapacityNumber(item.capacityLimit)}`)
+            .join('; ')})`;
+    };
+
     const handleCapacityValidationChange = (info) => {
         setCapacityValidationInfo(info || {
             hasErrors: false,
@@ -591,18 +600,18 @@ const IncomingArrivalFabric = () => {
                 return;
             }
 
-            if (mode === 'edit') {
-                fabricRef.current?.loadFromEditAndRecalc?.(resp.fabric_rolls || []);
-            }
-
-            if (mode === 'create') {
+            if (mode === 'edit' || mode === 'create') {
                 navigate('/arrivalList');
             }
         } catch (e) {
             console.log(e);
+            // причина відмови від бекенду (400): { поле: [повідомлення] }
+            const reasons = Object.values(e?.data || {}).flat().filter(m => typeof m === 'string');
             setBannerMsg(
-                'Вибачте, здається, щось пішло не так.' +
-                ' Повторіть, будь ласка, спробу пізніше.'
+                reasons.length
+                    ? `Вибачте, здається, щось пішло не так. Накладну не збережено:\n${reasons.join('\n')}`
+                    : 'Вибачте, здається, щось пішло не так.' +
+                    ' Повторіть, будь ласка, спробу пізніше.'
             );
         } finally {
             setIsLoading(false);
@@ -845,7 +854,7 @@ const IncomingArrivalFabric = () => {
                 </div>
                 {!isReadonly && capacityValidationInfo?.hasErrors && (
                     <div className={styles.bannerError}>
-                        <strong>Перевірте (чи за бажанням перерозподіліть) кількість у рядках, де в комірках на складі перевищено доступну місткість.</strong>
+                        <strong>Перевірте (чи за бажанням перерозподіліть) кількість у рядках, де в комірках на складі перевищено доступну місткість{getCapacityMaxText(capacityValidationInfo.violations)}.</strong>
                         <div style={{ paddingBottom: '8px', whiteSpace: 'pre-line' }}>
                             {capacityValidationInfo.summaryText}
                         </div>

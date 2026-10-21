@@ -338,31 +338,35 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
         })();
     }, []);
 
+    // дерево складу з поточною вільною місткістю комірок; null — якщо не вдалося завантажити
+    const loadWarehouseTree = async () => {
+        try {
+            const token = getAccessToken();
+            const data = await fetchWarehouseStructure(token);
+            return (data || []).map(w => ({
+                id: w.id,
+                name: w.name,
+                racks: (w.racks || []).map(r => ({
+                    id: r.id,
+                    name: String(r.name ?? ''),
+                    cells: (r.cells || []).map(c => ({
+                        id: c.id,
+                        name: String(c.number ?? ''),
+                        initialCapacity: c.initial_capacity,
+                        remainingCapacity: c.remaining_capacity,
+                    })),
+                })),
+            }));
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    };
+
     useEffect(() => {
         (async () => {
-            try {
-                const token = getAccessToken();
-                const data = await fetchWarehouseStructure(token);
-                const normalized = (data || []).map(w => ({
-                    id: w.id,
-                    name: w.name,
-                    racks: (w.racks || []).map(r => ({
-                        id: r.id,
-                        name: String(r.name ?? ''),
-                        cells: (r.cells || []).map(c => ({
-                            id: c.id,
-                            name: String(c.number ?? ''),
-                            initialCapacity: c.initial_capacity,
-                            remainingCapacity: c.remaining_capacity,
-                        })),
-                    })),
-                }));
-                setWhTree(normalized);
-            } catch (e) {
-                console.error(e);
-            } finally {
-
-            }
+            const tree = await loadWarehouseTree();
+            if (tree) setWhTree(tree);
         })();
     }, []);
 
@@ -1219,9 +1223,13 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
         setRows(mapped.length ? mapped : [emptyRow(false)]);
     };
 
-    const loadFromEditAndRecalc = (fabric_rolls = []) => {
+    // після збереження: нова "раніше збережена" кількість рядків рахується разом з оновленою
+    // вільною місткістю комірок, інакше ліміт (вільно + збережено) зменшувався б після кожного збереження
+    const loadFromEditAndRecalc = async (fabric_rolls = []) => {
         const mapped = (fabric_rolls || []).map(mapEditFabricRollToRow);
         const preparedRows = mapped.length ? mapped : [emptyRow(false)];
+        const tree = await loadWarehouseTree();
+        if (tree) setWhTree(tree);
         setRows(recalcRowsByExchangeRate(preparedRows, exchangeRate));
     };
 
@@ -1556,7 +1564,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                             </h3>
 
                             <p style={{ margin: 0 }}>
-                                Для <strong>{capacityPopupInfo.cellLabel}</strong> перевищено сумарну допустиму кількість.
+                                Для <strong>{capacityPopupInfo.cellLabel}</strong> перевищено сумарну допустиму кількість (максимум <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>).
                             </p>
 
                            {mode !== 'edit' && (<p style={{ margin: 0 }}>

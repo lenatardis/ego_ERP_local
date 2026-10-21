@@ -253,31 +253,35 @@ const EditableProductTable = ({ mode = 'create', exchangeRate, readOnly = false,
         })();
     }, []);
 
-    // склад дерево
+    // склад дерево з поточною вільною місткістю комірок; null — якщо не вдалося завантажити
+    const loadWarehouseTree = async () => {
+        try {
+            const token = getAccessToken();
+            const data = await fetchWarehouseStructure(token);
+            return (data || []).map(w => ({
+                id: w.id,
+                name: w.name,
+                racks: (w.racks || []).map(r => ({
+                    id: r.id,
+                    name: String(r.name ?? ''),
+                    cells: (r.cells || []).map(c => ({
+                        id: c.id,
+                        name: String(c.number ?? ''),
+                        initialCapacity: c.initial_capacity,
+                        remainingCapacity: c.remaining_capacity
+                    })),
+                })),
+            }));
+        } catch (e) {
+            console.error('warehouse tree fetch failed', e);
+            return null;
+        }
+    };
+
     useEffect(() => {
         (async () => {
-            try {
-                const token = getAccessToken();
-                const data = await fetchWarehouseStructure(token);
-                const normalized = (data || []).map(w => ({
-                    id: w.id,
-                    name: w.name,
-                    racks: (w.racks || []).map(r => ({
-                        id: r.id,
-                        name: String(r.name ?? ''),
-                        cells: (r.cells || []).map(c => ({
-                            id: c.id,
-                            name: String(c.number ?? ''),
-                            initialCapacity: c.initial_capacity,
-                            remainingCapacity: c.remaining_capacity
-                        })),
-                    })),
-                }));
-                setWhTree(normalized);
-            } catch (e) {
-                console.error('warehouse tree fetch failed', e);
-                setWhTree([]);
-            }
+            const tree = await loadWarehouseTree();
+            setWhTree(tree || []);
         })();
     }, []);
 
@@ -1217,7 +1221,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
         };
     };
 
-    const loadFromEditAndRecalc = (templates = []) => {
+    const loadFromEditAndRecalc = async (templates = []) => {
         const mapped = (templates || []).map(t => {
             const row = emptyRow(true);
             row.isPersisted = true;
@@ -1263,6 +1267,10 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
         });
 
         const preparedRows = mapped.length ? mapped : [emptyRow(false)];
+        // після збереження: нова "раніше збережена" кількість рахується разом з оновленою
+        // вільною місткістю комірок, інакше ліміт (вільно + збережено) зменшувався б після кожного збереження
+        const tree = await loadWarehouseTree();
+        if (tree) setWhTree(tree);
         setRows(recalcRowsByExchangeRate(preparedRows, exchangeRate));
     };
 
@@ -1735,7 +1743,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                             </h3>
 
                             <p style={{ margin: 0 }}>
-                                Для <strong>{capacityPopupInfo.cellLabel}</strong> перевищено сумарну допустиму кількість.
+                                Для <strong>{capacityPopupInfo.cellLabel}</strong> перевищено сумарну допустиму кількість (максимум <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>).
                             </p>
 
                             {mode !== 'edit' && (

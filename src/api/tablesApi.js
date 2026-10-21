@@ -310,6 +310,22 @@ export const deleteVendor = async (token, id) => {
     }
 };
 
+// 400 on saving an arrival: the backend's reason ({ field: [message] }) travels with the error as `error.data`
+const throwArrivalValidationError = async (response) => {
+    if (response.status !== 400) return;
+
+    let errorData = null;
+    try {
+        errorData = await response.clone().json();
+    } catch {
+        errorData = null;
+    }
+
+    const error = new Error(`HTTP error! Status: ${response.status}`);
+    error.data = errorData;
+    throw error;
+};
+
 export const createFabricArrival = async (token, payload) => {
     try {
         const response = await fetch(
@@ -324,6 +340,8 @@ export const createFabricArrival = async (token, payload) => {
                 body: JSON.stringify(payload),
             }
         );
+
+        await throwArrivalValidationError(response);
 
         return await handleResponse(response, (newToken) =>
             createFabricArrival(newToken, payload)
@@ -396,6 +414,7 @@ export const editSpecificArrival = async (token, id, payload) => {
         console.log('[API PATCH] Body:', body);
 
         const response = await fetch(url, {method: 'PATCH', headers, body});
+        await throwArrivalValidationError(response);
         return await handleResponse(response, (newToken) =>
             editSpecificArrival(newToken, id, payload)
         );
