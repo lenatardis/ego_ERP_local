@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 const SHARED_PATHS = [
     'src/mocks/shared/seed.js',
     'src/mocks/shared/catalog',
+    'src/mocks/shared/mswRecovery.js',
     'public/demo/customer-receipt.svg',
     'public/demo/media',
     'scripts/same-origin.mjs',

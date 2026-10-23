@@ -3,9 +3,11 @@
 // Requests without a handler are reported in the console and are not mocked.
 import { setupWorker } from 'msw/browser';
 import { handlers } from './handlers';
+import { keepMocking } from './shared/mswRecovery';
 
 export const worker = setupWorker(...handlers);
 
+// keepMocking: re-activates mocking after the browser stopped the idle worker (./shared/mswRecovery.js)
 export const startMockBackend = () =>
     worker.start({
         // BASE_URL keeps the worker reachable when the app is served from a sub-path (e.g. GitHub Pages)
@@ -15,4 +17,7 @@ export const startMockBackend = () =>
             const path = frame.request ? new URL(frame.request.url).pathname : '';
             if (path.includes('/api/v1/')) defaults.warn();
         },
+    }).then((result) => {
+        keepMocking();
+        return result;
     });
