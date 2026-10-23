@@ -297,7 +297,7 @@ const Navigation = () => {
 
             <div className={styles.logout}>
                 <a
-                    href="https://dev.egodevelopment.pp.ua/"
+                    href="/ego_CRM_local/"
                     className={'btnDark'}
                     target="_blank"
                     rel="noopener noreferrer"
