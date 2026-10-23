@@ -1460,7 +1460,6 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
 
                                         {!isLocked
                                             && !readOnly
-                                            && productNameBlurred[ri]
                                             && row.template.name?.trim()?.length >= 2
                                             && !row.template?.id
                                             && !productLoading[ri]
