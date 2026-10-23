@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toBoolOrUndefined, paginate, notFound } from './utils';
-import { getCollection, saveCollection, nextId } from '../db';
+import { getCollection, getSharedCollection, saveCollection, saveSharedCollection, nextId } from '../db';
 import { DEMO_PRICELISTS, DEMO_SOURCES } from '../data/pricelists';
 import { priceCountFor } from './prices';
 import { toIso } from '../data/vendors';
@@ -18,20 +18,23 @@ import { loadSharedOrders } from '../data/crmShared';
 //          -> 204, or 400 { error: "Ви дійсно хочете ..." } while the source is used by orders
 // Deletes are soft (deleted_at). A source keeps pointing to a deleted pricelist and gets it with its
 // deleted_at, which Sources.jsx shows as "—". Changes are persisted in the visitor's browser (src/mocks/db.js).
+// Sources are shared with the CRM demo (../../../CLAUDE.md, "Cross-app contract"): the ERP owns and edits them, the
+// CRM reads them (its order source list, order display and prices), so they live in the shared store and are
+// re-read on every request. Pricelists and prices stay ERP-private.
 
 const PRICELISTS = 'pricelists';
-const SOURCES = 'sources';
 
 const MAX_TITLE_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 100;
 const STATUSES = ['ACTIVE', 'DEPRECATED'];
 
 const pricelists = () => getCollection(PRICELISTS, DEMO_PRICELISTS);
-const sources = () => getCollection(SOURCES, DEMO_SOURCES);
+const sources = () => getSharedCollection('sources', DEMO_SOURCES);
+const saveSources = (list) => saveSharedCollection('sources', list);
 
 const findPricelist = (id) => pricelists().find((p) => p.id === Number(id));
 const findActivePricelist = (id) => pricelists().find((p) => p.id === Number(id) && !p.deleted_at);
-const findActiveSource = (id) => sources().find((s) => s.id === Number(id) && !s.deleted_at);
+const findActiveSource = (list, id) => list.find((s) => s.id === Number(id) && !s.deleted_at);
 
 const newestFirst = (a, b) => b.created.localeCompare(a.created) || b.id - a.id;
 const includesText = (value, search) => String(value ?? '').toLowerCase().includes(search);
@@ -220,8 +223,9 @@ export const pricelistHandlers = [
         if (errors) return badRequest(errors);
 
         const now = toIso(new Date());
+        const list = sources();
         const source = {
-            id: nextId(sources()),
+            id: nextId(list),
             name: payload.name.trim(),
             prices_list_id: Number(payload.prices_list),
             created: now,
@@ -229,14 +233,15 @@ export const pricelistHandlers = [
             deleted_at: null,
         };
 
-        sources().push(source);
-        saveCollection(SOURCES);
+        list.push(source);
+        saveSources(list);
 
         return HttpResponse.json(serializeSource(source), { status: 201 });
     })),
 
     http.patch(`${API}/warehouses/sources/:id/`, withAuth(async ({ request, params }) => {
-        const source = findActiveSource(params.id);
+        const list = sources();
+        const source = findActiveSource(list, params.id);
         if (!source) return notFound();
 
         const payload = await request.json();
@@ -246,14 +251,15 @@ export const pricelistHandlers = [
         if (payload.name !== undefined) source.name = String(payload.name).trim();
         if (payload.prices_list !== undefined) source.prices_list_id = Number(payload.prices_list);
         source.modified = toIso(new Date());
-        saveCollection(SOURCES);
+        saveSources(list);
 
         return HttpResponse.json(serializeSource(source));
     })),
 
     // soft delete; a source used by orders needs a confirmed second request (ignore_warning=true)
     http.delete(`${API}/warehouses/sources/:id/`, withAuth(({ request, params }) => {
-        const source = findActiveSource(params.id);
+        const list = sources();
+        const source = findActiveSource(list, params.id);
         if (!source) return notFound();
 
         const ignoreWarning = new URL(request.url).searchParams.get('ignore_warning') === 'true';
@@ -268,7 +274,7 @@ export const pricelistHandlers = [
         }
 
         source.deleted_at = toIso(new Date());
-        saveCollection(SOURCES);
+        saveSources(list);
 
         return new HttpResponse(null, { status: 204 });
     })),

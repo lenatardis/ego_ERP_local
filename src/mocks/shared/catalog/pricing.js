@@ -18,9 +18,14 @@ const listPrice = (owner, ownerId, listId) => {
     return p ? Number(p.price) : null;
 };
 
-/** Sell price (number) of a catalog record (owner: 'kit_template', 'warehouse_item_type', ...) for an order source, or null. */
-export const priceFor = (owner, ownerId, sourceId) => {
-    const source = DEMO_SOURCES.find((s) => String(s.id) === String(sourceId));
+/**
+ * Sell price (number) of a catalog record (owner: 'kit_template', 'warehouse_item_type', ...) for an order source, or
+ * null. `sources`: the source records to look the source's pricelist up in — the seed's by default (the seed itself);
+ * the CRM passes the live ones, which the ERP edits (shared `sources` collection), so a source moved to another
+ * pricelist is priced from it.
+ */
+export const priceFor = (owner, ownerId, sourceId, sources = DEMO_SOURCES) => {
+    const source = sources.find((s) => String(s.id) === String(sourceId));
     const list = source && DEMO_PRICELISTS.find((pl) => pl.id === source.prices_list_id);
     const fromSource = isActiveList(list) ? listPrice(owner, ownerId, list.id) : null;
     return fromSource ?? (DEFAULT_LIST ? listPrice(owner, ownerId, DEFAULT_LIST.id) : null);
