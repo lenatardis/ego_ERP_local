@@ -643,7 +643,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
 
         const trimmed = (value || '').trim();
 
-        if (trimmed === '' || trimmed.length < 2) {
+        if (trimmed === '') {
             setProductHints(prev => ({ ...prev, [rowIndex]: [] }));
             setProductLoading(prev => ({ ...prev, [rowIndex]: false }));
             return;
