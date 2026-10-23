@@ -4,12 +4,17 @@
 // `customer_receipt_approved` ("CRM платежі") and a bill paid by a linked Privat payment ("Оплата замовлень");
 // the Privat statement lines themselves stay ERP-private.
 //
+// Production status, shared the other way round: the ERP owns `production` ({ id, order_id, order_product_id, status },
+// one record per manufacturing order, seeded from SEED_PRODUCTION) and updates it as its orders move through
+// production; the CRM reads it (cart lines' "Статус виробництва", the delete guard).
+//
 // The ERP pages read orders as `crmOrders` rows ({ id, customer_id, customer, manager, created }, names as strings):
 // that view is built here from the shared orders and customers instead of being stored.
 
 import { getSharedCollection, saveSharedCollection } from '../db';
 import {
-    SEED_CUSTOMERS, SEED_MANAGERS, SEED_ORDERS, SEED_PAYMENT_BILLS, resolveDemoAsset, toIso,
+    SEED_CUSTOMERS, SEED_MANAGERS, SEED_ORDERS, SEED_PAYMENT_BILLS, SEED_PRODUCTION, crmStatusOfProduction, resolveDemoAsset,
+    toIso,
 } from '../shared/seed';
 
 export const loadSharedOrders = () => getSharedCollection('orders', SEED_ORDERS);
@@ -73,4 +78,28 @@ export const linkedBillOf = (payment, bills) => {
 
 /** Ids of the bills that have a Privat payment linked to them. */
 export const linkedBillIds = (payments, bills) => new Set(payments.map((p) => linkedBillOf(p, bills)?.id).filter(Boolean));
+
+const PRODUCTION_SEED = SEED_PRODUCTION.map(({ id, order_id, order_product_id, status }) => ({ id, order_id, order_product_id, status }));
+
+/**
+ * After a manufacturing order changed status: the shared production record follows, and the CRM order becomes
+ * ready to ship once all its items are (an order in production that is now ready; nothing else is touched).
+ */
+export const syncProduction = (manufacturingOrder) => {
+    const production = getSharedCollection('production', PRODUCTION_SEED);
+    const record = production.find((p) => p.id === manufacturingOrder.id);
+    if (!record || record.status === manufacturingOrder.status) return;
+    record.status = manufacturingOrder.status;
+    saveSharedCollection('production', production);
+
+    const orders = loadSharedOrders();
+    const order = orders.find((o) => o.id === record.order_id);
+    if (!order || order.status !== 'IN_PRODUCTION') return;
+    const items = production.filter((p) => p.order_id === order.id);
+    if (items.every((p) => crmStatusOfProduction(p.status) !== 'IN_PRODUCTION')) {
+        order.status = 'SHIPMENT_READY';
+        order.modified = nowIso();
+        saveSharedOrders(orders);
+    }
+};
 

@@ -15,9 +15,9 @@ const PREFIX = 'ego-demo:erp:';
 const VERSION_KEY = `${PREFIX}version`;
 
 // Bump when seed data or record shapes change: previously stored demo data is then discarded.
-const DATA_VERSION = 34;
+const DATA_VERSION = 35;
 // Bump together with the CRM (same value in both repos) when shared seed data or record shapes change.
-const SHARED_DATA_VERSION = 3;
+const SHARED_DATA_VERSION = 4;
 
 // localStorage can be unavailable (blocked storage, some private modes): fall back to memory only.
 const storage = {

@@ -8,8 +8,9 @@
 //   SEED_CUSTOMERS     — their customers
 //   SEED_PAYMENT_BILLS — payment bills of the orders ("рахунки")
 // SEED_ORDER_PRODUCTS — what each seed order contains (kits, warehouse items), priced from the shared catalog;
-//   order totals, bills and bank statement lines are derived from it. The CRM stores it privately; the ERP
-//   doesn't use it yet.
+//   order totals, bills and bank statement lines are derived from it. The CRM stores it privately.
+// SEED_PRODUCTION — the ERP's manufacturing orders: which CRM order and cart line each one makes, and its status;
+//   the shared `production` collection (owned by the ERP) starts from it.
 // Reference data: SEED_MANAGERS (CRM demo users), SEED_SOURCES (order sources, owned by the ERP — same ids
 // and names as the ERP's pricelists.js), and the ERP-private bank statement lines SEED_PRIVAT_PAYMENTS /
 // SEED_PRIVAT_ACCOUNTS. The statement lines are generated here, in the same PRNG stream as the orders and
@@ -513,6 +514,169 @@ export const SEED_ORDERS = seed.crmOrders.map((o, i) => {
     };
 });
 
+// --- production: the ERP's manufacturing orders and the CRM orders they belong to ----------------
+// In the ERP a manufacturing order ("Замовлення" in production) is one kit or one warehouse item of a CRM order.
+// SEED_PRODUCTION places the ERP's demo manufacturing orders (ego_ERP_local/src/mocks/data/manufacturing.js keeps
+// their scenario details: who works on them, comments, what is sewn / packed) on CRM orders whose state fits:
+// production starts once something is paid and after the order was taken; a delivered item belongs to a fully
+// paid order. Such an order's cart is exactly its production item, and its status follows production:
+// `IN_PRODUCTION` while an item is being made, then `SHIPMENT_READY`, `DELIVERED` (an order without production
+// items is never `IN_PRODUCTION`). Deterministic, no PRNG: the data above stays the same.
+//
+// SEED_PRODUCTION records, newest first (the ERP's ids follow creation time, so the newest has the highest id):
+//   { id, stage, status, created, order_id, order_product_id,
+//     kit: { kit_template_id, fabric_id, option } | null, warehouse_item: { product_id, type_id } | null }
+// `status` is the ERP's manufacturing status; the shared `production` collection starts from these records
+// ({ id, order_id, order_product_id, status }) and the ERP updates it as orders move through production.
+
+// the ERP's newest manufacturing order was created then; one about every 10 hours before it
+export const PRODUCTION_NEWEST = new Date(2026, 9, 12, 16, 40).getTime();
+const PRODUCTION_STEP = 10 * HOUR;
+
+export const PRODUCTION_STAGES = ['awaitingCutting', 'onCut', 'awaitingSewing', 'onSewing', 'awaitingPackaging', 'onPackaging', 'shipmentReady', 'delivered'];
+export const PRODUCTION_STAGE_STATUS = {
+    awaitingCutting: 'AWAITING_CUTTING',
+    onCut: 'ON_CUT',
+    awaitingSewing: 'AWAITING_SEWING',
+    onSewing: 'ON_SEWING',
+    awaitingPackaging: 'AWAITING_PACKAGING',
+    onPackaging: 'ON_PACKAGING',
+    shipmentReady: 'SHIPMENT_READY',
+    delivered: 'DELIVERED',
+};
+/** The CRM order status that a manufacturing status means (an order is ready once all its items are). */
+export const crmStatusOfProduction = (status) =>
+    (status === 'DELIVERED' ? 'DELIVERED' : status === 'SHIPMENT_READY' ? 'SHIPMENT_READY' : 'IN_PRODUCTION');
+
+// what is made, newest first — kits by kit template (fabric: an in-stock fabric of the template's type),
+// warehouse items by product name and variant index (the ERP's packaging scenarios depend on these products).
+// Only what the CRM can sell: every kit, option and variant here has a price (kit template 1, the option
+// "Прокладка" and a few variants the ERP's demo used before have none in the pricelists). "Подушка Бамбук" is
+// out of stock on purpose: the packer finds nothing to pick.
+const OPTION_GIFT = DEMO_KIT_OPTION_TEMPLATES[0].id; // Подарункове пакування
+const OPTION_BAG = DEMO_KIT_OPTION_TEMPLATES[1].id; // Сумка-чохол
+const PRODUCTION_ITEMS = [
+    { stage: 'onCut', kit: 10 },
+    { stage: 'onCut', kit: 12, option: [OPTION_BAG] },
+    { stage: 'onCut', kit: 3 },
+    { stage: 'awaitingCutting', kit: 11 },
+    { stage: 'awaitingCutting', kit: 5 },
+    { stage: 'awaitingCutting', kit: 16 },
+    { stage: 'awaitingCutting', kit: 5 },
+    { stage: 'awaitingCutting', kit: 27 },
+    { stage: 'onSewing', kit: 10, option: [OPTION_BAG] },
+    { stage: 'onSewing', kit: 12 },
+    { stage: 'awaitingSewing', kit: 11 },
+    { stage: 'awaitingSewing', kit: 3 },
+    { stage: 'awaitingSewing', kit: 16 },
+    { stage: 'onPackaging', kit: 10 },
+    { stage: 'onPackaging', kit: 5, option: [OPTION_GIFT] },
+    { stage: 'awaitingPackaging', kit: 5 },
+    { stage: 'awaitingPackaging', kit: 27 },
+    { stage: 'awaitingPackaging', kit: 12 },
+    { stage: 'onPackaging', product: 'Ковдра Холофайбер' },
+    { stage: 'onPackaging', product: 'Red Pillow' },
+    { stage: 'onPackaging', product: 'Подушка Бамбук' },
+    { stage: 'awaitingPackaging', product: 'Подушка Еко Пух', variant: 3 },
+    { stage: 'awaitingPackaging', product: 'Ковдра Літня' },
+    { stage: 'awaitingPackaging', product: 'Подушка Анатомічна' },
+    { stage: 'shipmentReady', kit: 11 },
+    { stage: 'shipmentReady', product: 'Подушка 4 сезони' },
+    { stage: 'shipmentReady', kit: 5 },
+    { stage: 'shipmentReady', product: 'Ковдра Дитяча' },
+    { stage: 'shipmentReady', kit: 3 },
+    { stage: 'delivered', kit: 10, option: [OPTION_GIFT] },
+    { stage: 'delivered', product: 'Ковдра 4 сезони', variant: 2 },
+    { stage: 'delivered', kit: 16 },
+    { stage: 'delivered', product: 'Подушка Літня', variant: 1 },
+    { stage: 'delivered', kit: 12 },
+];
+
+// fabrics the cutter can find rolls of ("Вибір тканини"), taken in turn for each fabric type
+const IN_STOCK_FABRICS = DEMO_FABRICS.filter((f) => f.new_fabricrolls_remainder > 0 || f.opened_length_remainder > 0);
+const fabricTurns = new Map();
+const nextFabricOfType = (typeId) => {
+    const fabrics = IN_STOCK_FABRICS.filter((f) => productTypeOfFabric(f) === typeId);
+    if (!fabrics.length) throw new Error(`seed: no in-stock fabric of product type ${typeId}`);
+    const turn = fabricTurns.get(typeId) ?? 0;
+    fabricTurns.set(typeId, turn + 1);
+    return fabrics[turn % fabrics.length];
+};
+
+/** The cart line of a production item, priced for the order's source, or null when the source has no price. */
+const productionLine = (item, sourceId) => {
+    if (item.kit) {
+        const template = DEMO_KIT_TEMPLATES.find((t) => t.id === item.kit);
+        const option = item.option ?? [];
+        const parts = [priceFor('kit_template', template.id, sourceId), ...option.map((id) => priceFor('kit_option_template', id, sourceId))];
+        if (parts.some((price) => price === null)) return null;
+        return {
+            warehouse_item: null,
+            kit: {
+                fabric_id: item.fabric_id,
+                kit_template_id: template.id,
+                is_split: false,
+                price: parts.reduce((sum, price) => sum + price, 0),
+                comment: null,
+                custom_size: null,
+                option,
+                additional_fabric_consumption_count: Number(template.additional_fabric_consumption_price || 0) / 10,
+                components: template.component_ids.map((id) => ({
+                    component_template_id: id, option: [], comment: null, custom_size: null, mono_fabric_type: null, is_custom: false,
+                })),
+            },
+        };
+    }
+    const price = priceFor('warehouse_item_type', item.type_id, sourceId);
+    return price === null ? null : { warehouse_item: { product_id: item.product_id, type_id: item.type_id, price, source_id: sourceId }, kit: null };
+};
+
+const isPaidAtAll = (order) => (billsByOrder.get(order.id) ?? []).some((b) => b.status === 'PAID');
+
+export const SEED_PRODUCTION = [];
+const productionLines = new Map(); // order id -> the cart line it gets instead of a random one
+
+{
+    // newest paid orders first; each production item takes the newest one that fits
+    const candidates = SEED_ORDERS.filter(isPaidAtAll).sort((a, b) => b.created.localeCompare(a.created));
+    const used = new Set();
+    PRODUCTION_ITEMS.forEach((spec, index) => {
+        const item = { ...spec };
+        if (spec.kit) {
+            const template = DEMO_KIT_TEMPLATES.find((t) => t.id === spec.kit);
+            item.fabric_id = nextFabricOfType(template.fabric_type_id).id;
+        } else {
+            const product = DEMO_PRODUCTS.find((p) => p.name === spec.product);
+            item.product_id = product.id;
+            item.type_id = product.types[spec.variant ?? 0].id;
+        }
+        const created = PRODUCTION_NEWEST - index * PRODUCTION_STEP;
+        const order = candidates.find((o) => !used.has(o.id)
+            // taken at least a day before production started
+            && new Date(o.created).getTime() < created - 3 * HOUR - DAY
+            && (spec.stage !== 'delivered' || o.payment.status === 'PAID')
+            && productionLine(item, o.source_id) !== null);
+        if (!order) throw new Error(`seed: no CRM order fits production item ${index}`);
+        used.add(order.id);
+        productionLines.set(order.id, productionLine(item, order.source_id));
+        SEED_PRODUCTION.push({
+            id: PRODUCTION_ITEMS.length - index,
+            stage: spec.stage,
+            status: PRODUCTION_STAGE_STATUS[spec.stage],
+            created: toIso(new Date(created)),
+            order_id: order.id,
+            order_product_id: null, // set with the carts below
+            kit: spec.kit ? { kit_template_id: spec.kit, fabric_id: item.fabric_id, option: spec.option ?? [] } : null,
+            warehouse_item: spec.kit ? null : { product_id: item.product_id, type_id: item.type_id },
+        });
+        order.status = crmStatusOfProduction(PRODUCTION_STAGE_STATUS[spec.stage]);
+    });
+    // an order without production items is not being made
+    SEED_ORDERS.forEach((o) => {
+        if (o.status === 'IN_PRODUCTION' && !used.has(o.id)) o.status = 'SHIPMENT_READY';
+    });
+}
+
 // --- carts of the seed orders and the money that follows from them ----------------------------
 // What each seed order contains (CRM "Товар": warehouse items and kits), priced the way the CRM prices them
 // for the order's source (./catalog/pricing.js). The order total is the cart total; its bills and the bank
@@ -591,12 +755,16 @@ SEED_ORDERS.forEach((order) => {
         if (roll > 0.8) lines.push(makeKitLine(order.source_id));
         if (randCart() < 0.2) lines.push(makeWarehouseLine(order.source_id));
     }
-    lines.filter(Boolean).forEach((line) => SEED_ORDER_PRODUCTS.push({
+    // an order in production holds exactly its production item (the draws above still run, so that the other
+    // orders' carts stay the same)
+    const production = productionLines.get(order.id);
+    (production ? [production] : lines.filter(Boolean)).forEach((line) => SEED_ORDER_PRODUCTS.push({
         id: SEED_ORDER_PRODUCTS.length + 1,
         order_id: order.id,
         created: order.created,
         ...line,
     }));
+    if (production) SEED_PRODUCTION.find((p) => p.order_id === order.id).order_product_id = SEED_ORDER_PRODUCTS.length;
 });
 
 // order totals from the carts, then the bills and the statement lines that pay them

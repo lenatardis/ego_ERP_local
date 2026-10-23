@@ -5,6 +5,7 @@ import { DEMO_MANUFACTURING_ORDERS, DEMO_WORKPLACES, DEMO_STAGE_WORKER, HISTORY,
 import { DEMO_FABRICS, DEMO_FABRIC_ROLLS } from '../data/fabrics';
 import { DEMO_PRODUCTS } from '../data/products';
 import { toIso } from '../data/vendors';
+import { syncProduction } from '../data/crmShared';
 
 // Production orders (Замовлення), as consumed by Orders.jsx, Order.jsx, CutterFabricPopup.jsx and
 // WarehouseItemPopup.jsx through src/api/ordersApi.js:
@@ -259,6 +260,8 @@ export const manufacturingHandlers = [
             const blocker = finishBlocker(order, role);
             if (blocker) return badRequest('status', blocker);
             finishStage(order, role);
+            // the CRM sees the item's production status, and the order once all its items are ready
+            syncProduction(order);
         } else if (Array.isArray(payload.component)) {
             if (!order.kit) return badRequest('component', 'Замовлення не містить комплекту.');
             const field = role === 'sewer' ? 'is_sewn' : role === 'packer' ? 'is_packed' : null;

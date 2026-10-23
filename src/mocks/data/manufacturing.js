@@ -4,7 +4,8 @@
 // Served by src/mocks/handlers/manufacturing.js.
 //
 // Stored by id and expanded when a response is built:
-//   order_id     -> `order` (the CRM order, shared ids with DEMO_CRM_ORDERS)
+//   order_id     -> `order` (the CRM order; which one, and what is made, comes from SEED_PRODUCTION in the seed
+//                   shared with the CRM — ../shared/seed.js — so the CRM's cart line is the same kit / item)
 //   cutter_id / sewer_id / packer_id -> workplace { id, name, scanner_id, employee }
 //   kit.fabric_id -> `kit.fabric_image` (the fabric photo from the Storage page)
 //   warehouse_item.id (a variant of a finished product) -> name / category / color / size / image
@@ -12,13 +13,12 @@
 
 import { mulberry32, DEMO_FABRICS } from './fabrics';
 import { DEMO_PRODUCTS } from './products';
-import { DEMO_CRM_ORDERS } from './privatPayments';
 import { DEMO_COMPONENT_TEMPLATES, DEMO_KIT_TEMPLATES, DEMO_KIT_SIZES, DEMO_KIT_OPTION_TEMPLATES } from './calculatorTemplates';
+import { PRODUCTION_NEWEST, PRODUCTION_STAGES, PRODUCTION_STAGE_STATUS, SEED_PRODUCTION } from '../shared/seed';
 import { toIso } from './vendors';
 
 const rand = mulberry32(13102026);
 const randInt = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
-const pick = (arr) => arr[Math.floor(rand() * arr.length)];
 
 const HEX = '0123456789abcdef';
 const uuid = () => [8, 4, 4, 4, 12].map((n) => Array.from({ length: n }, () => HEX[randInt(0, 15)]).join('')).join('-');
@@ -90,11 +90,6 @@ export const HISTORY = {
 const componentName = (id) => DEMO_COMPONENT_TEMPLATES.find((c) => c.id === id)?.name || '—';
 const kitSizeName = (id) => DEMO_KIT_SIZES.find((s) => s.id === id)?.name || '';
 
-// fabrics with rolls in stock (the cutter finds them by code in "Вибір тканини")
-const IN_STOCK_FABRICS = DEMO_FABRICS.filter((f) => f.new_fabricrolls_remainder > 0 || f.opened_length_remainder > 0);
-
-const KIT_TEMPLATE_IDS = [10, 11, 12, 16, 1, 3, 5, 27];
-
 const COMMENTS = [
     'Терміново, клієнт чекає до п\'ятниці',
     'Упакувати в подарункову коробку',
@@ -103,31 +98,29 @@ const COMMENTS = [
     'Замовлення покроїно, зараз на пошиві',
 ];
 
-const variantOf = (productName, index = 0) => {
-    const product = DEMO_PRODUCTS.find((p) => p.name === productName);
-    return product.types[index];
-};
-
 let nextId = 1;
 let nextComponentId = 1;
 let nextHistoryId = 1;
 let nextCostId = 1;
 
 // creation dates: one order every ~10 hours going back from the newest one, newest specs first
-const NEWEST = new Date(2026, 9, 12, 16, 40).getTime();
+const NEWEST = PRODUCTION_NEWEST;
 const HOUR = 60 * 60 * 1000;
 
 const later = (iso, minHours, maxHours) =>
     toIso(new Date(new Date(iso).getTime() + randInt(minHours * 60, maxHours * 60) * 60 * 1000));
 
 /**
- * One seed order. `stage` is how far it got:
+ * One seed order: what is made and how far it got (`stage`) come from SEED_PRODUCTION[index]:
  *   awaitingCutting | onCut | awaitingSewing | onSewing | awaitingPackaging | onPackaging | shipmentReady | delivered
- * `assign` overrides who is assigned to the stage the order is waiting for / working on.
+ * `spec` holds the scenario: `assign` overrides who is assigned to the stage the order is waiting for / working on.
  */
-const buildOrder = (spec, index) => {
+const buildOrder = (scenario, index) => {
+    const production = SEED_PRODUCTION[index];
+    const spec = { ...scenario, stage: production.stage };
     const id = nextId++;
-    const crmOrder = DEMO_CRM_ORDERS[DEMO_CRM_ORDERS.length - 1 - index];
+    if (id !== production.id) throw new Error(`manufacturing seed: id ${id} != shared production id ${production.id}`);
+    const crmOrder = { id: production.order_id };
     const created = toIso(new Date(NEWEST - index * 10 * HOUR - randInt(0, 120) * 60 * 1000));
     const history = [];
     let time = created;
@@ -155,10 +148,10 @@ const buildOrder = (spec, index) => {
 
     const reached = (stage) => STAGES.indexOf(spec.stage) >= STAGES.indexOf(stage);
 
-    if (spec.kit) {
-        const template = DEMO_KIT_TEMPLATES.find((k) => k.id === spec.kit);
-        const fabric = IN_STOCK_FABRICS[spec.fabric ?? index % IN_STOCK_FABRICS.length];
-        const options = spec.options ?? (rand() < 0.4 ? [pick(DEMO_KIT_OPTION_TEMPLATES)] : []);
+    if (production.kit) {
+        const template = DEMO_KIT_TEMPLATES.find((k) => k.id === production.kit.kit_template_id);
+        const fabric = DEMO_FABRICS.find((f) => f.id === production.kit.fabric_id);
+        const options = production.kit.option.map((optionId) => DEMO_KIT_OPTION_TEMPLATES.find((o) => o.id === optionId));
         order.kit = {
             id: 600 + id,
             name: `${fabric.name} - ${template.short_name}`,
@@ -225,8 +218,8 @@ const buildOrder = (spec, index) => {
         });
     } else {
         // finished product from the warehouse: goes straight to packaging
-        const variant = variantOf(spec.product, spec.variant);
-        const product = DEMO_PRODUCTS.find((p) => p.types.includes(variant));
+        const product = DEMO_PRODUCTS.find((p) => p.id === production.warehouse_item.product_id);
+        const variant = product.types.find((t) => t.id === production.warehouse_item.type_id);
         const unit = reached('shipmentReady') || spec.picked ? variant.units[0] : null;
         order.warehouse_item = {
             id: variant.id,
@@ -254,68 +247,64 @@ const buildOrder = (spec, index) => {
     return order;
 };
 
-const STAGES = ['awaitingCutting', 'onCut', 'awaitingSewing', 'onSewing', 'awaitingPackaging', 'onPackaging', 'shipmentReady', 'delivered'];
-
-const STAGE_STATUS = {
-    awaitingCutting: 'AWAITING_CUTTING',
-    onCut: 'ON_CUT',
-    awaitingSewing: 'AWAITING_SEWING',
-    onSewing: 'ON_SEWING',
-    awaitingPackaging: 'AWAITING_PACKAGING',
-    onPackaging: 'ON_PACKAGING',
-    shipmentReady: 'SHIPMENT_READY',
-    delivered: 'DELIVERED',
-};
+const STAGES = PRODUCTION_STAGES;
+const STAGE_STATUS = PRODUCTION_STAGE_STATUS;
 
 // Newest first. Each demo role gets: orders in "Мої активні", queue orders already assigned to them
 // (open from "Всі доступні"), and queue orders that are unassigned or belong to a colleague (read-only).
+// What each one makes, its stage and its CRM order are SEED_PRODUCTION[i] (../shared/seed.js, same order);
+// the comments name them. Only the scenario lives here.
 const SPECS = [
     // --- Закрійник (demo_cutter, id 5) ---
-    { kit: 10, stage: 'onCut', fabric: 0 },
-    { kit: 12, stage: 'onCut', fabric: 1, comment: COMMENTS[0], options: [DEMO_KIT_OPTION_TEMPLATES[2]] },
-    { kit: 3, stage: 'onCut', fabric: 2, costs: 1 },
-    { kit: 11, stage: 'awaitingCutting', fabric: 3, assign: 5 },
-    { kit: 1, stage: 'awaitingCutting', fabric: 4, assign: 5, comment: COMMENTS[2] },
-    { kit: 16, stage: 'awaitingCutting', fabric: 5 },
-    { kit: 5, stage: 'awaitingCutting', fabric: 6, assign: OTHER.cutter },
-    { kit: 27, stage: 'awaitingCutting', fabric: 7 },
+    {}, // kit 10, на крійці
+    { comment: COMMENTS[0] }, // kit 12 + сумка-чохол, на крійці
+    { costs: 1 }, // kit 3, на крійці, один рулон уже покроєно
+    { assign: 5 }, // kit 11, очікує крійки
+    { assign: 5, comment: COMMENTS[2] }, // kit 5, очікує крійки
+    {}, // kit 16, очікує крійки
+    { assign: OTHER.cutter }, // kit 5, очікує крійки
+    {}, // kit 27, очікує крійки
 
     // --- Швачка (demo_seamstress, id 6) ---
-    { kit: 10, stage: 'onSewing', fabric: 1, comment: COMMENTS[4], options: [DEMO_KIT_OPTION_TEMPLATES[2]] },
-    { kit: 12, stage: 'onSewing', fabric: 2, sewn: 2 },
-    { kit: 11, stage: 'awaitingSewing', fabric: 0, assign: 6 },
-    { kit: 3, stage: 'awaitingSewing', fabric: 3, assign: OTHER.sewer[0], comment: COMMENTS[3] },
-    { kit: 16, stage: 'awaitingSewing', fabric: 4 },
+    { comment: COMMENTS[4] }, // kit 10 + сумка-чохол, на пошитті
+    { sewn: 2 }, // kit 12, на пошитті
+    { assign: 6 }, // kit 11, очікує пошиття
+    { assign: OTHER.sewer[0], comment: COMMENTS[3] }, // kit 3, очікує пошиття
+    {}, // kit 16, очікує пошиття
 
     // --- Пакувальник (demo_packer, id 8): комплекти ---
-    { kit: 10, stage: 'onPackaging', fabric: 5 },
-    { kit: 1, stage: 'onPackaging', fabric: 6, packed: 2, comment: COMMENTS[1] },
-    { kit: 5, stage: 'awaitingPackaging', fabric: 7, assign: 8 },
-    { kit: 27, stage: 'awaitingPackaging', fabric: 0, assign: OTHER.packer },
-    { kit: 12, stage: 'awaitingPackaging', fabric: 1 },
+    {}, // kit 10, на пакуванні
+    { packed: 2, comment: COMMENTS[1] }, // kit 5 + подарункове пакування, на пакуванні
+    { assign: 8 }, // kit 5, очікує пакування
+    { assign: OTHER.packer }, // kit 27, очікує пакування
+    {}, // kit 12, очікує пакування
 
     // --- Пакувальник: товари зі складу ---
-    { product: 'Ковдра Холофайбер', variant: 1, stage: 'onPackaging' },
-    { product: 'Red Pillow', stage: 'onPackaging', picked: true, comment: COMMENTS[1] },
-    { product: 'Подушка Бамбук', stage: 'onPackaging' }, // out of stock: no locations to pick from
-    { product: 'Подушка Еко Пух', variant: 2, stage: 'awaitingPackaging', assign: 8 },
-    { product: 'Ковдра Літня', stage: 'awaitingPackaging' },
-    { product: 'Подушка Анатомічна', stage: 'awaitingPackaging', assign: OTHER.packer },
+    {}, // Ковдра Холофайбер, на пакуванні
+    { picked: true, comment: COMMENTS[1] }, // Red Pillow, на пакуванні, уже взято зі складу
+    {}, // Подушка Бамбук, на пакуванні — немає на складі: нічого взяти
+    { assign: 8 }, // Подушка Еко Пух, очікує пакування
+    {}, // Ковдра Літня, очікує пакування
+    { assign: OTHER.packer }, // Подушка Анатомічна, очікує пакування
 
     // --- Архів: готові до відправки / доставлені ---
-    { kit: 11, stage: 'shipmentReady', fabric: 2 },
-    { product: 'Подушка 4 сезони', stage: 'shipmentReady' },
-    { kit: 1, stage: 'shipmentReady', fabric: 3, comment: COMMENTS[1] },
-    { product: 'Ковдра Дитяча', stage: 'shipmentReady' },
-    { kit: 3, stage: 'shipmentReady', fabric: 4, sewer: OTHER.sewer[1], packer: OTHER.packer },
-    { kit: 10, stage: 'delivered', fabric: 5 },
-    { product: 'Ковдра 4 сезони', variant: 2, stage: 'delivered' },
-    { kit: 16, stage: 'delivered', fabric: 6, cutter: OTHER.cutter, sewer: OTHER.sewer[0] },
-    { product: 'Подушка Літня', stage: 'delivered' },
-    { kit: 12, stage: 'delivered', fabric: 7 },
+    {}, // kit 11, готово до відправки
+    {}, // Подушка 4 сезони
+    { comment: COMMENTS[1] }, // kit 5
+    {}, // Ковдра Дитяча
+    { sewer: OTHER.sewer[1], packer: OTHER.packer }, // kit 3
+    {}, // kit 10 + подарункове пакування, доставлено
+    {}, // Ковдра 4 сезони
+    { cutter: OTHER.cutter, sewer: OTHER.sewer[0] }, // kit 16
+    {}, // Подушка Літня
+    {}, // kit 12
 ];
 
-// ids follow creation time (oldest = 1), the list shows newest first
+if (SPECS.length !== SEED_PRODUCTION.length) {
+    throw new Error(`manufacturing seed: ${SPECS.length} scenarios for ${SEED_PRODUCTION.length} production items`);
+}
+
+// ids follow creation time (oldest = 1, as SEED_PRODUCTION numbers them), the list shows newest first
 export const DEMO_MANUFACTURING_ORDERS = SPECS
     .map((spec, i) => ({ spec, i }))
     .reverse()
