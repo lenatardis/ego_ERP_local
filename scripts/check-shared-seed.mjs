@@ -12,6 +12,7 @@ const SHARED_PATHS = [
     'src/mocks/shared/catalog',
     'public/demo/customer-receipt.svg',
     'public/demo/media',
+    'scripts/same-origin.mjs',
 ];
 const REPOS = ['ego_ERP_local', 'ego_CRM_local'];
 

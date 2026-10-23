@@ -9,6 +9,8 @@ pnpm dev        # start dev server
 pnpm build      # production build
 pnpm lint       # run ESLint
 pnpm preview    # preview production build
+pnpm check:shared   # shared seed / catalog / media / scripts identical with ../ego_CRM_local
+pnpm same-origin    # ERP + CRM on one origin, http://localhost:8080/ (see the workspace CLAUDE.md, "Both apps on one origin")
 ```
 
 Package manager is **pnpm**.

@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "check:shared": "node scripts/check-shared-seed.mjs"
+    "check:shared": "node scripts/check-shared-seed.mjs",
+    "same-origin": "node scripts/same-origin.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
