@@ -83,6 +83,24 @@ if (storage.get(`${SHARED_PREFIX}version`) !== String(SHARED_DATA_VERSION)) {
     storage.set(`${SHARED_PREFIX}version`, String(SHARED_DATA_VERSION));
 }
 
+// Private data follows the shared data it was built on (manufacturing orders and Privat payment links point at shared
+// orders and bills): whenever the shared store is (re)created it gets a new generation id — here or in the CRM — and
+// private data built on another generation is dropped. Private data that has no generation yet (stored before this
+// check existed) adopts the current one.
+const SHARED_GENERATION_KEY = `${SHARED_PREFIX}generation`;
+const BUILT_ON_KEY = `${PREFIX}sharedGeneration`;
+if (!storage.get(SHARED_GENERATION_KEY)) {
+    storage.set(SHARED_GENERATION_KEY, `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`);
+}
+const sharedGeneration = storage.get(SHARED_GENERATION_KEY);
+const builtOn = storage.get(BUILT_ON_KEY);
+if (builtOn && sharedGeneration && builtOn !== sharedGeneration) {
+    storage.removeAllDemoKeys();
+    storage.set(VERSION_KEY, String(DATA_VERSION));
+    Object.keys(cache).forEach((name) => delete cache[name]);
+}
+if (sharedGeneration) storage.set(BUILT_ON_KEY, sharedGeneration);
+
 const readJson = (key) => {
     try {
         return JSON.parse(storage.get(key));
