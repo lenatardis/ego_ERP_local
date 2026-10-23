@@ -897,12 +897,6 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
             return;
         }
 
-        if (trimmed.length < 2) {
-            setFabricHints(prev => ({ ...prev, [rowIndex]: [] }));
-            setFabricLoading(prev => ({ ...prev, [rowIndex]: false }));
-            return;
-        }
-
         //debounce
         fabricTimersRef.current[rowIndex] = setTimeout(async () => {
             try {
@@ -1116,6 +1110,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
 
             if (r.priceUAH !== '' && priceUAHNum < 0) e.priceUAH = 'Не може бути < 0';
             if (r.priceUSD !== '' && priceUSDNum < 0) e.priceUSD = 'Не може бути < 0';
+            else if (!(priceUSDNum > 0)) e.priceUSD = 'Вкажіть ціну';
 
             if (Object.keys(e).length) {
                 errors[i] = e;
