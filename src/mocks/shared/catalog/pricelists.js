@@ -3,7 +3,8 @@
 // served by src/mocks/handlers/pricelists.js.
 // A source references its pricelist by `prices_list_id`; the handler expands it into `prices_list`
 // and builds each pricelist's `sources`, so renames propagate. Sources are the order (lead) sources
-// shared with the CRM; `orders_count` is how many orders use a source (drives the delete warning).
+// shared with the CRM. `orders_count` is the original panel's figure, kept as seed data only: the delete warning
+// counts the CRM orders that really use the source (handlers/pricelists.js, the shared orders).
 // `price_count` is not stored: the handler counts the prices of src/mocks/data/prices.js.
 // Data is generated with a seeded PRNG so it is identical on every reload.
 

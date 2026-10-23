@@ -4,6 +4,7 @@ import { getCollection, saveCollection, nextId } from '../db';
 import { DEMO_PRICELISTS, DEMO_SOURCES } from '../data/pricelists';
 import { priceCountFor } from './prices';
 import { toIso } from '../data/vendors';
+import { loadSharedOrders } from '../data/crmShared';
 
 // Response shapes follow the original API, as consumed by Pricelist.jsx, Sources.jsx and NewPrices.jsx:
 //   GET    /warehouses/prices-lists/       -> { prices_lists, total_count, total_pages, current_page }
@@ -223,7 +224,6 @@ export const pricelistHandlers = [
             id: nextId(sources()),
             name: payload.name.trim(),
             prices_list_id: Number(payload.prices_list),
-            orders_count: 0,
             created: now,
             modified: now,
             deleted_at: null,
@@ -257,10 +257,12 @@ export const pricelistHandlers = [
         if (!source) return notFound();
 
         const ignoreWarning = new URL(request.url).searchParams.get('ignore_warning') === 'true';
-        if (source.orders_count > 0 && !ignoreWarning) {
+        // the CRM orders that use it (shared with the CRM demo, suborders included)
+        const ordersCount = loadSharedOrders().filter((o) => o.source_id === source.id).length;
+        if (ordersCount > 0 && !ignoreWarning) {
             return badRequest({
                 error:
-                    `Джерело «${source.name}» вказане в ${source.orders_count} ${ordersWord(source.orders_count)}.\\n` +
+                    `Джерело «${source.name}» вказане в ${ordersCount} ${ordersWord(ordersCount)}.\\n` +
                     'Ви дійсно хочете його видалити? Існуючі замовлення збережуть джерело.',
             });
         }
