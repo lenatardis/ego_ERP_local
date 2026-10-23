@@ -59,3 +59,18 @@ export const updatePaidStatus = (orders, orderId, bills) => {
     order.modified = nowIso();
     return true;
 };
+
+/**
+ * The bill a Privat payment is linked to, or null. A link counts only while the bill still exists and carries this
+ * payment (`payment_id`, set by the seed and by the link): a bill deleted in the CRM, or a new bill that later got
+ * the same id, is not mistaken for the linked one. (The CRM refuses to delete paid bills, so this is a safety net.)
+ */
+export const linkedBillOf = (payment, bills) => {
+    if (!payment.payment_bill_id) return null;
+    const bill = bills.find((b) => b.id === payment.payment_bill_id);
+    return bill && bill.payment_id === payment.payment_id ? bill : null;
+};
+
+/** Ids of the bills that have a Privat payment linked to them. */
+export const linkedBillIds = (payments, bills) => new Set(payments.map((p) => linkedBillOf(p, bills)?.id).filter(Boolean));
+

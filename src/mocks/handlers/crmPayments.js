@@ -3,8 +3,8 @@ import { API, withAuth, isSet, toBoolOrUndefined, notFound } from './utils';
 import { getCollection } from '../db';
 import { DEMO_PRIVAT_PAYMENTS } from '../data/privatPayments';
 import {
-    loadCrmOrderViews, loadSharedBills, loadSharedOrders, nowIso, resolveBillAssets, saveSharedBills, saveSharedOrders,
-    updatePaidStatus,
+    linkedBillIds, loadCrmOrderViews, loadSharedBills, loadSharedOrders, nowIso, resolveBillAssets, saveSharedBills,
+    saveSharedOrders, updatePaidStatus,
 } from '../data/crmShared';
 
 // Response shapes follow the original API, as consumed by PaymentForCRM.jsx and CRMPaymentInfo.jsx:
@@ -40,10 +40,11 @@ export const crmPaymentHandlers = [
         const approved = param('receipt_approved');
         const paidDate = param('paid_date'); // yyyy-mm-dd
         const isLinked = toBoolOrUndefined(q.get('is_linked'));
-        const linkedBillIds = new Set(payments().map((p) => p.payment_bill_id).filter(Boolean));
+        const bills = loadSharedBills();
+        const linked = linkedBillIds(payments(), bills);
 
         const orders = loadCrmOrderViews();
-        const filtered = loadSharedBills()
+        const filtered = bills
             // newest first: bill ids follow creation time
             .slice()
             .sort((a, b) => b.id - a.id)
@@ -55,7 +56,7 @@ export const crmPaymentHandlers = [
                 if (status && b.status !== status) return false;
                 if (approved && b.customer_receipt_approved !== approved) return false;
                 if (paidDate && b.paid_datetime?.slice(0, 10) !== paidDate) return false;
-                if (isLinked !== undefined && linkedBillIds.has(b.id) !== isLinked) return false;
+                if (isLinked !== undefined && linked.has(b.id) !== isLinked) return false;
                 return true;
             });
 

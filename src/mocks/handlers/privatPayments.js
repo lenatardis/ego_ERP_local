@@ -3,7 +3,8 @@ import { API, withAuth, isSet, toNumberOrNull, toBoolOrUndefined, notFound } fro
 import { getCollection, saveCollection } from '../db';
 import { DEMO_PRIVAT_ACCOUNTS, DEMO_PRIVAT_PAYMENTS, CUSTOMER_CONTACT_URL } from '../data/privatPayments';
 import {
-    loadCrmOrderViews, loadSharedBills, loadSharedOrders, saveSharedBills, saveSharedOrders, updatePaidStatus,
+    linkedBillIds, linkedBillOf, loadCrmOrderViews, loadSharedBills, loadSharedOrders, saveSharedBills, saveSharedOrders,
+    updatePaidStatus,
 } from '../data/crmShared';
 
 // Response shapes follow the original API, as consumed by PaymentForOrders.jsx and PrivatPaymentInfo.jsx:
@@ -53,7 +54,7 @@ const fromDDMMYYYY = (s) => {
 
 /** The CRM order a payment is linked to (through its bill), or null. */
 const linkedOrder = (shared, payment) => {
-    const bill = payment.payment_bill_id ? findBill(shared, payment.payment_bill_id) : null;
+    const bill = linkedBillOf(payment, shared.bills);
     return bill ? shared.orders.get(bill.order_id) ?? null : null;
 };
 
@@ -81,7 +82,7 @@ const toRow = (shared, payment) => {
 
 const toDetail = (shared, { account_id, payment_bill_id, ...payment }) => {
     const account = findAccount(account_id);
-    const bill = payment_bill_id ? findBill(shared, payment_bill_id) : null;
+    const bill = linkedBillOf({ payment_bill_id, ...payment }, shared.bills);
     return {
         ...payment,
         account: account ? { id: account.id, iban: account.iban, full_name: account.full_name } : null,
@@ -112,13 +113,13 @@ const nameScore = (customer, payment) => {
 };
 
 const findCoincidences = (shared, payment) => {
-    const linkedBillIds = new Set(payments().map((p) => p.payment_bill_id).filter(Boolean));
+    const linked = linkedBillIds(payments(), shared.bills);
     const paidAt = new Date(payment.datetime).getTime();
     const amount = Number(payment.amount);
 
     const byOrder = new Map();
     shared.bills.forEach((bill) => {
-        if (bill.status === 'PAID' || linkedBillIds.has(bill.id)) return;
+        if (bill.status === 'PAID' || linked.has(bill.id)) return;
         const order = shared.orders.get(bill.order_id);
         if (!order) return;
 
@@ -237,7 +238,7 @@ export const privatPaymentHandlers = [
         const shared = loadShared();
         const bill = findBill(shared, billId);
         if (!bill) return badRequest({ payment_bill: [`Invalid pk "${billId}" - object does not exist.`] });
-        if (payments().some((p) => p.payment_bill_id === bill.id && p.id !== payment.id)) {
+        if (payments().some((p) => p.id !== payment.id && linkedBillOf(p, shared.bills)?.id === bill.id)) {
             return badRequest({ payment_bill: ['This payment bill is already linked to another payment.'] });
         }
 
