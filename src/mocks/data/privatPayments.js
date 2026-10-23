@@ -3,9 +3,9 @@
 // PaymentForCRM.jsx and CRMPaymentInfo.jsx; served by src/mocks/handlers/privatPayments.js and crmPayments.js.
 //
 // Generated in src/mocks/shared/seed.js, together with the CRM demo (same file in both repos):
-//   - privatPayments  — incoming PrivatBank statement lines (ERP side)
-//   - crmOrders       — the ERP's view of the CRM orders the payments are for (customer and manager as names)
-//   - paymentBills    — CRM payment bills of those orders; a payment linked to an order points to one bill
+//   - privatPayments  — incoming PrivatBank statement lines (ERP-private); a linked payment points to one CRM bill
+// CRM orders, customers and payment bills are shared with the CRM demo since step 7.3: see ./crmShared.js.
+// DEMO_CRM_ORDERS below is the seed's order list as rows, still used to place the seeded manufacturing orders.
 
 import {
     SEED_PRIVAT_ACCOUNTS,
@@ -13,9 +13,7 @@ import {
     SEED_ORDERS,
     SEED_CUSTOMERS,
     SEED_MANAGERS,
-    SEED_PAYMENT_BILLS,
     CUSTOMER_CONTACT_URL,
-    resolveDemoAsset,
 } from '../shared/seed';
 
 export { CUSTOMER_CONTACT_URL };
@@ -37,8 +35,4 @@ export const DEMO_CRM_ORDERS = SEED_ORDERS.map((o) => ({
     customer: customerName(o.customer_id),
     manager: managerName(o.manager_id),
     created: o.created,
-}));
-export const DEMO_PAYMENT_BILLS = SEED_PAYMENT_BILLS.map((b) => ({
-    ...b,
-    customer_receipt: resolveDemoAsset(b.customer_receipt, import.meta.env.BASE_URL),
 }));

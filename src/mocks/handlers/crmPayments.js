@@ -1,26 +1,27 @@
 import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toBoolOrUndefined, notFound } from './utils';
-import { getCollection, saveCollection } from '../db';
-import { DEMO_PRIVAT_PAYMENTS, DEMO_CRM_ORDERS, DEMO_PAYMENT_BILLS } from '../data/privatPayments';
+import { getCollection } from '../db';
+import { DEMO_PRIVAT_PAYMENTS } from '../data/privatPayments';
+import {
+    loadCrmOrderViews, loadSharedBills, loadSharedOrders, nowIso, resolveBillAssets, saveSharedBills, saveSharedOrders,
+    updatePaidStatus,
+} from '../data/crmShared';
 
 // Response shapes follow the original API, as consumed by PaymentForCRM.jsx and CRMPaymentInfo.jsx:
 //   GET   /accounting/payment_bill/       -> { count, next, previous, results }  (table rows, page_size per page)
 //   GET   /accounting/payment_bill/:id/   -> bill with order id, receipts and provider payment
-//   PATCH /accounting/payment_bill/:id/   -> { customer_receipt_approved } — the accountant's decision, made once
-// Bills are the same collection the "Оплата замовлень" page links Privat payments to (see privatPayments.js).
-// Changes are persisted in the visitor's browser (see src/mocks/db.js).
+//   PATCH /accounting/payment_bill/:id/   -> { customer_receipt_approved } — the accountant's decision, made once;
+//                                            approving also marks the bill paid (and its order, by the CRM's rule)
+// Bills (and the orders / customers they belong to) are shared with the CRM demo and re-read on every request
+// (see ../data/crmShared.js); the "Оплата замовлень" page links Privat payments to the same bills.
 
-const BILLS = 'paymentBills';
 const APPROVAL_VALUES = ['APPROVED', 'DECLINED'];
 
-const bills = () => getCollection(BILLS, DEMO_PAYMENT_BILLS);
-const orders = () => getCollection('crmOrders', DEMO_CRM_ORDERS);
 const payments = () => getCollection('privatPayments', DEMO_PRIVAT_PAYMENTS);
 
-const findBill = (id) => bills().find((b) => b.id === Number(id));
-const findOrder = (id) => orders().find((o) => o.id === id);
+const findBill = (bills, id) => bills.find((b) => b.id === Number(id));
 
-const toResponse = ({ order_id, ...bill }) => ({ ...bill, order: order_id });
+const toResponse = ({ order_id, ...bill }) => ({ ...resolveBillAssets(bill), order: order_id });
 
 const includesCI = (value, needle) => String(value ?? '').toLowerCase().includes(needle);
 
@@ -40,12 +41,13 @@ export const crmPaymentHandlers = [
         const isLinked = toBoolOrUndefined(q.get('is_linked'));
         const linkedBillIds = new Set(payments().map((p) => p.payment_bill_id).filter(Boolean));
 
-        const filtered = bills()
+        const orders = loadCrmOrderViews();
+        const filtered = loadSharedBills()
             // newest first: bill ids follow creation time
             .slice()
             .sort((a, b) => b.id - a.id)
             .filter((b) => {
-                if (search && ![b.id, b.order_id, b.prepayment_amount, findOrder(b.order_id)?.customer]
+                if (search && ![b.id, b.order_id, b.prepayment_amount, orders.get(b.order_id)?.customer]
                     .some((f) => includesCI(f, search))) return false;
                 if (type && b.type !== type) return false;
                 if (method && b.method !== method) return false;
@@ -69,12 +71,13 @@ export const crmPaymentHandlers = [
     })),
 
     http.get(`${API}/accounting/payment_bill/:id/`, withAuth(({ params }) => {
-        const bill = findBill(params.id);
+        const bill = findBill(loadSharedBills(), params.id);
         return bill ? HttpResponse.json(toResponse(bill)) : notFound();
     })),
 
     http.patch(`${API}/accounting/payment_bill/:id/`, withAuth(async ({ request, params }) => {
-        const bill = findBill(params.id);
+        const bills = loadSharedBills();
+        const bill = findBill(bills, params.id);
         if (!bill) return notFound();
 
         const { customer_receipt_approved: value } = await request.json();
@@ -86,7 +89,16 @@ export const crmPaymentHandlers = [
         }
 
         bill.customer_receipt_approved = value;
-        saveCollection(BILLS);
+        // an approved receipt means the money arrived: the bill is paid, as when the CRM approves it
+        if (value === 'APPROVED' && bill.status !== 'PAID') {
+            bill.status = 'PAID';
+            bill.paid_datetime = nowIso();
+        }
+        saveSharedBills(bills);
+        if (value === 'APPROVED') {
+            const orders = loadSharedOrders();
+            if (updatePaidStatus(orders, bill.order_id, bills)) saveSharedOrders(orders);
+        }
         return HttpResponse.json(toResponse(bill));
     })),
 ];

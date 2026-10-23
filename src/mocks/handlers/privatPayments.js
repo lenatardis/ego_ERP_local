@@ -1,13 +1,10 @@
 import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toNumberOrNull, toBoolOrUndefined, notFound } from './utils';
 import { getCollection, saveCollection } from '../db';
+import { DEMO_PRIVAT_ACCOUNTS, DEMO_PRIVAT_PAYMENTS, CUSTOMER_CONTACT_URL } from '../data/privatPayments';
 import {
-    DEMO_PRIVAT_ACCOUNTS,
-    DEMO_PRIVAT_PAYMENTS,
-    DEMO_CRM_ORDERS,
-    DEMO_PAYMENT_BILLS,
-    CUSTOMER_CONTACT_URL,
-} from '../data/privatPayments';
+    loadCrmOrderViews, loadSharedBills, loadSharedOrders, saveSharedBills, saveSharedOrders, updatePaidStatus,
+} from '../data/crmShared';
 
 // Response shapes follow the original API, as consumed by PaymentForOrders.jsx and PrivatPaymentInfo.jsx:
 //   GET   /accounting/private                    -> { count, next, previous, results }  (table rows, 25 per page)
@@ -15,11 +12,11 @@ import {
 //   GET   /accounting/private/:id/               -> payment with nested account and payment_bill
 //   PATCH /accounting/private/:id/               -> { payment_bill } links the payment to a CRM bill
 //   GET   /accounting/payment_bill/coincidence   -> CRM orders whose open bills may match a payment
-// Accounts, bills and orders are stored by id and expanded here.
+// Accounts, bills and orders are stored by id and expanded here. Statement lines are ERP-private; bills, orders and
+// customers are shared with the CRM demo and re-read on every request (see ../data/crmShared.js).
 // Changes are persisted in the visitor's browser (see src/mocks/db.js).
 
 const COLLECTION = 'privatPayments';
-const BILLS = 'paymentBills';
 const PAGE_SIZE = 25;
 
 // matching rules of the coincidence endpoint
@@ -29,13 +26,13 @@ const SIGNIFICANCE = { name_significance: 0.5, date_significance: 0.2, amount_si
 const MAX_MATCHED_ORDERS = 10;
 
 const payments = () => getCollection(COLLECTION, DEMO_PRIVAT_PAYMENTS);
-const bills = () => getCollection(BILLS, DEMO_PAYMENT_BILLS);
-const orders = () => getCollection('crmOrders', DEMO_CRM_ORDERS);
 
 const findPayment = (id) => payments().find((p) => p.id === Number(id));
 const findAccount = (id) => DEMO_PRIVAT_ACCOUNTS.find((a) => a.id === id);
-const findBill = (id) => bills().find((b) => b.id === Number(id));
-const findOrder = (id) => orders().find((o) => o.id === id);
+
+/** The shared bills and the ERP's view of the shared orders, read once per request. */
+const loadShared = () => ({ bills: loadSharedBills(), orders: loadCrmOrderViews() });
+const findBill = (shared, id) => shared.bills.find((b) => b.id === Number(id));
 
 const pad = (n) => String(n).padStart(2, '0');
 const toDDMMYYYY = (iso) => {
@@ -43,6 +40,8 @@ const toDDMMYYYY = (iso) => {
     return `${d}.${m}.${y}`;
 };
 const toDDMMYYYYHHMM = (iso) => {
+    // a bill made in the CRM has no date until the manager sets one
+    if (!iso) return null;
     const d = new Date(iso);
     return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
@@ -53,13 +52,13 @@ const fromDDMMYYYY = (s) => {
 };
 
 /** The CRM order a payment is linked to (through its bill), or null. */
-const linkedOrder = (payment) => {
-    const bill = payment.payment_bill_id ? findBill(payment.payment_bill_id) : null;
-    return bill ? findOrder(bill.order_id) : null;
+const linkedOrder = (shared, payment) => {
+    const bill = payment.payment_bill_id ? findBill(shared, payment.payment_bill_id) : null;
+    return bill ? shared.orders.get(bill.order_id) ?? null : null;
 };
 
-const toRow = (payment) => {
-    const order = linkedOrder(payment);
+const toRow = (shared, payment) => {
+    const order = linkedOrder(shared, payment);
     return {
         id: payment.id,
         datetime: toDDMMYYYY(payment.datetime),
@@ -80,9 +79,9 @@ const toRow = (payment) => {
     };
 };
 
-const toDetail = ({ account_id, payment_bill_id, ...payment }) => {
+const toDetail = (shared, { account_id, payment_bill_id, ...payment }) => {
     const account = findAccount(account_id);
-    const bill = payment_bill_id ? findBill(payment_bill_id) : null;
+    const bill = payment_bill_id ? findBill(shared, payment_bill_id) : null;
     return {
         ...payment,
         account: account ? { id: account.id, iban: account.iban, full_name: account.full_name } : null,
@@ -112,18 +111,21 @@ const nameScore = (customer, payment) => {
     return tokens.length ? tokens.filter((t) => haystack.includes(t)).length / tokens.length : 0;
 };
 
-const findCoincidences = (payment) => {
+const findCoincidences = (shared, payment) => {
     const linkedBillIds = new Set(payments().map((p) => p.payment_bill_id).filter(Boolean));
     const paidAt = new Date(payment.datetime).getTime();
     const amount = Number(payment.amount);
 
     const byOrder = new Map();
-    bills().forEach((bill) => {
+    shared.bills.forEach((bill) => {
         if (bill.status === 'PAID' || linkedBillIds.has(bill.id)) return;
-        const order = findOrder(bill.order_id);
+        const order = shared.orders.get(bill.order_id);
         if (!order) return;
 
-        const hours = Math.abs(paidAt - new Date(bill.prepayment_datetime).getTime()) / 3600000;
+        // a bill without a date (made in the CRM, not filled in yet) is matched by name and amount only
+        const hours = bill.prepayment_datetime
+            ? Math.abs(paidAt - new Date(bill.prepayment_datetime).getTime()) / 3600000
+            : Infinity;
         const date = Math.max(0, 1 - hours / DATE_RANGE_HOURS);
         const sum = Math.max(0, 1 - Math.abs(amount - Number(bill.prepayment_amount)) / AMOUNT_RANGE);
         const name = nameScore(order.customer, payment);
@@ -149,8 +151,8 @@ const findCoincidences = (payment) => {
 
     return [...byOrder.entries()]
         .map(([orderId, matched]) => {
-            const order = findOrder(orderId);
-            const orderBills = bills().filter((b) => b.order_id === orderId);
+            const order = shared.orders.get(orderId);
+            const orderBills = shared.bills.filter((b) => b.order_id === orderId);
             const paidCount = orderBills.filter((b) => b.status === 'PAID').length;
             return {
                 order_id: orderId,
@@ -187,11 +189,12 @@ export const privatPaymentHandlers = [
         const isLinked = toBoolOrUndefined(q.get('is_linked'));
         const [from, to] = String(q.get('datetime_range') ?? '').split('-').map(fromDDMMYYYY);
 
+        const shared = loadShared();
         const filtered = payments()
             // newest first: the statement is imported as payments come in
             .slice()
             .sort((a, b) => b.datetime.localeCompare(a.datetime) || b.id - a.id)
-            .map((p) => ({ payment: p, row: toRow(p) }))
+            .map((p) => ({ payment: p, row: toRow(shared, p) }))
             .filter(({ payment: p, row }) => {
                 if (search && ![p.id, p.counterparty, p.assignment, p.amount, row.account, row.manager, p.comment]
                     .some((f) => includesCI(f, search))) return false;
@@ -221,16 +224,18 @@ export const privatPaymentHandlers = [
 
     http.get(`${API}/accounting/private/:id/`, withAuth(({ params }) => {
         const payment = findPayment(params.id);
-        return payment ? HttpResponse.json(toDetail(payment)) : notFound();
+        return payment ? HttpResponse.json(toDetail(loadShared(), payment)) : notFound();
     })),
 
-    // links the payment to a CRM bill; the bill becomes paid by this payment
+    // links the payment to a CRM bill: the bill becomes paid by this payment, and its order is paid once all its
+    // bills are (the CRM's rule, ../data/crmShared.js updatePaidStatus)
     http.patch(`${API}/accounting/private/:id/`, withAuth(async ({ request, params }) => {
         const payment = findPayment(params.id);
         if (!payment) return notFound();
 
         const { payment_bill: billId } = await request.json();
-        const bill = findBill(billId);
+        const shared = loadShared();
+        const bill = findBill(shared, billId);
         if (!bill) return badRequest({ payment_bill: [`Invalid pk "${billId}" - object does not exist.`] });
         if (payments().some((p) => p.payment_bill_id === bill.id && p.id !== payment.id)) {
             return badRequest({ payment_bill: ['This payment bill is already linked to another payment.'] });
@@ -241,17 +246,20 @@ export const privatPaymentHandlers = [
         bill.paid_datetime = payment.datetime;
         bill.payment_id = payment.payment_id;
         saveCollection(COLLECTION);
-        saveCollection(BILLS);
+        saveSharedBills(shared.bills);
 
-        const { order_url, customer_url } = toRow(payment);
-        return HttpResponse.json({ ...toDetail(payment), order_url, customer_url, is_linked: true });
+        const orders = loadSharedOrders();
+        if (updatePaidStatus(orders, bill.order_id, shared.bills)) saveSharedOrders(orders);
+
+        const { order_url, customer_url } = toRow(shared, payment);
+        return HttpResponse.json({ ...toDetail(shared, payment), order_url, customer_url, is_linked: true });
     })),
 
     http.get(`${API}/accounting/payment_bill/coincidence`, withAuth(({ request }) => {
         const payment = findPayment(new URL(request.url).searchParams.get('privatbank_payment_id'));
         if (!payment) return notFound();
 
-        const results = findCoincidences(payment);
+        const results = findCoincidences(loadShared(), payment);
         return HttpResponse.json({
             count: results.length,
             results,
