@@ -174,5 +174,5 @@ export const loginUser = async (username, password) => {
 export const logout = (dispatch) => {
     removeTokens();
     dispatch(setAuth(false));
-    window.location.href = '/';
+    window.location.href = import.meta.env.BASE_URL;
 };

@@ -119,8 +119,9 @@ export function useUnsavedChangesGuard() {
                     // повний reload → системний beforeunload спрацює як при звичайному виході
                     window.location.href = href;
                 } else {
-                    // SPA-навігація (без reload)
-                    navigate(href);
+                    // SPA-навігація (без reload); href з <a> вже містить basename, navigate() додасть його сам
+                    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+                    navigate(base && href.startsWith(`${base}/`) ? href.slice(base.length) : href);
                 }
             } finally {
                 setTimeout(() => { guardDisabledRef.current = false; }, 0);
