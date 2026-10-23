@@ -7,14 +7,24 @@
 //   SEED_ORDERS        — CRM orders (full CRM shape; the CRM owns them), payment embedded
 //   SEED_CUSTOMERS     — their customers
 //   SEED_PAYMENT_BILLS — payment bills of the orders ("рахунки")
+// SEED_ORDER_PRODUCTS — what each seed order contains (kits, warehouse items), priced from the shared catalog;
+//   order totals, bills and bank statement lines are derived from it. The CRM stores it privately; the ERP
+//   doesn't use it yet.
 // Reference data: SEED_MANAGERS (CRM demo users), SEED_SOURCES (order sources, owned by the ERP — same ids
 // and names as the ERP's pricelists.js), and the ERP-private bank statement lines SEED_PRIVAT_PAYMENTS /
 // SEED_PRIVAT_ACCOUNTS. The statement lines are generated here, in the same PRNG stream as the orders and
-// bills they pay, so that every id and value stays exactly as the ERP demo had it before the split;
-// the CRM ignores them.
+// bills they pay, so that ids, dates and links stayed as the ERP demo had them before the split (amounts now
+// follow the orders' carts); the CRM ignores them.
 //
 // Environment-neutral on purpose (CRA and Vite): no bundler globals. Demo assets are stored as paths
 // relative to the app's base URL (`demo/...`) — resolve them with resolveDemoAsset() when building a response.
+// Carts are priced from the catalog seed (./catalog/, also identical in both repos), whose only app-specific
+// input is src/mocks/appBaseUrl.js.
+
+import { DEMO_FABRICS } from './catalog/fabrics';
+import { DEMO_PRODUCTS } from './catalog/products';
+import { DEMO_KIT_OPTION_TEMPLATES, DEMO_KIT_TEMPLATES } from './catalog/calculatorTemplates';
+import { fabricTotalLength, priceFor, priceWithDiscount, productTypeOfFabric } from './catalog/pricing';
 
 export const mulberry32 = (seed) => () => {
     seed |= 0;
@@ -162,6 +172,9 @@ const toWorkingHours = (date, direction) => {
 const amountPrepayment = () => pick([200, 200, 300, 300, 400, 500]);
 const amountFull = () => randInt(70, 450) * 10;
 
+// bill id -> { payment: its statement line, diff: bill amount - payment amount (fees, rounding) }
+const BILL_PAYMENTS = new Map();
+
 const build = () => {
     const payments = [];
     const orders = []; // order specs: { created, customer, manager, bills: [bill specs] }
@@ -221,6 +234,9 @@ const build = () => {
             paid_datetime: isLinked ? payment.datetime : null,
             payment_id: isLinked ? payment.payment_id : null,
             linkedPayment: isLinked ? payment : null,
+            // the statement line this bill is (or will be) paid by; its amount follows the bill (see below)
+            paymentRef: payment,
+            amountDiff: billAmount - amount,
         }];
         // the rest of a prepaid order is paid on delivery
         if (isPrepayment) {
@@ -275,10 +291,11 @@ const build = () => {
                 manager: spec.manager,
                 created: toIso(spec.created),
             });
-            spec.bills.forEach(({ linkedPayment, ...bill }) => {
+            spec.bills.forEach(({ linkedPayment, paymentRef, amountDiff, ...bill }) => {
                 const id = 7301 + paymentBills.length;
                 paymentBills.push({ id, order_id: orderId, ...bill, receipt_url: null });
                 if (linkedPayment) linkedPayment.payment_bill_id = id;
+                if (paymentRef) BILL_PAYMENTS.set(id, { payment: paymentRef, diff: amountDiff });
             });
         });
 
@@ -428,26 +445,21 @@ seed.paymentBills.forEach((b) => {
 
 export const SEED_ORDERS = seed.crmOrders.map((o, i) => {
     const bills = billsByOrder.get(o.id) ?? [];
-    const billSum = bills.reduce((sum, b) => sum + Number(b.prepayment_amount), 0);
-    // a prepaid order without its "on delivery" bill yet: the rest is still to be billed
-    const isOpenPrepayment = bills.length === 1 && bills[0].method === 'PREPAYMENT';
-    const finalAmount = isOpenPrepayment ? billSum + ordInt(70, 450) * 10 : billSum;
+    // a prepaid order without its "on delivery" bill yet: the rest is still to be billed.
+    // (This draw sized the rest when totals came from the bills; kept so the draws below stay the same.)
+    if (bills.length === 1 && bills[0].method === 'PREPAYMENT') ordInt(70, 450);
 
-    // discounts: Payment.jsx / DiscountField.jsx — PERC is a percentage, VAL an amount in UAH
+    // discounts: Payment.jsx / DiscountField.jsx — PERC is a percentage, VAL an amount in UAH.
+    // The amounts themselves come from the order's cart (applyCartTotals below).
     let discount_type = 'NONE';
     let discount_amount = 0;
-    let amount = finalAmount;
     const discountRoll = randOrd();
     if (discountRoll < 0.12) {
         discount_type = 'PERC';
         discount_amount = ordPick([5, 10]);
-        // floor: the CRM recomputes final_amount as ceil(amount - amount * percent / 100) (getPriceWithDiscount.js),
-        // which gives back exactly finalAmount only for the floored amount
-        amount = Math.floor(finalAmount / (1 - discount_amount / 100));
     } else if (discountRoll < 0.2) {
         discount_type = 'VAL';
         discount_amount = ordPick([100, 150, 200]);
-        amount = finalAmount + discount_amount;
     }
 
     let paymentStatus = 'PAY_WAIT';
@@ -491,14 +503,118 @@ export const SEED_ORDERS = seed.crmOrders.map((o, i) => {
             id: 5101 + i,
             status: paymentStatus,
             type: paymentTypeOf(bills),
-            amount: money(amount),
-            final_amount: money(finalAmount),
+            amount: null,
+            final_amount: null,
             discount_type,
             discount_amount,
             post_paid_amount: null,
             receipt_url: null,
         },
     };
+});
+
+// --- carts of the seed orders and the money that follows from them ----------------------------
+// What each seed order contains (CRM "Товар": warehouse items and kits), priced the way the CRM prices them
+// for the order's source (./catalog/pricing.js). The order total is the cart total; its bills and the bank
+// statement lines that pay them follow from it, so the numbers agree everywhere. Separate PRNG, so the data
+// above (ids, dates, people, statuses) stays the same.
+//
+// SEED_ORDER_PRODUCTS records (the CRM keeps them in its private store, `ego-demo:crm:orderProducts`):
+//   { id, order_id, created, warehouse_item: { product_id, type_id, price, source_id } | null,
+//     kit: { fabric_id, kit_template_id, is_split, price, comment, custom_size, option, additional_fabric_consumption_count,
+//            components: [{ component_template_id, option, comment, custom_size, mono_fabric_type, is_custom }] } | null }
+// A kit's price is its template price plus its options — what the CRM calculator charges for the same kit.
+
+const randCart = mulberry32(24102026);
+const cartPick = (arr) => arr[Math.floor(randCart() * arr.length)];
+
+const KIT_FABRICS = DEMO_FABRICS.filter((f) => productTypeOfFabric(f) && fabricTotalLength(f) > 0);
+const STOCK_VARIANTS = DEMO_PRODUCTS.flatMap((p) => p.types.filter((t) => t.quantity > 0).map((t) => ({ product: p, type: t })));
+
+const makeKitLine = (sourceId) => {
+    // a fabric whose kits have a price for this source (most do; retry a few fabrics otherwise)
+    for (let attempt = 0; attempt < 10; attempt++) {
+        const fabric = cartPick(KIT_FABRICS);
+        const templates = DEMO_KIT_TEMPLATES.filter((t) => t.fabric_type_id === productTypeOfFabric(fabric)
+            && priceFor('kit_template', t.id, sourceId) !== null);
+        if (!templates.length) continue;
+        const template = cartPick(templates);
+        const pricedOptions = DEMO_KIT_OPTION_TEMPLATES.filter((opt) => priceFor('kit_option_template', opt.id, sourceId) !== null);
+        const option = pricedOptions.length && randCart() < 0.2 ? [cartPick(pricedOptions).id] : [];
+        const price = priceFor('kit_template', template.id, sourceId)
+            + option.reduce((sum, id) => sum + priceFor('kit_option_template', id, sourceId), 0);
+        return {
+            warehouse_item: null,
+            kit: {
+                fabric_id: fabric.id,
+                kit_template_id: template.id,
+                is_split: false,
+                price,
+                comment: null,
+                custom_size: null,
+                option,
+                additional_fabric_consumption_count: Number(template.additional_fabric_consumption_price || 0) / 10,
+                components: template.component_ids.map((id) => ({
+                    component_template_id: id, option: [], comment: null, custom_size: null, mono_fabric_type: null, is_custom: false,
+                })),
+            },
+        };
+    }
+    return null;
+};
+
+const makeWarehouseLine = (sourceId) => {
+    for (let attempt = 0; attempt < 10; attempt++) {
+        const { product, type } = cartPick(STOCK_VARIANTS);
+        const price = priceFor('warehouse_item_type', type.id, sourceId);
+        if (price !== null) {
+            return { warehouse_item: { product_id: product.id, type_id: type.id, price, source_id: sourceId }, kit: null };
+        }
+    }
+    return null;
+};
+
+export const SEED_ORDER_PRODUCTS = [];
+
+const lineTotal = (line) => (line.kit ? line.kit.price : line.warehouse_item.price);
+
+SEED_ORDERS.forEach((order) => {
+    // mostly bedding: one kit, sometimes two; now and then a pillow / blanket from the warehouse too,
+    // and some orders are warehouse items only
+    const lines = [];
+    const roll = randCart();
+    if (roll < 0.15) {
+        lines.push(makeWarehouseLine(order.source_id));
+        if (randCart() < 0.3) lines.push(makeWarehouseLine(order.source_id));
+    } else {
+        lines.push(makeKitLine(order.source_id));
+        if (roll > 0.8) lines.push(makeKitLine(order.source_id));
+        if (randCart() < 0.2) lines.push(makeWarehouseLine(order.source_id));
+    }
+    lines.filter(Boolean).forEach((line) => SEED_ORDER_PRODUCTS.push({
+        id: SEED_ORDER_PRODUCTS.length + 1,
+        order_id: order.id,
+        created: order.created,
+        ...line,
+    }));
+});
+
+// order totals from the carts, then the bills and the statement lines that pay them
+SEED_ORDERS.forEach((order) => {
+    const total = SEED_ORDER_PRODUCTS.filter((p) => p.order_id === order.id).reduce((sum, p) => sum + lineTotal(p), 0);
+    const finalAmount = priceWithDiscount(total, order.payment.discount_type, order.payment.discount_amount);
+    order.payment.amount = money(total);
+    order.payment.final_amount = money(finalAmount);
+
+    // a full payment bills the whole order; a prepayment keeps its deposit and the "on delivery" bill takes the rest
+    const bills = billsByOrder.get(order.id) ?? [];
+    const prepaid = bills.filter((b) => b.method === 'PREPAYMENT').reduce((sum, b) => sum + Number(b.prepayment_amount), 0);
+    bills.forEach((bill) => {
+        if (bill.method === 'FULL') bill.prepayment_amount = money(finalAmount);
+        if (bill.method === 'POSTPAID') bill.prepayment_amount = money(finalAmount - prepaid);
+        const link = BILL_PAYMENTS.get(bill.id);
+        if (link) link.payment.amount = money(Number(bill.prepayment_amount) - link.diff);
+    });
 });
 
 export const SEED_PAYMENT_BILLS = seed.paymentBills;
