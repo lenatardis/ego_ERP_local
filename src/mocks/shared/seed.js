@@ -441,7 +441,9 @@ export const SEED_ORDERS = seed.crmOrders.map((o, i) => {
     if (discountRoll < 0.12) {
         discount_type = 'PERC';
         discount_amount = ordPick([5, 10]);
-        amount = Math.round(finalAmount / (1 - discount_amount / 100));
+        // floor: the CRM recomputes final_amount as ceil(amount - amount * percent / 100) (getPriceWithDiscount.js),
+        // which gives back exactly finalAmount only for the floored amount
+        amount = Math.floor(finalAmount / (1 - discount_amount / 100));
     } else if (discountRoll < 0.2) {
         discount_type = 'VAL';
         discount_amount = ordPick([100, 150, 200]);

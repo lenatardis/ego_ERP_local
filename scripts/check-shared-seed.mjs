@@ -6,7 +6,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SHARED_FILES = ['src/mocks/shared/seed.js', 'public/demo/customer-receipt.svg'];
+// files, or folders compared file by file (a file missing on either side fails the check)
+const SHARED_PATHS = [
+    'src/mocks/shared/seed.js',
+    'src/mocks/shared/catalog',
+    'public/demo/customer-receipt.svg',
+    'public/demo/media',
+];
 const REPOS = ['ego_ERP_local', 'ego_CRM_local'];
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -19,8 +25,18 @@ if (!REPOS.includes(self) || !fs.existsSync(otherRoot)) {
     process.exit(0);
 }
 
+const listFiles = (root, rel) => {
+    const full = path.join(root, rel);
+    if (!fs.existsSync(full)) return [];
+    if (!fs.statSync(full).isDirectory()) return [rel];
+    return fs.readdirSync(full).sort().flatMap((name) => listFiles(root, path.posix.join(rel, name)));
+};
+
+const sharedFiles = [...new Set(SHARED_PATHS.flatMap((p) => [...listFiles(repoRoot, p), ...listFiles(otherRoot, p)]))]
+    .concat(SHARED_PATHS.filter((p) => !fs.existsSync(path.join(repoRoot, p)) && !fs.existsSync(path.join(otherRoot, p))));
+
 let failed = false;
-for (const file of SHARED_FILES) {
+for (const file of sharedFiles) {
     const mine = path.join(repoRoot, file);
     const theirs = path.join(otherRoot, file);
     if (!fs.existsSync(mine) || !fs.existsSync(theirs)) {
