@@ -106,6 +106,7 @@ The goal is to preserve the existing frontend functionality, UI, business logic,
 - `src/mocks/data/<entity>.js` — deterministic seed data (seeded PRNG `mulberry32`), record shapes mirror what the components read.
 - `src/mocks/handlers/<entity>.js` — MSW handlers wrapped in `withAuth`, implementing the filters/pagination the API layer sends and the original response shape; register them in `src/mocks/handlers/index.js`.
 - `src/mocks/db.js` — `getCollection` / `saveCollection` persist changed collections to `localStorage` under the `ego-demo:erp:` prefix. Bump `DATA_VERSION` when seed data or record shapes of existing collections change.
+- `src/mocks/shared/seed.js` — seed of the data shared with the CRM demo (CRM orders, customers, payment bills, plus the Privat statement lines generated in the same PRNG stream); **identical copy in `../ego_CRM_local`**, run `pnpm check:shared` after editing it and copy it over. `src/mocks/data/privatPayments.js` derives the ERP's `crmOrders` / `paymentBills` / `privatPayments` seeds from it. Contract: `../CLAUDE.md` → "Cross-app contract".
 - Related records are stored by id and expanded into nested objects when a response is built, so edits (e.g. renaming a vendor) propagate.
 - Lists sort newest-created first, so a record created through a form appears at the top of page 1.
 - Demo login: users in `src/mocks/data/demoUsers.js` (password `DemoPass123`).
