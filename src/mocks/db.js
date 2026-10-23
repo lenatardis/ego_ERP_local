@@ -4,14 +4,20 @@
 // a handler changes it, so read-only collections are always served straight from the seed and
 // changed ones survive page reloads. Everything stays in the visitor's own browser.
 //
-// Keys are namespaced (`ego-demo:erp:*`) because other demos on the same origin
-// (e.g. the CRM on the same github.io domain) share one localStorage.
+// Keys are namespaced because the CRM demo runs on the same github.io origin and shares one localStorage
+// (see ../../CLAUDE.md, "Cross-app contract"). Two stores:
+//   - ERP-private collections under `ego-demo:erp:*`;
+//   - collections shared with the CRM (orders, customers, payment bills) under `ego-demo:shared:*`.
+//     Their seed is identical in both apps, so whichever app writes first, the other reads the same data.
+//     Shared collections are re-read from localStorage on every access: the CRM may change them in another tab.
 
 const PREFIX = 'ego-demo:erp:';
 const VERSION_KEY = `${PREFIX}version`;
 
 // Bump when seed data or record shapes change: previously stored demo data is then discarded.
 const DATA_VERSION = 33;
+// Bump together with the CRM (same value in both repos) when shared seed data or record shapes change.
+const SHARED_DATA_VERSION = 3;
 
 // localStorage can be unavailable (blocked storage, some private modes): fall back to memory only.
 const storage = {
@@ -29,10 +35,10 @@ const storage = {
             console.warn('[demo db] Could not persist demo data:', error);
         }
     },
-    removeAllDemoKeys() {
+    removeAllDemoKeys(prefix = PREFIX) {
         try {
             Object.keys(localStorage)
-                .filter((key) => key.startsWith(PREFIX))
+                .filter((key) => key.startsWith(prefix))
                 .forEach((key) => localStorage.removeItem(key));
         } catch {
             // nothing stored, nothing to remove
@@ -68,10 +74,37 @@ export const saveCollection = (name) => {
     }
 };
 
+// --- collections shared with the CRM ---------------------------------------------------------
+
+const SHARED_PREFIX = 'ego-demo:shared:';
+
+if (storage.get(`${SHARED_PREFIX}version`) !== String(SHARED_DATA_VERSION)) {
+    storage.removeAllDemoKeys(SHARED_PREFIX);
+    storage.set(`${SHARED_PREFIX}version`, String(SHARED_DATA_VERSION));
+}
+
+const readJson = (key) => {
+    try {
+        return JSON.parse(storage.get(key));
+    } catch {
+        return null;
+    }
+};
+
+/** A fresh copy of a shared collection (stored state, otherwise the seed); change it, then saveSharedCollection. */
+export const getSharedCollection = (name, seed) => readJson(SHARED_PREFIX + name) ?? structuredClone(seed);
+
+/** Persists a shared collection after a handler has changed it. */
+export const saveSharedCollection = (name, items) => {
+    storage.set(SHARED_PREFIX + name, JSON.stringify(items));
+};
+
+// --- helpers ---------------------------------------------------------------------------------
+
 /** Next free numeric id in a collection of records. */
 export const nextId = (items) => items.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
 
-/** Drops all changes made in this browser; the next request is served from seed data again. */
+/** Drops all ERP-private changes made in this browser (shared data is left to both apps). */
 export const resetDemoData = () => {
     storage.removeAllDemoKeys();
     storage.set(VERSION_KEY, String(DATA_VERSION));
