@@ -1525,7 +1525,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                     <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
                                             <div key={`s-${vi}`} className={styles.gridTable__cell} style={line(5, vi)}>
-                                                <div className={innerStyles.fullBorder}>
+                                                <div className={innerStyles.noRightBorder}>
                                                     <NewCustomSelect
                                                         value={v.sizeId ?? ''}
                                                         onChange={readOnly ? undefined : (e) => updateVariant(ri, vi, { sizeId: e.target.value === '' ? '' : Number(e.target.value) })}
@@ -1564,7 +1564,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                             <div key={`q-${vi}`} className={styles.gridTable__cell} style={line(6, vi)}>
                                                 <input
                                                     type="number"
-                                                    className={`${innerStyles.fullBorder} ${activeCapacityErrorVariants[`${ri}:${vi}`] ? innerStyles.capacityWarningBorder : ''}`}
+                                                    className={activeCapacityErrorVariants[`${ri}:${vi}`] ? `${innerStyles.fullBorder} ${innerStyles.capacityWarningBorder}` : innerStyles.noRightBorder}
                                                     value={v.quantity}
                                                     onChange={readOnly ? undefined : (e) => updateVariant(ri, vi, { quantity: e.target.value })}
                                                     placeholder="Введіть"

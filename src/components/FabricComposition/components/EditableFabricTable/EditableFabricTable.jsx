@@ -1446,7 +1446,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
 
 
                                     <div className={`${styles.gridTable__cell}`}>
-                                        <div className={innerStyles.fullBorder}>
+                                        <div className={innerStyles.noRightBorder}>
                                             <WhiteCustomSelect
                                                 value={row.cell.id ?? ''}
                                                 onChange={readOnly ? undefined : (e) => handleCellSelect(idx, e.target.value)}

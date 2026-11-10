@@ -44,21 +44,23 @@ span {
   flex-direction: column;
 }
 .or {
-  font-size: 11px;
-  line-height: 1em;
-  margin: 6px 0;
+  font-size: 13px;
+  // as tall as a field (34 px): the select ends where the neighbouring cells start and the
+  // input starts where they end, so their borders don't meet
+  line-height: 34px;
+  margin: 0;
   text-align: center;
   opacity: 0.6;
 }
 
 // Fabric rows: cells are top-aligned, so a warning under a field only makes the row taller
 // instead of pushing the row's fields up. The other cells keep the offset that used to
-// centre them on the length cell (select / "або" / input).
+// centre them on the length cell (select / "або" / input), i.e. level with "або".
 .stableRow {
   align-items: start;
 
   > :not(:has(.sizeCell)) {
-    margin-top: 28px;
+    margin-top: 34px;
   }
 }
 
