@@ -335,7 +335,7 @@ const Navigation = () => {
                 <div className={styles.logout__block}>
                     <div className={styles.logout__row}>
                         <div className={styles.logout__imagePlaceholder}>
-                            <img src={photo ? photo : user} alt="" />
+                            <img src={photo ? photo : user} alt="" className={photo ? '' : styles.logout__icon} />
                         </div>
                         <p className={styles.logout__name}>
                             {first_name} {last_name}

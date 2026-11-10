@@ -84,6 +84,12 @@
       width: 31px;
       height: 31px;
     }
+
+    // the generic person icon (no photo) at its own size, centred in the circle
+    img.logout__icon {
+      width: 14px;
+      height: 15px;
+    }
   }
 
   &__name {
