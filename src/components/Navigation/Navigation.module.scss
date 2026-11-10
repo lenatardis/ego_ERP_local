@@ -8,6 +8,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  // demo build: on a short window the menu scrolls instead of pushing "Перейти в CRM" / logout
+  // below the bottom edge. Only below 730 px: the tallest menu (two groups open) needs 726 px, and
+  // on taller windows a scrollbar would only flash while one group closes and another opens.
+  @media screen and (max-height: 730px) {
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  // keep logo / menu / logout at their full height, so the menu scrolls instead of squeezing
+  // the open groups (their bodies have overflow: hidden and would shrink to nothing)
+  > * {
+    flex-shrink: 0;
+  }
 
   &__logo {
     margin-top: 30px;
@@ -58,6 +71,14 @@
   padding: 0 20px;
   justify-content: space-between;
   flex-direction: column;
+
+  // "Перейти в CRM": as wide as its caption, centred (was stretched to the sidebar width)
+  &__crm {
+    align-self: center;
+    text-align: center;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 
   &__block {
     display: flex;
