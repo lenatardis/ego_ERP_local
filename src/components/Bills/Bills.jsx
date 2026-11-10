@@ -85,7 +85,7 @@ const Bills = () => {
             <h2>Надходження-витрати (рахунки)</h2>
             <SearchFilter onOpenFilter={onOpenFilter} title={'Надходження-витрати (рахунки)'} />
             <TableOld columns={columns} data={data} />
-            <Filter isShow={isShowFilter}>
+            <Filter isShow={isShowFilter} onClose={onClose}>
                 <CustomSelect
                     label="Вид надходження"
                     value={filters.view}

@@ -2431,7 +2431,7 @@ const minWidthPx =
 
             <StickyBar/>
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <CustomSelect
                     label="З цінами"
                     value={filters.hasPrice}

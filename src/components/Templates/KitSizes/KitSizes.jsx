@@ -423,7 +423,7 @@ const KitSizes = () => {
 
             <StickyBar />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
             </Filter>
 
             <PopupCloser isShow={isShowFilter} onClose={onCloseFilter} />

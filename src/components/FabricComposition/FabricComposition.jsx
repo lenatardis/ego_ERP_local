@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback, useMemo, useRef } from "react"
 import styles from './FabricComposition.module.scss';
 import SearchFilter from "../Common/SearchFilter/SearchFilter";
 import Table from "../Common/Table/Table";
+import TableFixedHeader from "../Common/Table/TableFixedHeader.jsx";
+import { useStickyXScroll } from "../../hooks/useStickyXScroll.jsx";
 import Filter from "../Common/Filter/Filter";
 import PopupCloser from "../Common/PopupCloser/PopupCloser";
 import CustomSelect from "../Common/CustomSelect/CustomSelect";
@@ -139,7 +141,7 @@ const FabricComposition = () => {
             width: "65px",
             render: (value) =>
                 value
-                    ? <img src={value} alt="Фото" style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
+                    ? <img src={value} alt="Фото" className="photoSkeleton" style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
                     : <img src={ImgPlaceholder} alt="Фото" style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
         },
         { key: "remaining", title: "Залишок відкритих рулонів", width: "120px" },
@@ -147,6 +149,19 @@ const FabricComposition = () => {
         { key: "remainingClosed", title: "Залишок закритих рулонів", width: "110px" },
         { key: "remainingClosedMeters", title: "Залишок закритих рулонів в метрах", width: "110px" }
     ]), [openLocationPopup]);
+
+    // ghost scroll, as on the other tables (KitSizes, NewPrices, …); 120 px per column, so a desktop of 1366 px+ needs no scroll
+    const scrollRef = useRef(null);
+    const { mainRef, StickyBar, recalcX } = useStickyXScroll({
+        offsetBottom: 0,
+        trackHeight: 16,
+        zIndex: 60,
+    });
+    const minWidthPx = columns.length * 120;
+
+    useEffect(() => {
+        recalcX();
+    }, [minWidthPx, rows.length, recalcX]);
 
     const rollsColumns = useMemo(() => ([
         { key: "num", title: "№", width: "50px" },
@@ -335,9 +350,38 @@ const FabricComposition = () => {
                 onSearch={() => onSendFilters(filterParams)}
             />
 
-            <Table columns={columns} data={rows} equalColumns centered />
+            <TableFixedHeader
+                columns={columns}
+                subtitle={null}
+                equalColumns
+                centered
+                scrollContainerRef={scrollRef}
+                minWidth={minWidthPx}
+                stickyTop={0}
+                stickyZIndex={8}
+            />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            {/* scroll container with the same ghost scroll as the other tables (both refs) */}
+            <div
+                style={{ overflowX: "auto", paddingBottom: 8 }}
+                ref={(el) => {
+                    if (typeof mainRef === "function") {
+                        mainRef(el);
+                    } else if (mainRef && "current" in mainRef) {
+                        mainRef.current = el;
+                    }
+                    scrollRef.current = el;
+                }}
+                className={styles.xScrollHide}
+            >
+                <div style={{ minWidth: `${minWidthPx}px` }}>
+                    <Table columns={columns} data={rows} equalColumns centered hideHeader />
+                </div>
+            </div>
+
+            <StickyBar />
+
+            <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
                     label="Категорія"
                     value={filters.f5}
@@ -470,7 +514,7 @@ const FabricComposition = () => {
                             <img
                                 src={selectedFabric?.photo || ImgPlaceholder}
                                 alt=""
-                                className={styles.imgBlock__img}
+                                className={`${styles.imgBlock__img} photoSkeleton`}
                             />
                             <p className={styles.imgBlock__title}>
                                 {selectedFabric?.category} {selectedFabric?.code}

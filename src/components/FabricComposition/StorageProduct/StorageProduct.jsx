@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import styles from "./StorageProduct.module.scss";
 import SearchFilter from "../../Common/SearchFilter/SearchFilter";
 import Filter from "../../Common/Filter/Filter";
@@ -6,9 +6,13 @@ import PopupCloser from "../../Common/PopupCloser/PopupCloser";
 import { useNavigate } from "react-router";
 import ColorRow from "./ColorRow/ColorRow.jsx";
 import Table from "../../Common/Table/Table.jsx";
+import TableFixedHeader from "../../Common/Table/TableFixedHeader.jsx";
+import { useStickyXScroll } from "../../../hooks/useStickyXScroll.jsx";
 import { getAccessToken } from "../../../api/authStorage.js";
 import { fetchFinishedProducts, fetchProductProperties } from "../../../api/tablesApi.js";
 import ImgPlaceholder from "../../../assets/img/img_placeholder.jpeg";
+import eyeIcon from "../../../assets/icons/eye.svg";
+import eyeClosedIcon from "../../../assets/icons/eyeClosed.svg";
 import Preloader from "../../Common/Preloader/Preloader.jsx";
 import { Pagination } from "@mui/material";
 import NewCustomSelect from "../../Common/NewCustomSelect/NewCustomSelect.jsx";
@@ -421,6 +425,7 @@ const StorageProduct = () => {
                         <img
                             src={src}
                             alt="Фото"
+                            className="photoSkeleton"
                             style={{ width: 65, height: 65, objectFit: "cover", borderRadius: 4 }}
                         />
                     ) : (
@@ -470,6 +475,12 @@ const StorageProduct = () => {
                                     <span>
                                         {isExpanded ? "Сховати варіанти" : "Показати варіанти"}
                                     </span>
+                                    {/* phones: an eye instead of the caption (StorageProduct.module.scss) */}
+                                    <img
+                                        className={styles.varIcon}
+                                        src={isExpanded ? eyeClosedIcon : eyeIcon}
+                                        alt={isExpanded ? "Сховати варіанти" : "Показати варіанти"}
+                                    />
                                 </button>
                             )}
                         </div>
@@ -515,6 +526,19 @@ const StorageProduct = () => {
         [expandedIds, openLocationPopup]
     );
 
+    // ghost scroll, as on the other tables (KitSizes, NewPrices, …); 120 px per column, so a desktop of 1366 px+ needs no scroll
+    const scrollRef = useRef(null);
+    const { mainRef, StickyBar, recalcX } = useStickyXScroll({
+        offsetBottom: 0,
+        trackHeight: 16,
+        zIndex: 60,
+    });
+    const minWidthPx = columns.length * 120;
+
+    useEffect(() => {
+        recalcX();
+    }, [minWidthPx, rows.length, expandedIds, recalcX]);
+
     const locationColumns = useMemo(
         () => [
             { key: "num", title: "№", width: "50px" },
@@ -549,17 +573,47 @@ const StorageProduct = () => {
               onNewProductArrivalNavigate={onNewProductArrivalNavigate}*/
             />
 
-            <Table
+            <TableFixedHeader
                 columns={columns}
-                data={rows}
-                subrows={(row) =>
-                    expandedIds.has(row.__tplId) ? row.__subrows || [] : []
-                }
+                subtitle={null}
                 equalColumns
                 centered
+                scrollContainerRef={scrollRef}
+                minWidth={minWidthPx}
+                stickyTop={0}
+                stickyZIndex={8}
             />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            {/* scroll container with the same ghost scroll as the other tables (both refs) */}
+            <div
+                style={{ overflowX: "auto", paddingBottom: 8 }}
+                ref={(el) => {
+                    if (typeof mainRef === "function") {
+                        mainRef(el);
+                    } else if (mainRef && "current" in mainRef) {
+                        mainRef.current = el;
+                    }
+                    scrollRef.current = el;
+                }}
+                className={styles.xScrollHide}
+            >
+                <div style={{ minWidth: `${minWidthPx}px` }}>
+                    <Table
+                        columns={columns}
+                        data={rows}
+                        subrows={(row) =>
+                            expandedIds.has(row.__tplId) ? row.__subrows || [] : []
+                        }
+                        equalColumns
+                        centered
+                        hideHeader
+                    />
+                </div>
+            </div>
+
+            <StickyBar />
+
+            <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
                     label="Категорія"
                     value={filters.category}
@@ -612,7 +666,7 @@ const StorageProduct = () => {
                             <img
                                 src={selectedProduct?.photo || ImgPlaceholder}
                                 alt=""
-                                className={styles.imgBlock__img}
+                                className={`${styles.imgBlock__img} photoSkeleton`}
                             />
                             <p className={styles.imgBlock__title}>
                                 {selectedProduct?.category} {selectedProduct?.name}

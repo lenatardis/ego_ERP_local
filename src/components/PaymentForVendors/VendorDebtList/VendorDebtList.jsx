@@ -270,7 +270,7 @@ const VendorDebtList = () => {
 
             <StickyBar />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <div>
                     <div style={{ marginBottom: 8 }}>
                         <p style={{ fontSize: 12, color: "#ffffff", marginBottom: 10 }}>

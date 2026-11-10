@@ -8,7 +8,8 @@ const Table = ({columns, data, subtitle, equalColumns, subrows, centered, priceT
     }
 
     return (
-        <div className={`${styles.table} ${centered ? styles.centered : ''} ${priceTable ? styles.priceTable : ''} ${hideHeader ? styles.tableWithStickyHeader : ''} ${popupTable ? styles.popupTable : ''} ${zeroPdTable ? styles.zeroPdTable : ''}`}>
+        <div className={`${styles.table} ${centered ? styles.centered : ''} ${priceTable ? styles.priceTable : ''} ${hideHeader ? styles.tableWithStickyHeader : ''} ${popupTable ? styles.popupTable : ''} ${zeroPdTable ? styles.zeroPdTable : ''}`}
+             style={{'--table-cols': columns.length}}>
             {subtitle && <h3 className={styles.subtitle}>{subtitle}</h3>}
             {/* Header */}
             {!hideHeader && (

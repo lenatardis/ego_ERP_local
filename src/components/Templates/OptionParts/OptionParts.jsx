@@ -578,7 +578,7 @@ const OptionParts = () => {
             {/* ghost scroll bar */}
             <StickyBar />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <CustomSelect
                     label="Тип"
                     value={filters.type}

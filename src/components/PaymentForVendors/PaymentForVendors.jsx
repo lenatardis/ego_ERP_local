@@ -611,7 +611,7 @@ const PaymentForVendors = () => {
 
             <StickyBar />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
                     label="Джерело"
                     value={filterParams.source}

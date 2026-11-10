@@ -495,7 +495,7 @@ const PaymentForOrders = () => {
 
             <StickyBar />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <InputBox
                     label="Призначення"
                     name="assignment"

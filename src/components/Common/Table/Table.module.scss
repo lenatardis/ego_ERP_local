@@ -304,4 +304,21 @@
   .table {
     padding: 12px;
   }
+
+  // header and rows share one minimum width, so they scroll sideways together inside .table
+  // (before, the columns overflowed while each row's background stayed screen-wide)
+  .gridTable__header, .tableRows {
+    min-width: calc(var(--table-cols, 1) * 110px);
+  }
+
+  // a table under a TableFixedHeader keeps its desktop padding (the header's width relies on it)
+  .table.tableWithStickyHeader {
+    padding: 0 16px 16px;
+  }
+
+  // sticky table headers stop below the mobile top bar (56 px, Navigation), not behind it;
+  // TableFixedHeader sets `top` inline, hence !important
+  .tableFixedRoot {
+    top: 56px !important;
+  }
 }

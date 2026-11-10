@@ -531,7 +531,7 @@ const PaymentForCRM = () => {
 
       <StickyBar />
 
-      <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+      <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
         <NewCustomSelect
           label="Тип"
           value={filterParams.type}

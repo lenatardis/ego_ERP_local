@@ -6,6 +6,10 @@
   text-align: center;
 }
 
+.varIcon {
+  display: none;
+}
+
 .infoBlock {
   padding: 12px;
 }
@@ -35,4 +39,33 @@
 .infoTitle {
   margin-bottom: 12px;
   font-weight: 600;
+}
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  // the variants toggle as an eye icon instead of "Показати / Сховати варіанти"
+  .var {
+    width: 40px;
+    height: 36px;
+    padding: 0;
+
+    span {
+      display: none;
+    }
+  }
+
+  .varIcon {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// scroll container of the ghost-scroll table: its own scrollbar is hidden, the sticky ghost bar replaces it
+.xScrollHide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    height: 0 !important;
+  }
 }

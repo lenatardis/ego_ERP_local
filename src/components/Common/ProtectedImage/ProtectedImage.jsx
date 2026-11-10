@@ -110,7 +110,7 @@ const ProtectedImage = ({
                 <img
                     src={blobUrl}
                     alt={alt}
-                    className={className}
+                    className={`${className || ""} photoSkeleton`}
                     loading="lazy"
                     onError={() => setMode("fallback")}
                 />
@@ -124,7 +124,7 @@ const ProtectedImage = ({
         <img
             src={src}
             alt={alt}
-            className={className}
+            className={`${className || ""} photoSkeleton`}
             loading="lazy"
             onError={() => {
                 if (token) {

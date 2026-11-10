@@ -28,3 +28,12 @@
   margin-bottom: 12px;
   font-weight: 600;
 }
+// scroll container of the ghost-scroll table: its own scrollbar is hidden, the sticky ghost bar replaces it
+.xScrollHide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    height: 0 !important;
+  }
+}

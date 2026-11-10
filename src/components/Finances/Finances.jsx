@@ -92,7 +92,7 @@ const Finances = () => {
                 <p>82 450 грн</p>
             </div>
             <TableOld columns={columns} data={data} />
-            <Filter isShow={isShowFilter}>
+            <Filter isShow={isShowFilter} onClose={onClose}>
                 <CustomSelect
                     label="Вид надходження"
                     value={filters.view}

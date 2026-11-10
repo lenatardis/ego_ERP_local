@@ -698,7 +698,7 @@ const Pricelist = () => {
 
 
             {/* фільтри */}
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <CustomSelect
                     label="Статус"
                     value={filters.status}

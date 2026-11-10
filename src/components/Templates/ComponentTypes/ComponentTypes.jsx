@@ -57,6 +57,7 @@ const renderPhotoCell = (src) => {
     return (
         <img
             src={url}
+            className="photoSkeleton"
             alt=""
             style={{
                 width: 42,
@@ -476,7 +477,7 @@ const ComponentTypes = () => {
             {/* ghost scroll bar */}
             <StickyBar />
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
             </Filter>
 
             <PopupCloser isShow={isShowFilter} onClose={onCloseFilter} />
@@ -617,6 +618,7 @@ const ComponentTypes = () => {
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
                                     <img
                                         src={editForm.imageUrl}
+                                        className="photoSkeleton"
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />

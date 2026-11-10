@@ -793,7 +793,7 @@ const ComponentOptions = () => {
             {/* ghost scroll bar */}
             <StickyBar/>
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
 
                 {/* TYPES чекбокси */}
                 <div style={{marginTop: 12}}>

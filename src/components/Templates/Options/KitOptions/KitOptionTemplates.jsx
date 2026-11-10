@@ -549,6 +549,7 @@ const KitOptionTemplates = () => {
                     row.image ? (
                         <img
                             src={row.image}
+                            className="photoSkeleton"
                             alt={row.name || "photo"}
                             style={{
                                 width: 46,
@@ -679,7 +680,7 @@ const KitOptionTemplates = () => {
             <StickyBar />
 
 
-            <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
+            <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
             </Filter>
             <PopupCloser isShow={isShowFilter} onClose={onCloseFilter} />
 
@@ -892,6 +893,7 @@ const KitOptionTemplates = () => {
                             ) : editForm.currentImageUrl ? (
                                 <img
                                     src={editForm.currentImageUrl}
+                                    className="photoSkeleton"
                                     alt="current"
                                     style={{
                                         width: 120,
