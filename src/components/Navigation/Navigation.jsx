@@ -99,8 +99,12 @@ const Navigation = () => {
         logout(dispatch);
     };
 
+    // Demo build: on phones (< 1024 px) the current page's group isn't opened by itself — every
+    // group starts closed and opens only when tapped
+    const autoOpenCurrent = windowWidth >= 1024;
+
     const isGroupOpen = (groupId) => {
-        if (groupId === currentPageAccordion) {
+        if (autoOpenCurrent && groupId === currentPageAccordion) {
             return !closedCurrentAccordion || openedAccordion === groupId;
         }
 
@@ -108,7 +112,7 @@ const Navigation = () => {
     };
 
     const handleAccordionToggle = (groupId) => {
-        if (groupId === currentPageAccordion) {
+        if (autoOpenCurrent && groupId === currentPageAccordion) {
             if (openedAccordion === groupId) {
                 setOpenedAccordion(null);
                 setClosedCurrentAccordion(true);

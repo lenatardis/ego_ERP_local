@@ -34,11 +34,21 @@
 }
 
 // Demo build, mobile only (< 1024 px): the options' inner tabs (Опції компонентів / комплектів)
-// sit on a panel of their own, so they read as a sub-group of "Опції", not as more main tabs
+// sit on a panel of their own, so they read as a sub-group of "Опції", not as more main tabs.
+// Both tab blocks are full-width 2-column grids, so their edges line up with each other and the page.
 @media screen and (max-width: 1023px) {
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tabBtn {
+    width: auto;
+    min-width: 0;
+    padding: 8px;
+  }
+
   .innerTabs {
-    width: fit-content;
-    max-width: 100%;
     padding: 8px;
     border-radius: var(--border-radius-M);
     background-color: var(--bg-second);
