@@ -288,3 +288,49 @@ textarea:disabled {
 
 
 
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .incomingFabric {
+    h2 {
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    h3 {
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    // heading on top, the actions (Перевірка суми, Зберегти) below it, as two equal buttons
+    .titleBlock {
+      flex-direction: column;
+      align-items: stretch;
+      row-gap: 16px;
+    }
+
+    .form {
+      padding: 12px;
+
+      &__action {
+        gap: 12px;
+
+        button {
+          flex: 1 1 0;
+          width: auto;
+        }
+      }
+
+      // one column instead of two
+      &__content {
+        grid-template-columns: minmax(0, 1fr);
+        grid-column-gap: 0;
+      }
+    }
+
+    .titleWrap {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  }
+}
