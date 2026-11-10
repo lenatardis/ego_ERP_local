@@ -150,9 +150,45 @@
     justify-content: space-between;
   }
 
+  // the banner under the actions (all widths): a warning box with a "!" mark ("Перевірка суми" success: green, ✓)
   .bannerError {
+    display: flex;
     white-space: pre-line;
-    padding-top: 5px;
+    align-items: flex-start;
+    column-gap: 10px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid #F17C7C;
+    border-radius: 6px;
+    background-color: #FDECEC;
+    color: #8E2B2B;
+    font-size: 14px;
+    line-height: 20px;
+
+    &::before {
+      content: '!';
+      flex: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #D54F4F;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      text-align: center;
+    }
+  }
+
+  .bannerOk {
+    border-color: #7BC08A;
+    background-color: #EAF6ED;
+    color: #1F5F2E;
+
+    &::before {
+      content: '✓';
+      background-color: #3E9B52;
+    }
   }
 }
 
@@ -331,6 +367,11 @@ textarea:disabled {
     .titleWrap {
       flex-wrap: wrap;
       gap: 12px;
+    }
+
+    // the two former columns are stacked now: keep them apart ("Хто приймав" stuck to the field above)
+    .form__content {
+      grid-row-gap: 16px;
     }
 
     // the date input as wide as its wrapper (the red error border showed it ending halfway)

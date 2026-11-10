@@ -661,7 +661,10 @@ const handleCapacityValidationChange = (info) => {
                 )}
             </div>
 
-            {bannerMsg && <div className={styles.bannerError}>{bannerMsg}</div>}
+            {bannerMsg && (
+                // "Перевірка суми" success gets the positive (green) banner style (IncomingArrival.module.scss)
+                <div className={`${styles.bannerError} ${bannerMsg.startsWith('Суми співпадають') ? styles.bannerOk : ''}`}>{bannerMsg}</div>
+            )}
 
             <form id="incoming-product-form" onSubmit={isReadonly ? (e) => e.preventDefault() : handleSubmit(onSave, onInvalid)} autoComplete="off" onKeyDownCapture={stopEnterSubmit}>
                 <div className={`${styles.form} ${styles.upperForm}`}>
