@@ -555,7 +555,6 @@ const StorageProduct = () => {
                 subrows={(row) =>
                     expandedIds.has(row.__tplId) ? row.__subrows || [] : []
                 }
-                subtitle={"Готова продукція"}
                 equalColumns
                 centered
             />

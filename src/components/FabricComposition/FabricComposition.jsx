@@ -335,7 +335,7 @@ const FabricComposition = () => {
                 onSearch={() => onSendFilters(filterParams)}
             />
 
-            <Table columns={columns} data={rows} subtitle={'Тканини'} equalColumns centered />
+            <Table columns={columns} data={rows} equalColumns centered />
 
             <Filter isShow={isShowFilter} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
