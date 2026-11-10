@@ -57,6 +57,8 @@ const showReloadNotice = () => {
     const text = document.createElement('span');
     text.textContent = NOTICE_TEXT;
     text.style.flex = '1 1 260px';
+    // set on the text itself: the ERP's global `p, span { color }` would override the inherited white
+    text.style.color = '#FFFFFF';
 
     const button = document.createElement('button');
     button.type = 'button';
