@@ -88,7 +88,12 @@ const server = http.createServer((req, res) => {
         return;
     }
     const app = appFor(urlPath);
-    if (!app) {
+    if (app && `${urlPath}/` === app.base) {
+        // /ego_CRM_local -> /ego_CRM_local/, as GitHub Pages does: a page outside the MSW worker's scope
+        // (the base path with its slash) gets no mocks, so its API requests would reach this server
+        const { search } = new URL(req.url, 'http://localhost');
+        res.writeHead(301, { Location: app.base + search }).end();
+    } else if (!app) {
         res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Not found');
     } else if (STATIC) {
         serveStatic(app, urlPath, res);
