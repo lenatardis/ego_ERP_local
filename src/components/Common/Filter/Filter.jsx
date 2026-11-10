@@ -2,10 +2,12 @@ import React from "react";
 import styles from './Filter.module.scss';
 import RemoveFilter from "../../../assets/icons/filter-remove-icon.svg";
 import CloseIcon from "../../../assets/icons/close.svg";
+import useScrollLock from "../../../hooks/useScrollLock";
 
 
 
 const Filter = ({children, isShow, deleteFilters = null, onClose = null}) => {
+    useScrollLock(isShow);
 
     return (
         <div className={isShow ? styles.filterShow : styles.filter}>

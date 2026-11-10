@@ -8,6 +8,8 @@ import { useLocation } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { logout } from "../../api/authApi";
 import { getProfile } from "../../store/selectors";
+import useScrollLock from "../../hooks/useScrollLock";
+import useWindowSize from "../../hooks/useWindowSize";
 
 const Navigation = () => {
     const { pathname } = useLocation();
@@ -76,6 +78,9 @@ const Navigation = () => {
     const [closedCurrentAccordion, setClosedCurrentAccordion] = useState(false);
     // Demo build, mobile only (< 1024 px): the sidebar is a slide-out menu opened from the top bar
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+    // the page behind the open mobile menu doesn't scroll (only below 1024 px, where the menu is a slide-out)
+    const { width: windowWidth } = useWindowSize();
+    useScrollLock(isMobileOpen && windowWidth < 1024);
 
     useEffect(() => {
         setOpenedAccordion(null);

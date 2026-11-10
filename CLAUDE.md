@@ -94,6 +94,8 @@ Arrival tables — warnings don't move fields (2026-11-10, at the user's request
 
 Sidebar on short desktop windows (2026-11-10, at the user's request): `.navigation` scrolls (`overflow-y: auto`, its children `flex-shrink: 0`) — only at window heights ≤ 730 px (the tallest menu needs 726 px), because while one group closes and another opens the menu is briefly taller and a scrollbar would flash on taller windows. `Перейти в CRM` is as wide as its caption (16 px side padding, 138 px), centred (`logout__crm`). Before, with two groups open (the current page's + one more) the logout line went below the bottom edge under ~706 px window height and couldn't be reached. Checked: 600 px — content 726 px, scrolls, logout fully reachable, groups keep their height; 860 px — no scroll, unchanged.
 
+Page scroll lock (2026-11-10, at the user's request; all widths): while a filter (`Filter`, every page) or the mobile slide-out menu (below 1024 px) is open, the page behind doesn't scroll — `src/hooks/useScrollLock.js` (counted locks) puts `scrollLocked` on `<html>` (`Base.scss`: `html` and `body` `overflow: hidden !important`, so it doesn't clash with the popups' inline `body.style.overflow` from `setIsActivePopup`) and `scrollLockedGutter` (`scrollbar-gutter: stable`) when the page had a scrollbar, so nothing shifts sideways. Checked: desktop filter (no scroll, content doesn't move, scrolls after closing); 390 px menu and filter; 844×390 landscape — page locked, the menu itself still scrolls to the logout line.
+
 ## Project Context
 
 This repository is a local portfolio reconstruction of an existing ERP admin panel.

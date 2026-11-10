@@ -35,6 +35,17 @@ html.stableGutter {
   scrollbar-gutter: stable;
 }
 
+// Demo build: page scroll locked while a filter / the mobile menu is open (`useScrollLock`).
+// !important: popups set `body.style.overflow` inline.
+html.scrollLocked,
+html.scrollLocked body {
+  overflow: hidden !important;
+}
+
+html.scrollLockedGutter {
+  scrollbar-gutter: stable;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
