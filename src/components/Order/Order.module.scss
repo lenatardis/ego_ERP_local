@@ -445,3 +445,59 @@
   margin-bottom: 16px;
   color: #d54f4f;
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .order {
+    row-gap: 16px;
+
+    &__header {
+      padding: 12px;
+
+      .nameBlock h3 {
+        font-size: 22px;
+        line-height: 28px;
+      }
+    }
+
+    // worker on top, order info below (wrapping)
+    &__headerRow {
+      flex-direction: column;
+      row-gap: 12px;
+    }
+
+    &__content {
+      padding: 12px;
+    }
+
+    .userLogoPlaceholder {
+      width: 56px;
+      height: 56px;
+
+      img {
+        width: 56px;
+        height: 56px;
+      }
+    }
+
+    .infoBlock {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .timeBlock {
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px;
+
+      .timeCell span {
+        font-size: 22px;
+        line-height: 30px;
+      }
+    }
+
+    .grid > * {
+      min-width: 0;
+    }
+  }
+}

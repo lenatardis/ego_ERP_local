@@ -73,3 +73,27 @@
     background: url(../../../assets/icons/filter.svg) no-repeat left top;
   }
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .searchFilter {
+    &__header {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+  }
+
+  // search on its own line, buttons wrap below it
+  .actions {
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .searchWrap {
+      flex: 1 1 100%;
+    }
+  }
+}

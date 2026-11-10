@@ -150,6 +150,15 @@ body {
   width: calc(100% - 264px);
 }
 
+// Demo build, mobile only: the sidebar is a slide-out menu (Navigation), so the content takes the full width below the top bar
+@media screen and (max-width: 1023px) {
+  .contentBox {
+    margin: 0;
+    width: 100%;
+    padding: 72px 16px 16px;
+  }
+}
+
 .btnDark, .btnLight {
   padding: 8px 24px;
   border-radius: var(--border-radius-S);
@@ -201,4 +210,12 @@ body {
   height: 82px;
   padding: 10px 16px;
   border-radius: 4px;
+}
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  // button captions may wrap instead of pushing their row off screen
+  .btnDark span, .btnLight span {
+    white-space: normal;
+  }
 }

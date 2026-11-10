@@ -213,6 +213,10 @@
   border-radius: var(--border-radius-S);
 }
 
-
-
-
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .createBlock {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+  }
+}

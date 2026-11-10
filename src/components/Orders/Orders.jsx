@@ -367,7 +367,7 @@ const Orders = () => {
                                                 : ""
                                         }
                                     >
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Дата отримання">
                                             {row.receivedDate}
                                         </div>
 
@@ -383,23 +383,23 @@ const Orders = () => {
                                             />
                                         </div>
 
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Назва">
                                             {row.nameValue || "—"}
                                         </div>
 
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Категорія">
                                             {row.categoryValue || "—"}
                                         </div>
 
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Колір">
                                             {row.colorValue || "—"}
                                         </div>
 
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Розмір">
                                             {row.setSize || "—"}
                                         </div>
 
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Коментар">
                                             <div className={styles.comment}>
                                                 {row.directCommentValue}
                                             </div>
@@ -434,7 +434,7 @@ const Orders = () => {
                                             : ""
                                     }
                                 >
-                                    <div className={styles.cell}>
+                                    <div className={styles.cell} data-label="Дата отримання">
                                         {row.receivedDate}
                                     </div>
 
@@ -450,20 +450,20 @@ const Orders = () => {
                                         />
                                     </div>
 
-                                    <div className={styles.cell}>
+                                    <div className={styles.cell} data-label={thirdColumnTitle}>
                                         {thirdColumnValue || "—"}
                                     </div>
 
-                                    <div className={styles.cell}>
+                                    <div className={styles.cell} data-label={fourthColumnTitle}>
                                         {fourthColumnValue || "—"}
                                     </div>
 
-                                    <div className={styles.cell}>
+                                    <div className={styles.cell} data-label="Опції">
                                         {optionsValue}
                                     </div>
 
                                     {showBarcodeColumn && (
-                                        <div className={styles.cell}>
+                                        <div className={styles.cell} data-label="Barcode">
                                             {row.barcode ? (
                                                 <div
                                                     className={
@@ -492,7 +492,7 @@ const Orders = () => {
                                         </div>
                                     )}
 
-                                    <div className={styles.cell}>
+                                    <div className={styles.cell} data-label="Коментар">
                                         <div className={styles.comment}>
                                             {row.comment}
                                         </div>

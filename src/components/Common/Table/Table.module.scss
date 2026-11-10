@@ -298,3 +298,10 @@
   }
 }
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .table {
+    padding: 12px;
+  }
+}

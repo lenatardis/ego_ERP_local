@@ -74,11 +74,21 @@ const Navigation = () => {
 
     const [openedAccordion, setOpenedAccordion] = useState(null);
     const [closedCurrentAccordion, setClosedCurrentAccordion] = useState(false);
+    // Demo build, mobile only (< 1024 px): the sidebar is a slide-out menu opened from the top bar
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     useEffect(() => {
         setOpenedAccordion(null);
         setClosedCurrentAccordion(false);
+        setIsMobileOpen(false);
     }, [pathname]);
+
+    useEffect(() => {
+        if (!isMobileOpen) return;
+        const onKeyDown = (e) => { if (e.key === 'Escape') setIsMobileOpen(false); };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [isMobileOpen]);
 
     const handleLogout = () => {
         logout(dispatch);
@@ -248,9 +258,25 @@ const Navigation = () => {
         );
     };
 
+    const activeLink = visibleNavGroups.flatMap((group) => group.links).find(isLinkActive);
+
     return (
-        <div className={styles.navigation}>
-            <Link to={'/'}>
+        <>
+        <div className={styles.mobileBar}>
+            <button
+                type="button"
+                className={styles.mobileBar__toggle}
+                onClick={() => setIsMobileOpen(true)}
+                aria-label="Відкрити меню"
+            >
+                <span/><span/><span/>
+            </button>
+            <img className={styles.mobileBar__logo} src={logo} alt="logo" width={36} height={36}/>
+            <p className={styles.mobileBar__title}>{activeLink ? activeLink.name : 'Ego Textile'}</p>
+        </div>
+        {isMobileOpen && <div className={styles.mobileOverlay} onClick={() => setIsMobileOpen(false)}/>}
+        <div className={`${styles.navigation} ${isMobileOpen ? styles.navigationOpen : ''}`}>
+            <Link to={'/'} onClick={() => setIsMobileOpen(false)}>
                 <img
                     className={styles.navigation__logo}
                     src={logo}
@@ -285,6 +311,7 @@ const Navigation = () => {
                                         to={link.src}
                                         key={linkIndex}
                                         className={isActive ? styles.linkActive : styles.link}
+                                        onClick={() => setIsMobileOpen(false)}
                                     >
                                         <span>{link.name}</span>
                                     </Link>
@@ -322,6 +349,7 @@ const Navigation = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

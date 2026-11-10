@@ -40,3 +40,19 @@
     text-align: center;
   }
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .sidePopup, .sidePopupActive {
+    width: 100%;
+    padding: 0 16px 10px;
+    overflow-y: auto;
+  }
+
+  .header {
+    &__title {
+      font-size: 24px;
+      padding: 24px 0 20px;
+    }
+  }
+}

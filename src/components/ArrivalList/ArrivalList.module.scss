@@ -66,3 +66,24 @@
     margin-bottom: 20px;
   }
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .arrivalList {
+    &__item {
+      flex-direction: column;
+      row-gap: 12px;
+    }
+
+    .actionBlock {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .navBtnRow {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+  }
+}

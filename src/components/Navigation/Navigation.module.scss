@@ -159,3 +159,86 @@
   opacity: 1;
 }
 
+
+// Demo build, mobile only (< 1024 px): top bar + slide-out sidebar. Hidden on desktop, so the desktop layout is unchanged.
+.mobileBar,
+.mobileOverlay {
+  display: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .mobileBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    height: 56px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    background-color: var(--bh-nav);
+
+    &__toggle {
+      width: 40px;
+      height: 40px;
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      row-gap: 5px;
+      background-color: transparent;
+      border-radius: var(--border-radius-M);
+
+      span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        border-radius: 1px;
+        background-color: #fff;
+      }
+    }
+
+    &__logo {
+      flex: 0 0 auto;
+      border-radius: 50%;
+    }
+
+    &__title {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .mobileOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background-color: rgba(48, 34, 60, 0.5);
+  }
+
+  // below the app's popups (z-index 65+)
+  .navigation {
+    top: 0;
+    left: 0;
+    z-index: 60;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+  }
+
+  .navigationOpen {
+    transform: none;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  }
+}

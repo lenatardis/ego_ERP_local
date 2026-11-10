@@ -102,3 +102,16 @@
     height: calc(100% - 48px);
   }
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .centerPopup, .centerPopupActive {
+    width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+  }
+
+  .popup {
+    min-width: 0;
+  }
+}

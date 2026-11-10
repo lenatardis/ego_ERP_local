@@ -227,3 +227,87 @@
   max-width: 100%;
   height: auto;
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .orders {
+    padding: 16px 12px;
+  }
+
+  // the four (and two inner) tabs as a grid instead of one 1170 px row
+  .switcher, .innerSwitcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  // rows as cards: photo on the left, the other cells on the right with their column name (data-label) above
+  .tableWrap {
+    padding: 8px;
+    min-height: 0;
+  }
+
+  .headerRow {
+    display: none;
+  }
+
+  .rows {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .rowCard {
+    grid-template-columns: 88px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px 12px;
+    min-height: 0;
+    padding: 10px;
+  }
+
+  .cell {
+    grid-column: 2;
+    display: block;
+    min-height: 0;
+    font-size: 14px;
+
+    &[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 2px;
+      color: #8e8795;
+      font-size: 11px;
+      line-height: 14px;
+    }
+
+    // the photo: left column, beside all the other cells
+    &:nth-child(2) {
+      grid-column: 1;
+      grid-row: 1 / span 7;
+    }
+
+    &:has(> .comment:empty) {
+      display: none;
+    }
+  }
+
+  .photo, .photoPlaceholder {
+    width: 88px;
+    min-width: 88px;
+    height: 104px;
+    flex-basis: 88px;
+  }
+
+  .comment {
+    max-width: none;
+    font-size: 14px;
+  }
+
+  .switchButton, .innerSwitchButton {
+    min-width: 0;
+    height: auto;
+    min-height: 40px;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+}

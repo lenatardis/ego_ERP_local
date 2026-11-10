@@ -34,3 +34,11 @@
   background-color: var(--btn-dark);
   color: #fff;
 }
+
+// Demo build, mobile only (< 1024 px); the desktop layout is unchanged
+@media screen and (max-width: 1023px) {
+  .tabs {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
