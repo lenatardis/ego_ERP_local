@@ -75,18 +75,20 @@ const Navigation = () => {
     const currentPageAccordion = getAccordionByPath(pathname);
 
     const [openedAccordion, setOpenedAccordion] = useState(null);
-    const [closedCurrentAccordion, setClosedCurrentAccordion] = useState(false);
     // Demo build, mobile only (< 1024 px): the sidebar is a slide-out menu opened from the top bar
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     // the page behind the open mobile menu doesn't scroll (only below 1024 px, where the menu is a slide-out)
     const { width: windowWidth } = useWindowSize();
-    useScrollLock(isMobileOpen && windowWidth < 1024);
+    const isPhone = windowWidth < 1024;
+    useScrollLock(isMobileOpen && isPhone);
 
+    // Demo build (all widths): one group open at a time. The current page's group starts open as
+    // that one group; opening another closes it. (The original kept the current group open next to
+    // the opened one — too tall for ~600 px laptop screens.)
     useEffect(() => {
-        setOpenedAccordion(null);
-        setClosedCurrentAccordion(false);
+        setOpenedAccordion(currentPageAccordion);
         setIsMobileOpen(false);
-    }, [pathname]);
+    }, [pathname, currentPageAccordion]);
 
     useEffect(() => {
         if (!isMobileOpen) return;
@@ -99,31 +101,9 @@ const Navigation = () => {
         logout(dispatch);
     };
 
-    // Demo build: on phones (< 1024 px) the current page's group isn't opened by itself — every
-    // group starts closed and opens only when tapped
-    const autoOpenCurrent = windowWidth >= 1024;
-
-    const isGroupOpen = (groupId) => {
-        if (autoOpenCurrent && groupId === currentPageAccordion) {
-            return !closedCurrentAccordion || openedAccordion === groupId;
-        }
-
-        return openedAccordion === groupId;
-    };
+    const isGroupOpen = (groupId) => openedAccordion === groupId;
 
     const handleAccordionToggle = (groupId) => {
-        if (autoOpenCurrent && groupId === currentPageAccordion) {
-            if (openedAccordion === groupId) {
-                setOpenedAccordion(null);
-                setClosedCurrentAccordion(true);
-            } else if (closedCurrentAccordion) {
-                setClosedCurrentAccordion(false);
-            } else {
-                setClosedCurrentAccordion(true);
-            }
-            return;
-        }
-
         setOpenedAccordion(prev => (prev === groupId ? null : groupId));
     };
 

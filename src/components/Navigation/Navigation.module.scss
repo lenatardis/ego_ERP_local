@@ -9,9 +9,10 @@
   flex-direction: column;
   align-items: center;
   // demo build: on a short window the menu scrolls instead of pushing "Перейти в CRM" / logout
-  // below the bottom edge. Only below 730 px: the tallest menu (two groups open) needs 726 px, and
-  // on taller windows a scrollbar would only flash while one group closes and another opens.
-  @media screen and (max-height: 730px) {
+  // below the bottom edge. Only up to 594 px: the tallest menu (one group open, the largest)
+  // needs 590 px, and on taller windows a scrollbar would only flash while one group closes and
+  // another opens.
+  @media screen and (max-height: 594px) {
     overflow-y: auto;
     scrollbar-width: thin;
   }
