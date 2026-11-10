@@ -11,7 +11,7 @@ const Filter = ({children, isShow, deleteFilters = null, onClose = null}) => {
 
     return (
         <div className={isShow ? styles.filterShow : styles.filter}>
-            {/* phones: the panel covers the screen, so the overlay behind it can't be tapped */}
+            {/* all widths; on phones the panel covers the screen, so the overlay behind it can't be tapped */}
             {onClose && (
                 <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Закрити фільтр">
                     <img src={CloseIcon} alt=""/>

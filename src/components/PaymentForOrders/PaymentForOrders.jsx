@@ -26,7 +26,7 @@ import {
 import InputBox from "../Common/InputBox/InputBox.jsx";
 import CustomCheckbox from "../Common/CustomCheckbox/CustomCheckbox.jsx";
 import InfoIcon from "../../assets/icons/info.svg";
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from "../Common/TapTooltip/TapTooltip";
 import NewCustomSelect from "../Common/NewCustomSelect/NewCustomSelect.jsx";
 import LinkRenderer from "../Common/LinkRenderer/LinkRenderer";
 import ExpandableTableFixedHeader from "../Common/ExpandableTable/ExpandableTableFixedHeader.jsx";

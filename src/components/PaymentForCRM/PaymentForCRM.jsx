@@ -12,7 +12,8 @@ import NewCustomSelect from "../Common/NewCustomSelect/NewCustomSelect.jsx";
 import CentralPopup from "../Common/CentralPopup/CentralPopup";
 import Preloader from "../Common/Preloader/Preloader.jsx";
 
-import { Pagination, Tooltip } from "@mui/material";
+import { Pagination } from "@mui/material";
+import Tooltip from "../Common/TapTooltip/TapTooltip";
 import { useNavigate } from "react-router";
 import { useStickyXScroll } from "../../hooks/useStickyXScroll.jsx";
 

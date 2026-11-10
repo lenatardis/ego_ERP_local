@@ -32,7 +32,7 @@ import {
     deleteCostPrice,
 } from "../../api/tablesApi.js";
 import {getAccessToken, getUserId} from "../../api/authStorage.js";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip from "../Common/TapTooltip/TapTooltip";
 import InfoIcon from "../../assets/icons/info.svg";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
 

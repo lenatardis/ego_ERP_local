@@ -27,8 +27,17 @@
   right: 0;
 }
 
+// × in the panel's top-right corner, all widths (demo build; on phones the panel covers the screen)
 .closeBtn {
-  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
 }
 
 .selects {
@@ -70,17 +79,5 @@
 
   .filterShow {
     right: 0;
-  }
-
-  .closeBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
   }
 }

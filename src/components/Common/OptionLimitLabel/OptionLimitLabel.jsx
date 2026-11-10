@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip } from "@mui/material";
+import Tooltip from "../TapTooltip/TapTooltip";
 import InfoIcon from "../../../assets/icons/info.svg";
 
 const OptionLimitLabel = ({ text, maxLength = 100 }) => (

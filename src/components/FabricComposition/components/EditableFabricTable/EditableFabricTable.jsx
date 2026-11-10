@@ -7,7 +7,7 @@ import WhiteCustomSelect from '../../../../components/Common/WhiteCustomSelect/W
 import NewCustomSelect from "../../../Common/NewCustomSelect/NewCustomSelect.jsx";
 import CentralPopup from "../../../Common/CentralPopup/CentralPopup.jsx";
 import NewFabric from "../NewFabric/NewFabric.jsx";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip from "../../../Common/TapTooltip/TapTooltip";
 import InfoIcon from "../../../../assets/icons/info.svg";
 import IconClose from "../../../../assets/icons/cross.svg";
 
