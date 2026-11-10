@@ -46,8 +46,36 @@ span {
 .or {
   font-size: 11px;
   line-height: 1em;
-  margin: 2px 0;
+  margin: 6px 0;
+  text-align: center;
   opacity: 0.6;
+}
+
+// Fabric rows: cells are top-aligned, so a warning under a field only makes the row taller
+// instead of pushing the row's fields up. The other cells keep the offset that used to
+// centre them on the length cell (select / "або" / input).
+.stableRow {
+  align-items: start;
+
+  > :not(:has(.sizeCell)) {
+    margin-top: 28px;
+  }
+}
+
+// Product rows: every colour/size line is a grid row of its own (placed inline in the JSX),
+// so the line is as tall as its tallest field + warning in any column and the columns stay aligned.
+// Cells start at the top; when editable, the padding leaves room for the "+" / "i" icons above the
+// first line (selector beats Table.module's `.editableTable .gridTable__row { padding: 8px 0 }`).
+.variantRow {
+  align-items: start;
+}
+
+:global(.editableTable) .variantRow.variantRowEditable {
+  padding-top: 28px;
+}
+
+.variantColumn {
+  display: contents;
 }
 
 .muiLocal {
@@ -168,6 +196,20 @@ span {
 
 .fullBorder {
   border: 1px solid var(--bg-main);
+}
+
+// an input with its own border (Кількість, Назва / Код, custom length) is as tall as the selects
+// next to it, whose border sits on a wrapper around a 32 px field
+input.fullBorder {
+  min-height: 34px;
+}
+
+// ...and so is an input placed straight in a cell (№, Категорія / Тип, Сума $ / грн). Only these
+// tables' rows; selects and inputs inside a bordered wrapper (prices) are already 34 px outside.
+.stableRow > * > input,
+.variantRow > * > input,
+.variantColumn > * > input {
+  min-height: 34px;
 }
 
 .noRightBorder {

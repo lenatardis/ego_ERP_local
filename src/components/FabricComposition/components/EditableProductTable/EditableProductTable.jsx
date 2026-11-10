@@ -1384,6 +1384,11 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                     {rows.map((row, ri) => {
                         const isLocked = !!row.readonlyTemplate;
                         const canRemoveRow = !readOnly && ri !== 0 && !row.isPersisted;
+                        // each colour/size line is a row of the table grid (+ one for the "Додати" selects),
+                        // so a warning under one field moves the whole line down in every column
+                        const lineCount = row.variants.length + (readOnly ? 0 : 1);
+                        const allLines = (col) => ({ gridColumn: col, gridRow: `1 / span ${lineCount}` });
+                        const line = (col, vi) => ({ gridColumn: col, gridRow: vi + 1, marginBottom: 4 });
                         return (
                             <div className={innerStyles.rowBlock} key={ri}>
                                 {canRemoveRow && (
@@ -1396,13 +1401,13 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                         <img src={IconClose} alt="" />
                                     </button>
                                 )}
-                                <div className={styles.gridTable__row} style={gridTemplate}>
+                                <div className={`${styles.gridTable__row} ${innerStyles.variantRow} ${readOnly ? '' : innerStyles.variantRowEditable}`} style={gridTemplate}>
                                     {/* № */}
-                                    <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`}><input type="text" value={String(ri + 1)}
+                                    <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`} style={allLines(1)}><input type="text" value={String(ri + 1)}
                                         readOnly /></div>
 
                                     {/* Назва (template) */}
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={styles.gridTable__cell} style={allLines(2)}>
                                         <div className={innerStyles.fabricCellWrap}>
                                             {!isLocked && !readOnly && (
                                                 <button
@@ -1476,14 +1481,14 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                     </div>
 
                                     {/* Категорія (readonly, з продукту) */}
-                                    <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`}>
+                                    <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`} style={allLines(3)}>
                                         <input type="text" value={row.category.name} readOnly />
                                     </div>
 
                                     {/* Колір */}
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`c-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`c-${vi}`} className={styles.gridTable__cell} style={line(4, vi)}>
                                                 <div className={innerStyles.noRightBorder}>
                                                     <NewCustomSelect
                                                         value={v.colorId ?? ''}
@@ -1501,23 +1506,25 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                             </div>
                                         ))}
                                         {!readOnly && (
-                                            <div className={innerStyles.noRightBorder}>
-                                                <NewCustomSelect
-                                                    value=""
-                                                    onChange={(e) => handleAddColor(ri, e.target.value)}
-                                                    options={colorOptions}
-                                                    label={<>+ Додати<br />колір</>}
-                                                    height="32px"
-                                                    menuLeftAlign
-                                                />
+                                            <div className={styles.gridTable__cell} style={line(4, row.variants.length)}>
+                                                <div className={innerStyles.noRightBorder}>
+                                                    <NewCustomSelect
+                                                        value=""
+                                                        onChange={(e) => handleAddColor(ri, e.target.value)}
+                                                        options={colorOptions}
+                                                        label={<>+ Додати<br />колір</>}
+                                                        height="32px"
+                                                        menuLeftAlign
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Розмір */}
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`s-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`s-${vi}`} className={styles.gridTable__cell} style={line(5, vi)}>
                                                 <div className={innerStyles.fullBorder}>
                                                     <NewCustomSelect
                                                         value={v.sizeId ?? ''}
@@ -1535,7 +1542,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                     className={innerStyles.err}>{variantErrors[`${ri}:${vi}`].size}</div>}
                                             </div>
                                         ))}
-                                        {!readOnly && (<div>
+                                        {!readOnly && (<div className={styles.gridTable__cell} style={line(5, row.variants.length)}>
                                             <div className={innerStyles.fullBorder}>
                                                 <NewCustomSelect
                                                     value=""
@@ -1552,9 +1559,9 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                     </div>
 
                                     {/* К-сть */}
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`q-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`q-${vi}`} className={styles.gridTable__cell} style={line(6, vi)}>
                                                 <input
                                                     type="number"
                                                     className={`${innerStyles.fullBorder} ${activeCapacityErrorVariants[`${ri}:${vi}`] ? innerStyles.capacityWarningBorder : ''}`}
@@ -1576,43 +1583,47 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                     </div>
 
                                     {/* Склад / Шкаф  / Комірка */}
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`w-${vi}`} style={{ marginBottom: 4 }} className={innerStyles.noRightBorder}>
-                                                <WhiteCustomSelect
-                                                    value={v.warehouse.id ?? ''}
-                                                    onChange={readOnly ? undefined : (e) => handleVarWarehouse(ri, vi, e.target.value)}
-                                                    options={whOptions()}
-                                                    label="Оберіть"
-                                                    height="32px"
-                                                    disabled={readOnly}
-                                                    menuLeftAlign
-                                                />
+                                            <div key={`w-${vi}`} className={styles.gridTable__cell} style={line(7, vi)}>
+                                                <div className={innerStyles.noRightBorder}>
+                                                    <WhiteCustomSelect
+                                                        value={v.warehouse.id ?? ''}
+                                                        onChange={readOnly ? undefined : (e) => handleVarWarehouse(ri, vi, e.target.value)}
+                                                        options={whOptions()}
+                                                        label="Оберіть"
+                                                        height="32px"
+                                                        disabled={readOnly}
+                                                        menuLeftAlign
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
 
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`r-${vi}`} style={{ marginBottom: 4 }} className={innerStyles.noRightBorder}>
-                                                <WhiteCustomSelect
-                                                    value={v.locker.id ?? ''}
-                                                    onChange={readOnly ? undefined : (e) => handleVarRack(ri, vi, e.target.value)}
-                                                    options={rackOptions(v.warehouse.id)}
-                                                    label={getRackLabel(v.warehouse.id)}
-                                                    height="32px"
-                                                    disabled={readOnly}
-                                                    menuLeftAlign
-                                                />
+                                            <div key={`r-${vi}`} className={styles.gridTable__cell} style={line(8, vi)}>
+                                                <div className={innerStyles.noRightBorder}>
+                                                    <WhiteCustomSelect
+                                                        value={v.locker.id ?? ''}
+                                                        onChange={readOnly ? undefined : (e) => handleVarRack(ri, vi, e.target.value)}
+                                                        options={rackOptions(v.warehouse.id)}
+                                                        label={getRackLabel(v.warehouse.id)}
+                                                        height="32px"
+                                                        disabled={readOnly}
+                                                        menuLeftAlign
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
 
 
 
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`c2-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`c2-${vi}`} className={styles.gridTable__cell} style={line(9, vi)}>
                                                 <div className={innerStyles.noRightBorder}>
                                                     <WhiteCustomSelect
                                                         value={v.cell.id ?? ''}
@@ -1632,9 +1643,9 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                     </div>
 
                                     {/* Ціна $ */}
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`pd-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`pd-${vi}`} className={styles.gridTable__cell} style={line(10, vi)}>
                                                 <div className={innerStyles.noRightBorder}>
                                                     <input
                                                         type="number"
@@ -1649,9 +1660,9 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                             </div>
                                         ))}
                                     </div>
-                                    <div className={styles.gridTable__cell}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`pu-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`pu-${vi}`} className={styles.gridTable__cell} style={line(11, vi)}>
                                                 <div className={`${innerStyles.fabricCellWrap} ${innerStyles.fullBorder}`}>
                                                     {!readOnly && (
                                                         <div className={`${innerStyles.fabricTooltip} ${innerStyles.priceTooltipRight}`}>
@@ -1676,16 +1687,16 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                         ))}
                                     </div>
 
-                                    <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`sd-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`sd-${vi}`} className={`${styles.gridTable__cell} ${styles.notEditableCell}`} style={line(12, vi)}>
                                                 <input type="number" value={v.sumUSD} readOnly />
                                             </div>
                                         ))}
                                     </div>
-                                    <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`}>
+                                    <div className={innerStyles.variantColumn}>
                                         {row.variants.map((v, vi) => (
-                                            <div key={`su-${vi}`} style={{ marginBottom: 4 }}>
+                                            <div key={`su-${vi}`} className={`${styles.gridTable__cell} ${styles.notEditableCell}`} style={line(13, vi)}>
                                                 <input type="number" value={v.sumUAH} readOnly />
                                             </div>
                                         ))}

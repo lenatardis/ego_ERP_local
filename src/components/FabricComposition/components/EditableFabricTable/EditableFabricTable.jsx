@@ -1284,7 +1284,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                         <img src={IconClose} alt="" />
                                     </button>
                                 )}
-                                <div className={styles.gridTable__row} style={gridTemplate}>
+                                <div className={`${styles.gridTable__row} ${innerStyles.stableRow}`} style={gridTemplate}>
                                     <div className={`${styles.gridTable__cell} ${styles.notEditableCell}`}><input type="text" value={String(idx + 1)} readOnly /></div>
                                     <div className={`${styles.gridTable__cell}`}>
                                         <div className={innerStyles.fabricCellWrap}>
