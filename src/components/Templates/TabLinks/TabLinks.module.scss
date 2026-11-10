@@ -32,3 +32,15 @@
     }
   }
 }
+
+// Demo build, mobile only (< 1024 px): the options' inner tabs (Опції компонентів / комплектів)
+// sit on a panel of their own, so they read as a sub-group of "Опції", not as more main tabs
+@media screen and (max-width: 1023px) {
+  .innerTabs {
+    width: fit-content;
+    max-width: 100%;
+    padding: 8px;
+    border-radius: var(--border-radius-M);
+    background-color: var(--bg-second);
+  }
+}

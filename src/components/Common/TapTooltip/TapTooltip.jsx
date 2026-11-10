@@ -29,6 +29,9 @@ const TapTooltip = ({ children, ...props }) => {
                 {cloneElement(children, {
                     onClick: (e) => {
                         children.props.onClick?.(e);
+                        // an icon inside a <label for=…> (OptionLimitLabel in the popups): the label would
+                        // focus its input with a click of its own, which closes the tooltip as a click away
+                        e.preventDefault();
                         setOpen((prev) => !prev);
                     },
                 })}

@@ -23,7 +23,7 @@ const OptionsInnerTabs = ({ preventSameRouteNav = true, className = "" }) => {
     };
 
     return (
-        <div className={`${styles.tabs} ${className}`}>
+        <div className={`${styles.tabs} ${styles.innerTabs} ${className}`}>
             {links.map((l) => (
                 <NavLink
                     key={l.key}
