@@ -114,7 +114,7 @@ The goal is to preserve the existing frontend functionality, UI, business logic,
 - Production ↔ CRM (step 7.5, contract in `../CLAUDE.md`): `src/mocks/data/manufacturing.js` takes what each demo manufacturing order makes, its stage, CRM order and date from the shared seed's `SEED_PRODUCTION` (same order as its SPECS, which keep only the scenario); finishing a stage calls `syncProduction` (`src/mocks/data/crmShared.js`), which updates the shared `production` collection and moves the CRM order to `SHIPMENT_READY` once all its items are ready.
 - Related records are stored by id and expanded into nested objects when a response is built, so edits (e.g. renaming a vendor) propagate.
 - Lists sort newest-created first, so a record created through a form appears at the top of page 1.
-- Demo login: users in `src/mocks/data/demoUsers.js` (password `DemoPass123`).
+- Demo login: users in `src/mocks/data/demoUsers.js` (password `DemoPass123`). Changed (2026-11-10, at the user's request): the login page (`components/Auth/Auth.jsx`) shows logo, title "Вхід в ERP", a demo-access hint and the form in a centred card (max 400 px), the same layout as the CRM's start page.
 
 ### Important working rules
 
