@@ -248,15 +248,16 @@
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 55;
+    // above the tables' ghost scroll bars (useStickyXScroll, z-index 60)
+    z-index: 61;
     background-color: rgba(48, 34, 60, 0.5);
   }
 
-  // below the app's popups (z-index 65+)
+  // below the app's popups (z-index 65+), above the ghost scroll bars (60)
   .navigation {
     top: 0;
     left: 0;
-    z-index: 60;
+    z-index: 62;
     height: 100vh;
     height: 100dvh;
     overflow-y: auto;
