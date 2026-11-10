@@ -332,5 +332,12 @@ textarea:disabled {
       flex-wrap: wrap;
       gap: 12px;
     }
+
+    // the date input as wide as its wrapper (the red error border showed it ending halfway)
+    .dateField {
+      width: 100%;
+      min-width: 0;
+      display: block;
+    }
   }
 }

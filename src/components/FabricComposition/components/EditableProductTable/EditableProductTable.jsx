@@ -1363,7 +1363,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
 
     return (
         <div>
-            <div className={`${styles.editableTable} ${innerStyles.muiLocal} editableTable`}>
+            <div className={`${styles.editableTable} ${styles.productEditableTable} ${innerStyles.muiLocal} editableTable`}>
                 <div className={styles.gridTable__header} style={gridTemplate}>
                     <div>№</div>
                     <div>Назва</div>

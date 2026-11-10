@@ -311,6 +311,26 @@
     min-width: calc(var(--table-cols, 1) * 110px);
   }
 
+  // editable arrival tables: at least the sum of their columns' minimum widths, so every row
+  // (and its grey background) spans all columns instead of stopping at the screen edge
+  .editableTable {
+    min-width: 980px;
+  }
+
+  .productEditableTable {
+    min-width: 1190px;
+  }
+
+  // product arrival table: real minimum widths, like the fabric table (on desktop Категорія and the
+  // four price / sum columns are minmax(20px, 1fr) and collapse on a narrow screen); the grid is inline, hence !important
+  .productEditableTable .gridTable__header,
+  .productEditableTable .gridTable__row {
+    grid-template-columns:
+      20px minmax(110px, 1.1fr) minmax(90px, 1fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(90px, 0.8fr)
+      minmax(130px, 1fr) minmax(100px, 1fr) minmax(100px, 1fr)
+      minmax(80px, 0.9fr) minmax(90px, 1fr) minmax(80px, 0.9fr) minmax(90px, 1fr) !important;
+  }
+
   // a table under a TableFixedHeader keeps its desktop padding (the header's width relies on it)
   .table.tableWithStickyHeader {
     padding: 0 16px 16px;
