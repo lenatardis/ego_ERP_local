@@ -71,6 +71,8 @@
   .filter, .filterShow {
     width: 100%;
     right: -100%;
+    // MUI menus keep 16 px off the screen edges – with 10 px here the open list sat 6 px off its select
+    padding: 10px 16px;
 
     h3 {
       font-size: 24px;

@@ -110,6 +110,8 @@ Dashes (2026-11-11, at the user's request): no em dash (U+2014) anywhere in eith
 
 Unchanged arrival edits (2026-11-11, at the user's request): saving an edited fabric / product arrival that has no changes is refused on the page with the banner "Для збереження відредагованої накладної внесіть зміни: поточна версія не відрізняється від збереженої." (no confirm popup). `FabricComposition/components/arrivalUnchanged.js` turns the arrival as loaded into the payload shape the page sends and compares it with the new payload, normalised (cents, numeric strings, empty = null, key order); the check runs after the page's own checks, right before the confirm popup, and once all checks pass and a save goes ahead (create or edit) the page clears its banner – the original left a failed attempt's banner (e.g. "Переконайтесь…") next to the confirm popup. If the normalisation misses an equivalence, the save simply goes through as before – a real edit is never blocked. Checked: all 19 seeded arrivals with rows read as unchanged; a comment edit or a table edit opens the confirm popup; an edit undone reads as unchanged again.
 
+Filter selects on phones (2026-11-11, at the user's request): below 1024 px the `Filter` panel has 16 px side padding (was 10 px). MUI menus keep 16 px off the screen edges, so with 10 px an open select's list was pushed 6 px sideways off its field. Checked at 360 / 384 / 768 px on Тканини: list and field at the same x for both selects. Desktop unchanged (the panel's selects are more than 16 px from the edge there).
+
 Login role picker (2026-11-11, at the user's request): "Бухгалтер" is the last option – reordered in `AuthForm.jsx` only (`DEMO_USERS` is shared catalog seed, identical in both repos, left as is).
 
 ## Project Context
