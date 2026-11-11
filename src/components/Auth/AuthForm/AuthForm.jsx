@@ -12,7 +12,11 @@ import { setTokens, setUserId } from "../../../api/authStorage";
 import CustomSelect from "../../Common/CustomSelect/CustomSelect";
 import { DEMO_USERS } from "../../../mocks/data/demoUsers";
 
-const DEMO_ROLE_OPTIONS = DEMO_USERS.map((u) => ({ value: String(u.id), name: u.roleLabel }));
+// Accountant last in the picker (at the user's request); DEMO_USERS itself is shared seed, left as is
+const DEMO_ROLE_OPTIONS = [
+    ...DEMO_USERS.filter((u) => !u.profile.groups.includes("Бухгалтер")),
+    ...DEMO_USERS.filter((u) => u.profile.groups.includes("Бухгалтер")),
+].map((u) => ({ value: String(u.id), name: u.roleLabel }));
 
 const AuthForm = () => {
     const dispatch = useAppDispatch();

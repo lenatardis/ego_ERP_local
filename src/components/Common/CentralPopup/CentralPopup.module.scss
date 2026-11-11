@@ -115,8 +115,32 @@
     min-width: 0;
   }
 
-  // only the × on phones, no "Закрити" caption
-  .cross p {
-    display: none;
+  // only the × on phones, no "Закрити" caption; a bigger ×, a smaller title
+  .cross {
+    padding: 6px;
+    margin-right: -6px;
+
+    p {
+      display: none;
+    }
+
+    span {
+      width: 24px;
+      height: 24px;
+    }
+
+    img {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  .header {
+    column-gap: 12px;
+
+    &__title {
+      font-size: 16px;
+      line-height: 20px;
+    }
   }
 }

@@ -100,7 +100,11 @@ Info icons on touch screens (2026-11-10, at the user's request): MUI `Tooltip` o
 
 Options' inner tabs on phones (2026-11-10, at the user's request): "Опції компонентів" / "Опції комплектів" (`Templates/TabLinks/OptionInnerTabs.jsx`, class `innerTabs`) sit on their own `--bg-second` panel (8 px padding, rounded) below 1024 px, so they read as a sub-group of "Опції"; both tab blocks (`TabLinks` on every template page, and the inner tabs) are full-width 2-column grids there, so their edges line up with each other and the search bar (checked at 360 px: all at 16–344, inner buttons' middle edges level with the main columns, no clipped caption); desktop unchanged.
 
-Popups on phones (2026-11-11, at the user's request): `CentralPopup` shows only the × below 1024 px (its "Закрити" caption hidden; the button has `aria-label="Закрити"`) — the CRM does the same. "Прив’язка платежу" (Оплата замовлень, `PaymentForOrders.module.scss`) is stacked below 1024 px: order tabs as a 2-column grid above the bills, each bill's text above its "Чек" / "Підв'язати" row — before, the two columns didn't fit and the popup scrolled sideways. Checked at 390 px: popup at 16–374, nothing outside it.
+Popups on phones (2026-11-11, at the user's request): `CentralPopup` shows only the × below 1024 px (its "Закрити" caption hidden; the button has `aria-label="Закрити"`) — the CRM does the same; there the × circle is 24 px (desktop 14 px, 10 px cross, 36 px tap area) and the title 16 px (desktop 18 px), so they look in proportion. "Прив’язка платежу" (Оплата замовлень, `PaymentForOrders.module.scss`) is stacked below 1024 px: order tabs as a 2-column grid above the bills, each bill's text above its "Чек" / "Підв'язати" row — before, the two columns didn't fit and the popup scrolled sideways. Checked at 390 px: popup at 16–374, nothing outside it.
+
+Order page on phones, second pass (2026-11-11, at the user's request — texts ran out of their blocks): below 1024 px `/order` stacks the kit info above "Історія замовлення" (both full width), with smaller fonts (title 22 px, headings 17 px, kit params 15 px, last update 18 px, worker history 14 px in one column) and `overflow-wrap: anywhere` for long names. Checked at 390 px as demo_cutter on order 4277: nothing outside the content box, no sideways scroll.
+
+Login role picker (2026-11-11, at the user's request): "Бухгалтер" is the last option — reordered in `AuthForm.jsx` only (`DEMO_USERS` is shared catalog seed, identical in both repos, left as is).
 
 ## Project Context
 
