@@ -173,7 +173,7 @@ const CustomLoadSelect = ({
         // Мінімум: підтягнути prefetchMinItems (щоб одразу було хоч щось)
         await prefetch();
 
-        // Якщо value досі не знайдено — догружаємо сторінки, доки не знайдемо або не закінчаться
+        // Якщо value досі не знайдено – догружаємо сторінки, доки не знайдемо або не закінчаться
         let safety = 0;
         while (!findOptionByValue(key) && hasMore() && safety < 200) {
             safety += 1;
@@ -182,7 +182,7 @@ const CustomLoadSelect = ({
     }, [value, findOptionByValue, prefetch, hasMore, loadPage]);
 
     const handleOpen = useCallback(async () => {
-        // перше відкриття — тягнемо сторінку 1 і робимо prefetch
+        // перше відкриття – тягнемо сторінку 1 і робимо prefetch
         if (pageRef.current === 0 && itemsRef.current.length === 0) {
             await loadPage(1, { reset: true });
         }

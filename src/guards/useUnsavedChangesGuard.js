@@ -10,7 +10,7 @@ import { useUnsavedCtx } from './UnsavedChangesContext';
  * - ЖОДНИХ автозбережень: користувач сам зберігає вручну.
  *
  * Якщо дуже потрібно примусово викликати системний beforeunload навіть при кліку по внутрішньому лінку,
- * постав HARD_LEAVE_ON_LINK = true — тоді навігація піде через window.location.href (повний reload).
+ * постав HARD_LEAVE_ON_LINK = true – тоді навігація піде через window.location.href (повний reload).
  */
 const HARD_LEAVE_ON_LINK = false;
 
@@ -84,7 +84,7 @@ export function useUnsavedChangesGuard() {
         } catch {}
     };
 
-    /** 2) Перехоплення внутрішніх <a>/<Link> — нативний confirm (без автозбереження) */
+    /** 2) Перехоплення внутрішніх <a>/<Link> – нативний confirm (без автозбереження) */
     useEffect(() => {
         if (!shouldBlock) return;
 
@@ -100,7 +100,7 @@ export function useUnsavedChangesGuard() {
             const isExternal = /^https?:\/\//i.test(href) || a.target === '_blank';
             if (isExternal) return;
 
-            // React Router Link зазвичай рендерить <a href="..."> — перехоплюємо
+            // React Router Link зазвичай рендерить <a href="..."> – перехоплюємо
             e.preventDefault();
             if (promptingRef.current) return;
             promptingRef.current = true;

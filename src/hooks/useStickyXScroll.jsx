@@ -154,7 +154,7 @@ export function useStickyXScroll({
         };
     }, [sizes.scrollWidth, sizes.clientWidth, handleGhostScroll, handleGhostWheel, forceSyncLoop, stopForceSync]);
 
-    // якщо змінився offsetBottom (з’явилась/зникла плашка) — ресинхронізуємо негайно
+    // якщо змінився offsetBottom (з’явилась/зникла плашка) – ресинхронізуємо негайно
     useEffect(() => {
         const main  = mainElRef.current;
         const ghost = ghostElRef.current;

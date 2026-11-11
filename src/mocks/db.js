@@ -84,7 +84,7 @@ if (storage.get(`${SHARED_PREFIX}version`) !== String(SHARED_DATA_VERSION)) {
 }
 
 // Private data follows the shared data it was built on (manufacturing orders and Privat payment links point at shared
-// orders and bills): whenever the shared store is (re)created it gets a new generation id — here or in the CRM — and
+// orders and bills): whenever the shared store is (re)created it gets a new generation id – here or in the CRM – and
 // private data built on another generation is dropped. Private data that has no generation yet (stored before this
 // check existed) adopts the current one.
 const SHARED_GENERATION_KEY = `${SHARED_PREFIX}generation`;

@@ -1,6 +1,6 @@
 // How the CRM prices catalog records for an order (workspace CLAUDE.md, "Cross-app contract"). Shared because
-// the seed (../seed.js) builds the seed orders' carts — and from them the order totals, bills and bank
-// payments — with the same prices the CRM charges when a product is added or a kit is saved.
+// the seed (../seed.js) builds the seed orders' carts – and from them the order totals, bills and bank
+// payments – with the same prices the CRM charges when a product is added or a kit is saved.
 
 import { DEMO_PRICELISTS, DEMO_SOURCES } from './pricelists';
 import { DEMO_PRICES } from './prices';
@@ -20,7 +20,7 @@ const listPrice = (owner, ownerId, listId) => {
 
 /**
  * Sell price (number) of a catalog record (owner: 'kit_template', 'warehouse_item_type', ...) for an order source, or
- * null. `sources`: the source records to look the source's pricelist up in — the seed's by default (the seed itself);
+ * null. `sources`: the source records to look the source's pricelist up in – the seed's by default (the seed itself);
  * the CRM passes the live ones, which the ERP edits (shared `sources` collection), so a source moved to another
  * pricelist is priced from it.
  */
@@ -31,7 +31,7 @@ export const priceFor = (owner, ownerId, sourceId, sources = DEMO_SOURCES) => {
     return fromSource ?? (DEFAULT_LIST ? listPrice(owner, ownerId, DEFAULT_LIST.id) : null);
 };
 
-// Kit templates are made for the CRM product types (сатин, бязь, полікотон — kit / component templates'
+// Kit templates are made for the CRM product types (сатин, бязь, полікотон – kit / component templates'
 // fabric_type_id), while fabrics carry the ERP warehouse types: which product type's kits a fabric of a
 // warehouse type is sewn into. Types without an entry (Перкаль, Муслін) have no kit templates.
 const PRODUCT_TYPE_OF_FABRIC_TYPE = {
@@ -46,7 +46,7 @@ export const productTypeOfFabric = (fabric) => PRODUCT_TYPE_OF_FABRIC_TYPE[fabri
 
 export const fabricTotalLength = (f) => f.opened_length_remainder + f.new_length_remainder;
 
-/** Order total after its discount — the CRM's own formula (ego_CRM_local/src/utils/getPriceWithDiscount.js). */
+/** Order total after its discount – the CRM's own formula (ego_CRM_local/src/utils/getPriceWithDiscount.js). */
 export const priceWithDiscount = (total, discountType, discountValue) => {
     if (!total) return 0;
     return discountType === 'PERC'

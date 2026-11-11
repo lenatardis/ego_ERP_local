@@ -501,7 +501,7 @@ const ComponentOptions = () => {
         const partsArrRaw = Array.isArray(raw?.part) ? raw.part : [];
         const partsArr = partsArrRaw.filter((p) => !p?.deleted_at);
 
-        // 1) назви для вже вибраних частин — беремо з raw.part (бо вони точно є)
+        // 1) назви для вже вибраних частин – беремо з raw.part (бо вони точно є)
         setPartsNameById((prev) => {
             const next = {...prev};
             for (const p of partsArr) {

@@ -113,7 +113,7 @@ const CreateCustomOptions = () => {
             const data = await fetchOptionParts(token, {
                 page: pageToLoad,
                 type: "component",
-                // page_size: 1, // якщо хочеш тестувати з фронта. Якщо ти вже “забила” в api — лишай без цього.
+                // page_size: 1, // якщо хочеш тестувати з фронта. Якщо ти вже “забила” в api – лишай без цього.
             });
 
             const list = Array.isArray(data?.option_parts) ? data.option_parts : [];
@@ -340,7 +340,7 @@ const CreateCustomOptions = () => {
         const typeObj = raw?.type ?? null;
         const partsArr = Array.isArray(raw?.part) ? raw.part : [];
 
-        // 1) назви для вже вибраних частин — беремо з raw.part (бо вони точно є)
+        // 1) назви для вже вибраних частин – беремо з raw.part (бо вони точно є)
         setPartsNameById((prev) => {
             const next = { ...prev };
             for (const p of partsArr) {

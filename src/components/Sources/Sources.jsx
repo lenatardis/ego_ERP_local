@@ -440,7 +440,7 @@ const Sources = () => {
             {
                 key: "pricesListTitle",
                 title: "Прайслист",
-                render: (_, row) => <LimitedCell value={row.pricesListTitle || "—"} />,
+                render: (_, row) => <LimitedCell value={row.pricesListTitle || "–"} />,
             },
             {
                 key: "actions",

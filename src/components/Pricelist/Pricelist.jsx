@@ -120,7 +120,7 @@ const Pricelist = () => {
                 page: params.page,
                 status: params.status || undefined,
                 title: params.title || undefined, // бековий пошук по назві
-                // is_default/page_size — додаси якщо треба
+                // is_default/page_size – додаси якщо треба
             });
 
             const apiRows = (data?.prices_lists ?? []).map(mapApiPricelistToRow);

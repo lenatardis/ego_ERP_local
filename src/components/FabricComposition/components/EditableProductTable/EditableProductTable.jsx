@@ -253,7 +253,7 @@ const EditableProductTable = ({ mode = 'create', exchangeRate, readOnly = false,
         })();
     }, []);
 
-    // склад дерево з поточною вільною місткістю комірок; null — якщо не вдалося завантажити
+    // склад дерево з поточною вільною місткістю комірок; null – якщо не вдалося завантажити
     const loadWarehouseTree = async () => {
         try {
             const token = getAccessToken();
@@ -377,7 +377,7 @@ const getProductVariantLabel = (row, variant, rowNumber, variantNumber) => {
         sizeName ? `розмір ${sizeName}` : '',
     ].filter(Boolean);
 
-    return `${parts.join(', ')} — позиція № ${rowNumber}.${variantNumber}`;
+    return `${parts.join(', ')} – позиція № ${rowNumber}.${variantNumber}`;
 };
 
 const getOriginalQtyByCell = (cellId, sourceRows = rowsRef.current) => {

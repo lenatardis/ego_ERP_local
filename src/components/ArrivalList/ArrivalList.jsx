@@ -106,7 +106,7 @@ const ArrivalList = () => {
             <h2>Список надходжень</h2>
             <div className={styles.arrivalList__wrap}>
 
-                {/* верхній ряд — створення нових надходжень */}
+                {/* верхній ряд – створення нових надходжень */}
                 <div className={styles.navBtnRow}>
                     <button onClick={navigateFabricArrival} className={`btnLight`}>
                         <span>+Тканини</span>
@@ -116,7 +116,7 @@ const ArrivalList = () => {
                     </button>
                 </div>
 
-                {/* 2-й ряд — таби-фільтри, притиснуті до лівого краю */}
+                {/* 2-й ряд – таби-фільтри, притиснуті до лівого краю */}
                 <div
                     className={styles.navBtnRow}
                     style={{justifyContent: 'flex-start'}}

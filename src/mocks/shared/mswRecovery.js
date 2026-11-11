@@ -1,15 +1,15 @@
-// Keeps MSW mocking a page after the browser has stopped its idle service worker — ONE FILE, KEPT IDENTICAL IN BOTH
+// Keeps MSW mocking a page after the browser has stopped its idle service worker – ONE FILE, KEPT IDENTICAL IN BOTH
 // REPOS (ego_ERP_local and ego_CRM_local, src/mocks/shared/; `check:shared` compares them). No bundler globals.
 //
 // Why: Chrome stops a service worker that has had nothing to do for ~30 s. MSW's page pings its worker every 5 s to
 // prevent that, but timers are throttled in a hidden tab (say, while you work in another window), so the worker gets
-// stopped. The restarted worker has forgotten which pages it mocks — it keeps them in memory (`activeClientIds` in
-// public/mockServiceWorker.js) — and lets their API requests through to the static host: lists come back empty
+// stopped. The restarted worker has forgotten which pages it mocks – it keeps them in memory (`activeClientIds` in
+// public/mockServiceWorker.js) – and lets their API requests through to the static host: lists come back empty
 // until the page is reloaded.
 //
 // keepMocking() (called once the mock backend has started):
-//   - when the tab is shown or focused again, it tells the worker again that this page is mocked — the same
-//     "MOCK_ACTIVATE" message MSW sends when it starts — which also wakes the worker up;
+//   - when the tab is shown or focused again, it tells the worker again that this page is mocked – the same
+//     "MOCK_ACTIVATE" message MSW sends when it starts – which also wakes the worker up;
 //   - as a fallback, an API request that still gets a non-JSON answer (every mock answers JSON, or 204 without a
 //     body) shows a notice asking to reload the page.
 

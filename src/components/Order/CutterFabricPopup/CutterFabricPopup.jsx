@@ -58,17 +58,17 @@ const getRollLabel = (roll) => {
     const warehouseName =
         roll?.cell?.rack?.warehouse?.name ||
         roll?.warehouse?.name ||
-        "—";
+        "–";
 
     const rackName =
         roll?.cell?.rack?.name ||
         roll?.rack?.name ||
-        "—";
+        "–";
 
     const cellNumber =
         roll?.cell?.number ??
         roll?.number ??
-        "—";
+        "–";
 
     const availableLength = getRollAvailableLength(roll);
 

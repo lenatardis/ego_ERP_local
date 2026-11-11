@@ -75,7 +75,7 @@ const getUserIdFromToken = (token) => {
     }
 };
 
-const getTextValue = (value, fallback = "—") => {
+const getTextValue = (value, fallback = "–") => {
     if (value === null || value === undefined || value === "") {
         return fallback;
     }
@@ -145,10 +145,10 @@ const normalizeImageUrl = (value) => {
 };
 
 const formatDateTime = (value) => {
-    if (!value) return "—";
+    if (!value) return "–";
 
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "—";
+    if (Number.isNaN(date.getTime())) return "–";
 
     return `${date.toLocaleDateString("uk-UA")} / ${date.toLocaleTimeString(
         "uk-UA",
@@ -160,7 +160,7 @@ const formatDateTime = (value) => {
 };
 
 const getOrderNumber = (order) => {
-    if (!order) return "—";
+    if (!order) return "–";
 
     if (order?.order && typeof order.order === "object") {
         return (
@@ -168,7 +168,7 @@ const getOrderNumber = (order) => {
             order.order.general_order_number ||
             order.order.order_number ||
             order.id ||
-            "—"
+            "–"
         );
     }
 
@@ -180,7 +180,7 @@ const getOrderNumber = (order) => {
         return order.order;
     }
 
-    return order?.id || "—";
+    return order?.id || "–";
 };
 
 const getImageUrl = (order) => {
@@ -199,15 +199,15 @@ const getImageUrl = (order) => {
 
 const getSetSizeValue = (order) => {
     const warehouseItemSize = getTextValue(order?.warehouse_item?.size);
-    if (warehouseItemSize !== "—") return warehouseItemSize;
+    if (warehouseItemSize !== "–") return warehouseItemSize;
 
     const kitName = getTextValue(order?.kit?.name);
-    if (kitName !== "—") return kitName;
+    if (kitName !== "–") return kitName;
 
     const warehouseItemName = getTextValue(order?.warehouse_item?.name);
-    if (warehouseItemName !== "—") return warehouseItemName;
+    if (warehouseItemName !== "–") return warehouseItemName;
 
-    return "—";
+    return "–";
 };
 
 const getCompletionItems = (order) => {
@@ -236,7 +236,7 @@ const getCompletionItems = (order) => {
         return [warehouseName];
     }
 
-    return ["—"];
+    return ["–"];
 };
 
 const FINISHED_ORDER_STATUSES = ["SHIPMENT_READY", "DELIVERED"];
@@ -245,7 +245,7 @@ const getCheckboxItems = (order) => {
     if (Array.isArray(order?.kit?.component) && order.kit.component.length > 0) {
         return order.kit.component.map((component, index) => ({
             id: component?.id ?? index + 1,
-            name: component?.name || "—",
+            name: component?.name || "–",
             is_sewn: Boolean(component?.is_sewn),
             is_packed: Boolean(component?.is_packed),
         }));
@@ -262,7 +262,7 @@ const getCheckboxItems = (order) => {
         ];
     }
 
-    return [{ id: 1, name: "—" }];
+    return [{ id: 1, name: "–" }];
 };
 
 const getOptionsItems = (order) => {
@@ -378,14 +378,14 @@ const getCuttingCostItems = (order) => {
             "";
 
         const cutterFullName =
-            [cutterFirstName, cutterLastName].filter(Boolean).join(" ").trim() || "—";
+            [cutterFirstName, cutterLastName].filter(Boolean).join(" ").trim() || "–";
 
         return {
             id: cost?.id || index,
-            fabricRollId: cost?.fabric_roll?.id ?? "—",
-            fabricName: cost?.fabric_roll?.fabric?.name || "—",
-            fabricType: cost?.fabric_roll?.fabric?.type?.type || "—",
-            usedLength: cost?.used_length ?? "—",
+            fabricRollId: cost?.fabric_roll?.id ?? "–",
+            fabricName: cost?.fabric_roll?.fabric?.name || "–",
+            fabricType: cost?.fabric_roll?.fabric?.type?.type || "–",
+            usedLength: cost?.used_length ?? "–",
             cutterFullName,
         };
     });
@@ -471,7 +471,7 @@ const Order = () => {
 
         const components = Array.isArray(order?.kit?.component) ? order.kit.component : [];
         const listMissing = (field) =>
-            components.filter((component) => !component?.[field]).map((component) => component?.name || "—");
+            components.filter((component) => !component?.[field]).map((component) => component?.name || "–");
 
         if (isCutter) {
             return cuttingCosts.length === 0
@@ -509,7 +509,7 @@ const Order = () => {
     const completionItems = getCompletionItems(order);
     const optionsItems = getOptionsItems(order);
     const statusLabel =
-        ORDER_STATUS_LABELS[order?.status] || order?.status || "—";
+        ORDER_STATUS_LABELS[order?.status] || order?.status || "–";
     const historyItems = getHistoryItems(order);
     const roleLabel = getCurrentRoleLabel(groups);
     const primaryExecutors = getPrimaryExecutors(order);
@@ -875,7 +875,7 @@ const Order = () => {
                 <div className={styles.order__headerRow}>
                     <div className={styles.userBlock}>
                         <div className={styles.userLogoPlaceholder}>
-                            <img src={photo ? photo : IconUserPlaceholder} alt="" />
+                            <img src={photo ? photo : IconUserPlaceholder} className={photo ? undefined : styles.userIcon} alt="" />
                         </div>
 
                         <div className={styles.nameBlock}>
@@ -974,7 +974,7 @@ const Order = () => {
                                                 </p>
                                             ))
                                         ) : (
-                                            <p>—</p>
+                                            <p>–</p>
                                         )}
                                     </div>
 
@@ -1009,9 +1009,9 @@ const Order = () => {
                                             {cuttingCosts.map((cost) => (
                                                 <p key={cost.id}>
                                                     · викроїно рулон <strong>#{cost?.fabric_roll?.id}</strong> (
-                                                    тканина <strong>{cost?.fabric_roll?.fabric?.name || "—"}</strong>, тип{" "}
-                                                    {cost?.fabric_roll?.fabric?.type?.type || "—"})
-                                                    {" "}на довжину <strong>{cost?.used_length ?? "—"}</strong>{" "}
+                                                    тканина <strong>{cost?.fabric_roll?.fabric?.name || "–"}</strong>, тип{" "}
+                                                    {cost?.fabric_roll?.fabric?.type?.type || "–"})
+                                                    {" "}на довжину <strong>{cost?.used_length ?? "–"}</strong>{" "}
                                                     {getMetersLabel(cost?.used_length)}.
                                                 </p>
                                             ))}

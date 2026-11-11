@@ -71,12 +71,12 @@ const renderPhotoCell = (src) => {
 
 const mapApiItemToRow = (item, kitSizeMap, fabricTypeMap) => {
     const templateId = item?.template?.id ?? item?.template ?? null;
-    const templateName = item?.template?.name ?? kitSizeMap.get(String(templateId)) ?? (templateId != null ? `#${templateId}` : "—");
+    const templateName = item?.template?.name ?? kitSizeMap.get(String(templateId)) ?? (templateId != null ? `#${templateId}` : "–");
 
     const fabricTypeId = item?.fabric_type?.id ?? item?.fabric_type ?? null;
-    const fabricTypeName = item?.fabric_type?.name ?? item?.fabric_type?.type ?? fabricTypeMap.get(String(fabricTypeId)) ?? (fabricTypeId != null ? `#${fabricTypeId}` : "—");
+    const fabricTypeName = item?.fabric_type?.name ?? item?.fabric_type?.type ?? fabricTypeMap.get(String(fabricTypeId)) ?? (fabricTypeId != null ? `#${fabricTypeId}` : "–");
 
-    // component_size приходить як string/array/anything — покажемо кількість
+    // component_size приходить як string/array/anything – покажемо кількість
     let compIds = [];
     if (Array.isArray(item?.component_size)) compIds = item.component_size;
     else if (typeof item?.component_size === "string") {
@@ -174,7 +174,7 @@ const KitTemplates = () => {
     const loadKitSizesMap = useCallback(async () => {
         try {
             const token = getAccessToken();
-            // kit sizes зазвичай мало — тягнемо 1 сторінку з великим page_size
+            // kit sizes зазвичай мало – тягнемо 1 сторінку з великим page_size
             const data = await fetchKitSizes(token, { page: 1, page_size: 200, is_deleted: "false" });
             const list = data?.kit_sizes ?? data?.results ?? [];
             const m = new Map();
@@ -612,7 +612,7 @@ const KitTemplates = () => {
     }, []);
 
     // прогріти ctCacheById першими N сторінками (окрім already loaded 1-ї),
-    // НЕ чіпаючи ctItems/ctPage — лише кеш назв
+    // НЕ чіпаючи ctItems/ctPage – лише кеш назв
     const warmCtCacheFirstPages = useCallback(async (pagesToWarm = 3, pageSize = 10) => {
         try {
             const token = getAccessToken();
@@ -643,7 +643,7 @@ const KitTemplates = () => {
                     return m;
                 });
 
-                // опційно: якщо сторінки закінчилися — зупиняємось
+                // опційно: якщо сторінки закінчилися – зупиняємось
                 const total = Number(data?.total_pages ?? data?.totalPages ?? 1) || 1;
                 if (p >= total) break;
             }
@@ -810,7 +810,7 @@ const KitTemplates = () => {
             .filter((x) => x?.is_available !== false)
             .map((x) => ({
                 value: String(x?.id ?? ""),
-                name: String(x?.name ?? x?.title ?? x?.type ?? x?.label ?? (x?.id != null ? `#${x.id}` : "—")),
+                name: String(x?.name ?? x?.title ?? x?.type ?? x?.label ?? (x?.id != null ? `#${x.id}` : "–")),
             }))
             .filter((x) => x.value);
 
@@ -1007,7 +1007,7 @@ const KitTemplates = () => {
                                 return (
                                     <div style={{ fontStyle: "italic", fontSize: 12, marginBottom: 8, color: "#666" }}>
                                         Вибрано: {s.totalQty} шт.
-                                        {s.uniqueCount > 0 ? ` — ${s.shown.join(", ")}${s.hasMore ? "…" : ""}` : ""}
+                                        {s.uniqueCount > 0 ? ` – ${s.shown.join(", ")}${s.hasMore ? "…" : ""}` : ""}
                                     </div>
                                 );
                             })()}
@@ -1031,7 +1031,7 @@ const KitTemplates = () => {
 
                                     const key = String(id);
 
-                                    // якщо юзер ще не чіпав інпут — показуємо "1" коли не обрано, або реальну qty коли обрано
+                                    // якщо юзер ще не чіпав інпут – показуємо "1" коли не обрано, або реальну qty коли обрано
                                     const fallbackValue = checked ? String(qty) : "1";
                                     const inputValue = (key in qtyDraftCreate) ? qtyDraftCreate[key] : fallbackValue;
 
@@ -1248,7 +1248,7 @@ const KitTemplates = () => {
                                 return (
                                     <div style={{ fontStyle: "italic", fontSize: 12, marginBottom: 8, color: "#666" }}>
                                         Вибрано: {s.totalQty} шт.
-                                        {s.uniqueCount > 0 ? ` — ${s.shown.join(", ")}${s.hasMore ? "…" : ""}` : ""}
+                                        {s.uniqueCount > 0 ? ` – ${s.shown.join(", ")}${s.hasMore ? "…" : ""}` : ""}
                                     </div>
                                 );
                             })()}

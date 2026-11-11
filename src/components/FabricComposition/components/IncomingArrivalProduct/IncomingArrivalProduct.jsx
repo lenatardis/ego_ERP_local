@@ -203,7 +203,7 @@ const IncomingArrivalProduct = () => {
                 if (Number.isFinite(buyNum) && buyNum > 0) {
                     setCurrentUsdRate(buyNum);
 
-                    // тільки при створенні — ставимо цей курс у поле exchangeRate
+                    // тільки при створенні – ставимо цей курс у поле exchangeRate
                     if (mode === 'create') {
                         setValue('exchangeRate', buyNum, { shouldDirty: false });
                     }
@@ -562,7 +562,7 @@ const IncomingArrivalProduct = () => {
         if (!violations.length) return '';
         if (violations.length === 1) return ` (максимум ${formatCapacityNumber(violations[0].capacityLimit)})`;
         return ` (максимум: ${violations
-            .map(item => `${item.cellLabel} — ${formatCapacityNumber(item.capacityLimit)}`)
+            .map(item => `${item.cellLabel} – ${formatCapacityNumber(item.capacityLimit)}`)
             .join('; ')})`;
     };
 
@@ -768,7 +768,7 @@ const handleCapacityValidationChange = (info) => {
                                         const raw = e.target.value;
                                         // лишаємо цифри + одну кому/крапку
                                         let cleaned = raw.replace(/[^0-9.,]/g, '');
-                                        // (опц.) якщо раптом користувач ввів кілька ком/крапок — можна залишити першу
+                                        // (опц.) якщо раптом користувач ввів кілька ком/крапок – можна залишити першу
                                         const parts = cleaned.split(/[.,]/);
                                         if (parts.length > 2) {
                                             cleaned = parts[0] + '.' + parts.slice(1).join('');

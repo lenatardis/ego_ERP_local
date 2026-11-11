@@ -88,15 +88,15 @@ export const normalizeOrdersResponse = (payload) => {
 };
 
 const formatDate = (value) => {
-    if (!value) return "—";
+    if (!value) return "–";
 
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "—";
+    if (Number.isNaN(date.getTime())) return "–";
 
     return date.toLocaleDateString("uk-UA");
 };
 
-const getTextValue = (value, fallback = "—") => {
+const getTextValue = (value, fallback = "–") => {
     if (value === null || value === undefined || value === "") {
         return fallback;
     }
@@ -151,23 +151,23 @@ const getImageUrl = (item) => {
 
 const getSetSizeValue = (item) => {
     const warehouseItemSize = getTextValue(item?.warehouse_item?.size);
-    if (warehouseItemSize !== "—") return warehouseItemSize;
+    if (warehouseItemSize !== "–") return warehouseItemSize;
 
     const kitText = getTextValue(item?.kit);
-    if (kitText !== "—") return kitText;
+    if (kitText !== "–") return kitText;
 
     const warehouseItemText = getTextValue(item?.warehouse_item);
-    if (warehouseItemText !== "—") return warehouseItemText;
+    if (warehouseItemText !== "–") return warehouseItemText;
 
-    return "—";
+    return "–";
 };
 
 const getNameValue = (item) => {
     const kitName = getTextValue(item?.kit?.name);
-    if (kitName !== "—") return kitName;
+    if (kitName !== "–") return kitName;
 
     const warehouseItemName = getTextValue(item?.warehouse_item?.name);
-    if (warehouseItemName !== "—") return warehouseItemName;
+    if (warehouseItemName !== "–") return warehouseItemName;
 
     return getSetSizeValue(item);
 };
@@ -249,7 +249,7 @@ export const mapOrderToRow = (item) => {
         optionsValue: getOptionsValue(item),
         directCommentValue,
         comment:
-            directCommentValue !== "—"
+            directCommentValue !== "–"
                 ? directCommentValue
                 : getTextValue(item?.warehouse_item?.comment),
         barcode: item?.barcode || "",

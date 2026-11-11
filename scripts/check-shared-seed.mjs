@@ -45,7 +45,7 @@ for (const file of sharedFiles) {
         console.error(`MISSING  ${file} (${fs.existsSync(mine) ? other : self})`);
         failed = true;
     } else if (!fs.readFileSync(mine).equals(fs.readFileSync(theirs))) {
-        console.error(`DIFFERS  ${file} — copy the up-to-date version to the other repo`);
+        console.error(`DIFFERS  ${file} – copy the up-to-date version to the other repo`);
         failed = true;
     } else {
         console.log(`ok       ${file}`);

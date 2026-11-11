@@ -62,7 +62,7 @@ const tBillMethod = (v) => (v ? BILL_METHOD_MAP[v] ?? v : "");
 const tBillStatus = (v) => (v ? BILL_STATUS_MAP[v] ?? v : "");
 
 const formatMoney = (n) => (n ?? n === 0 ? `${Number(n).toLocaleString("uk-UA")} грн` : "");
-const formatPercent0 = (n) => (n || n === 0 ? `${Number(n).toFixed(0)}%` : "—");
+const formatPercent0 = (n) => (n || n === 0 ? `${Number(n).toFixed(0)}%` : "–");
 
 const uniqueBy = (arr, keyFn) => {
     const seen = new Set();
@@ -80,7 +80,7 @@ const isoToDDMMYYYY = (iso) => {
     return `${d}.${m}.${y}`;
 };
 
-const formatSignificance = (n) => typeof n === "number" ? `${(n * 100).toFixed(0)}%` : "—";
+const formatSignificance = (n) => typeof n === "number" ? `${(n * 100).toFixed(0)}%` : "–";
 
 
 // dedupe results and payment_bills
@@ -698,7 +698,7 @@ const PaymentForOrders = () => {
                                                 <div>
                                                     <h5>Рахунок №{bill.id}</h5>
                                                     <p className={styles.paymentAccount__price}>{formatMoney(amount)}</p>
-                                                    <p className={styles.paymentAccount__date}>{typeLine || "—"} {bill.prepayment_datetime || "—"}</p>
+                                                    <p className={styles.paymentAccount__date}>{typeLine || "–"} {bill.prepayment_datetime || "–"}</p>
                                                     <div>
                                                         <p className={styles.paymentAccount__date}>
                                                             <span>Співпадіння: {formatPercent0(bill.similarity)}</span>
@@ -711,15 +711,15 @@ const PaymentForOrders = () => {
                                                                         <div style={{ display: 'grid', gap: 4 }}>
                                                                             <div>
                                                                                 <strong>{formatSignificance(tabData.significance_coefficients.name_significance)}</strong>
-                                                                                {" "}— значущість ПІБ контрагента
+                                                                                {" "}– значущість ПІБ контрагента
                                                                             </div>
                                                                             <div>
                                                                                 <strong>{formatSignificance(tabData.significance_coefficients.date_significance)}</strong>
-                                                                                {" "}— значущість дати транзакції
+                                                                                {" "}– значущість дати транзакції
                                                                             </div>
                                                                             <div>
                                                                                 <strong>{formatSignificance(tabData.significance_coefficients.amount_significance)}</strong>
-                                                                                {" "}— значущість суми
+                                                                                {" "}– значущість суми
                                                                             </div>
                                                                         </div>
                                                                     ) : "Дані про значущість недоступні"

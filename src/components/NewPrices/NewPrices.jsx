@@ -592,7 +592,7 @@ const NewPrices = () => {
         try {
             sessionStorage.setItem(ACTIVE_TAB_STORAGE_KEY, activeTab);
         } catch {
-            // storage недоступний — після перезавантаження просто відкриється перший таб
+            // storage недоступний – після перезавантаження просто відкриється перший таб
         }
     }, [activeTab]);
 
@@ -873,7 +873,7 @@ const NewPrices = () => {
     }, [activeTab, filterParams, pricelistsMeta, requestItems, setRowsForTab]);
 
 
-    // перше завантаження для активного табу — тільки після того, як є прайслисти
+    // перше завантаження для активного табу – тільки після того, як є прайслисти
     useEffect(() => {
         if (!priceCols) return;
         const initialSlice = tabState[activeTab];
@@ -883,7 +883,7 @@ const NewPrices = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [priceCols, activeTab]);
 
-    // коли міняється кількість прайс-колонок — підрізаємо expandedExtras
+    // коли міняється кількість прайс-колонок – підрізаємо expandedExtras
     useEffect(() => {
         setExpandedExtras((prev) => {
             const next = {};
@@ -1147,7 +1147,7 @@ const NewPrices = () => {
                 } catch (err) {
                     const status = getHttpStatusFromError(err);
 
-                    // ✅ 204 No Content при видаленні — вважаємо успішною операцією
+                    // ✅ 204 No Content при видаленні – вважаємо успішною операцією
                     // також прикриваємо кейс, коли handleResponse кидає чистий SyntaxError
                     if (
                         isDeleting &&
@@ -1253,7 +1253,7 @@ const NewPrices = () => {
                 exchange_rate: currentUsdRate ?? null,
             };
 
-            // ✅ якщо "Немає даних" — НЕ ПЕРЕДАЄМО ці поля взагалі
+            // ✅ якщо "Немає даних" – НЕ ПЕРЕДАЄМО ці поля взагалі
             if (!isNoDataLockedUah) {
                 payload.raw_material_unit_cost_price_uah = parseNumber(row.costRawMaterialUah);
             }
@@ -1576,19 +1576,19 @@ const NewPrices = () => {
         const lastUsd = round2(lastUsdRaw);
         const currentUsd = round2(currentUsdRaw);
 
-        // якщо поточне $ не рахується — показуємо тільки lastUsd, без % і без класу
+        // якщо поточне $ не рахується – показуємо тільки lastUsd, без % і без класу
         if (!Number.isFinite(currentUsd) || currentUsd <= 0) {
             return { kind: "ok", lastUsd, showDiff: false, diffPct: 0, cls: "" };
         }
 
-        // якщо на екрані однакові — теж без %
+        // якщо на екрані однакові – теж без %
         if (lastUsd === currentUsd) {
             return { kind: "ok", lastUsd, showDiff: false, diffPct: 0, cls: "" };
         }
 
         const diffPct = round2(((lastUsd - currentUsd) / currentUsd) * 100);
 
-        // якщо % після округлення = 0.00 — не показуємо і не підсвічуємо
+        // якщо % після округлення = 0.00 – не показуємо і не підсвічуємо
         if (!Number.isFinite(diffPct) || diffPct === 0) {
             return { kind: "ok", lastUsd, showDiff: false, diffPct: 0, cls: "" };
         }

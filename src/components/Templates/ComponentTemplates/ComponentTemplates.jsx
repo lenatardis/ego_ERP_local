@@ -198,7 +198,7 @@ const ComponentTemplates = () => {
             return {
                 options: list.map((x) => ({
                     value: String(x?.id ?? ""),
-                    name: x?.name ?? (x?.id != null ? `ID ${x.id}` : "—"),
+                    name: x?.name ?? (x?.id != null ? `ID ${x.id}` : "–"),
                 })),
                 totalPages,
             };
@@ -210,7 +210,7 @@ const ComponentTemplates = () => {
         async ({ page, page_size }) => {
             const token = getAccessToken();
 
-            // У тебе fetchProductTypesCRM без пагінації — тому повертаємо все як 1 сторінку
+            // У тебе fetchProductTypesCRM без пагінації – тому повертаємо все як 1 сторінку
             const ft = await fetchProductTypesCRM(token);
             const listRaw = Array.isArray(ft) ? ft : [];
 
@@ -218,7 +218,7 @@ const ComponentTemplates = () => {
                 .filter((x) => x?.is_available !== false)
                 .map((x) => ({
                     value: String(x?.id ?? ""),
-                    name: x?.type ?? (x?.id != null ? `ID ${x.id}` : "—"),
+                    name: x?.type ?? (x?.id != null ? `ID ${x.id}` : "–"),
                 }));
 
             return {
@@ -664,7 +664,7 @@ const ComponentTemplates = () => {
                 stickyZIndex={8}
             />
 
-            {/* scroll container (важливо: і scrollRef, і mainRef — як у NewPrices) */}
+            {/* scroll container (важливо: і scrollRef, і mainRef – як у NewPrices) */}
             <div
                 style={{ overflowX: "auto", paddingBottom: 8 }}
                 ref={(el) => {

@@ -19,7 +19,7 @@ const ITEMS_PER_PAGE = 25;
 const MAX_AMOUNT = 1000000;
 
 const formatMoney = (value) => {
-    if (value === undefined || value === null || value === "") return "—";
+    if (value === undefined || value === null || value === "") return "–";
 
     const num = Number(value);
     if (Number.isNaN(num)) return value;
@@ -29,7 +29,7 @@ const formatMoney = (value) => {
 
 const mapVendorToRow = (vendor) => ({
     id: vendor?.id ?? "",
-    full_name: vendor?.full_name ?? "—",
+    full_name: vendor?.full_name ?? "–",
     debt_uah: vendor?.dept?.uah ?? "",
     debt_usd: vendor?.dept?.usd ?? "",
     dept_paid_off: Boolean(vendor?.dept?.dept_paid_off),
@@ -157,7 +157,7 @@ const VendorDebtList = () => {
             key: "full_name",
             title: "ПІБ постачальника",
             width: "1.6fr",
-            render: (val) => val || "—",
+            render: (val) => val || "–",
         },
         {
             key: "debt_uah",

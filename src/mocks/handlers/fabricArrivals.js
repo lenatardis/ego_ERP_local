@@ -325,7 +325,7 @@ const syncFabricLines = (arrival, rows) => {
         if (quantity < usedRolls) {
             fail(field, `У рядку ${index + 1} (тканина ${fabric.name}) кількість рулонів не можна зменшити до ${quantity}: `
                 + `${usedRolls} з ${ids.length} рулонів цієї позиції вже розкрито або використано у виробництві (розкрій), `
-                + `а прибрати з накладної можна лише нерозкриті рулони. Мінімально можлива кількість — ${usedRolls}.`);
+                + `а прибрати з накладної можна лише нерозкриті рулони. Мінімально можлива кількість – ${usedRolls}.`);
         }
         while (ids.length > quantity) {
             const removable = [...ids].reverse()
@@ -441,7 +441,7 @@ const syncProductLines = (arrival, rows) => {
             if (inStorage < 0) {
                 fail(field, `Позиція ${product.name} (${color.name}, ${size.width}x${size.length}): кількість не можна зменшити до ${quantity}, `
                     + `бо ${taken} од. з цієї накладної вже взято зі складу для замовлень (пакування). `
-                    + `Мінімально можлива кількість — ${taken}.`);
+                    + `Мінімально можлива кількість – ${taken}.`);
             }
             if (previous) {
                 previous.type.units.splice(previous.index, 1);

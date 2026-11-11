@@ -17,7 +17,7 @@ import { loadSharedOrders } from '../data/crmShared';
 //   DELETE /warehouses/sources/:id/?ignore_warning=<bool>
 //          -> 204, or 400 { error: "Ви дійсно хочете ..." } while the source is used by orders
 // Deletes are soft (deleted_at). A source keeps pointing to a deleted pricelist and gets it with its
-// deleted_at, which Sources.jsx shows as "—". Changes are persisted in the visitor's browser (src/mocks/db.js).
+// deleted_at, which Sources.jsx shows as "–". Changes are persisted in the visitor's browser (src/mocks/db.js).
 // Sources are shared with the CRM demo (../../../CLAUDE.md, "Cross-app contract"): the ERP owns and edits them, the
 // CRM reads them (its order source list, order display and prices), so they live in the shared store and are
 // re-read on every request. Pricelists and prices stay ERP-private.

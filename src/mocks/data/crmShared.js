@@ -50,7 +50,7 @@ export const resolveBillAssets = (bill) => ({
 });
 
 /**
- * An order is paid once all its bills are paid and they cover its total — the same rule the CRM applies after a
+ * An order is paid once all its bills are paid and they cover its total – the same rule the CRM applies after a
  * receipt approval or an online payment (ego_CRM_local src/mocks/data/orders.js updatePaidStatus).
  * Changes the order in `orders`; returns true when it did.
  */

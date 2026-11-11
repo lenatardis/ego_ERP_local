@@ -1,24 +1,24 @@
-// Seed data shared by the ERP and CRM demos — ONE FILE, KEPT IDENTICAL IN BOTH REPOS:
+// Seed data shared by the ERP and CRM demos – ONE FILE, KEPT IDENTICAL IN BOTH REPOS:
 //   ego_ERP_local/src/mocks/shared/seed.js  ==  ego_CRM_local/src/mocks/shared/seed.js
 // Edit it in one repo, copy it to the other and run `node scripts/check-shared-seed.mjs` (in either repo).
 // See ../../CLAUDE.md of the workspace, "Cross-app contract".
 //
 // Collections shared by both apps (stored under `ego-demo:shared:` once changed):
-//   SEED_ORDERS        — CRM orders (full CRM shape; the CRM owns them), payment embedded
-//   SEED_CUSTOMERS     — their customers
-//   SEED_PAYMENT_BILLS — payment bills of the orders ("рахунки")
-// SEED_ORDER_PRODUCTS — what each seed order contains (kits, warehouse items), priced from the shared catalog;
+//   SEED_ORDERS        – CRM orders (full CRM shape; the CRM owns them), payment embedded
+//   SEED_CUSTOMERS     – their customers
+//   SEED_PAYMENT_BILLS – payment bills of the orders ("рахунки")
+// SEED_ORDER_PRODUCTS – what each seed order contains (kits, warehouse items), priced from the shared catalog;
 //   order totals, bills and bank statement lines are derived from it. The CRM stores it privately.
-// SEED_PRODUCTION — the ERP's manufacturing orders: which CRM order and cart line each one makes, and its status;
+// SEED_PRODUCTION – the ERP's manufacturing orders: which CRM order and cart line each one makes, and its status;
 //   the shared `production` collection (owned by the ERP) starts from it.
-// Reference data: SEED_MANAGERS (CRM demo users), SEED_SOURCES (order sources, owned by the ERP — same ids
+// Reference data: SEED_MANAGERS (CRM demo users), SEED_SOURCES (order sources, owned by the ERP – same ids
 // and names as the ERP's pricelists.js), and the ERP-private bank statement lines SEED_PRIVAT_PAYMENTS /
 // SEED_PRIVAT_ACCOUNTS. The statement lines are generated here, in the same PRNG stream as the orders and
 // bills they pay, so that ids, dates and links stayed as the ERP demo had them before the split (amounts now
 // follow the orders' carts); the CRM ignores them.
 //
 // Environment-neutral on purpose (CRA and Vite): no bundler globals. Demo assets are stored as paths
-// relative to the app's base URL (`demo/...`) — resolve them with resolveDemoAsset() when building a response.
+// relative to the app's base URL (`demo/...`) – resolve them with resolveDemoAsset() when building a response.
 // Carts are priced from the catalog seed (./catalog/, also identical in both repos), whose only app-specific
 // input is src/mocks/appBaseUrl.js.
 
@@ -152,8 +152,8 @@ const PAYMENTS_COUNT = 150;
 const atWorkingTime = (dayStart) => new Date(dayStart + randInt(8 * 60, 21 * 60) * 60 * 1000 + randInt(0, 59) * 1000);
 // Managers issue bills during working hours (08:00–21:59). A time outside them is moved by whole hours
 // (minutes kept, no extra PRNG draws), so the rest of the seed stays the same:
-//   'earlier' — to the previous evening (a bill issued before the payment stays before it);
-//   'later'   — to the next morning.
+//   'earlier' – to the previous evening (a bill issued before the payment stays before it);
+//   'later'   – to the next morning.
 const WORK_START_HOUR = 8;
 const WORK_END_HOUR = 21;
 const toWorkingHours = (date, direction) => {
@@ -368,7 +368,7 @@ const randOrd = mulberry32(23102026);
 const ordInt = (min, max) => Math.floor(randOrd() * (max - min + 1)) + min;
 const ordPick = (arr) => arr[Math.floor(randOrd() * arr.length)];
 
-// Order (lead) sources: owned by the ERP (ego_ERP_local/src/mocks/data/pricelists.js, SOURCE_SPECS) — same ids
+// Order (lead) sources: owned by the ERP (ego_ERP_local/src/mocks/data/pricelists.js, SOURCE_SPECS) – same ids
 // and names. `weight` (≈ the ERP's orders_count) only steers how often seed orders use a source;
 // deleted sources (OLX) and those without orders are not used by seed orders.
 export const SEED_SOURCES = [
@@ -450,7 +450,7 @@ export const SEED_ORDERS = seed.crmOrders.map((o, i) => {
     // (This draw sized the rest when totals came from the bills; kept so the draws below stay the same.)
     if (bills.length === 1 && bills[0].method === 'PREPAYMENT') ordInt(70, 450);
 
-    // discounts: Payment.jsx / DiscountField.jsx — PERC is a percentage, VAL an amount in UAH.
+    // discounts: Payment.jsx / DiscountField.jsx – PERC is a percentage, VAL an amount in UAH.
     // The amounts themselves come from the order's cart (applyCartTotals below).
     let discount_type = 'NONE';
     let discount_amount = 0;
@@ -548,7 +548,7 @@ export const PRODUCTION_STAGE_STATUS = {
 export const crmStatusOfProduction = (status) =>
     (status === 'DELIVERED' ? 'DELIVERED' : status === 'SHIPMENT_READY' ? 'SHIPMENT_READY' : 'IN_PRODUCTION');
 
-// what is made, newest first — kits by kit template (fabric: an in-stock fabric of the template's type),
+// what is made, newest first – kits by kit template (fabric: an in-stock fabric of the template's type),
 // warehouse items by product name and variant index (the ERP's packaging scenarios depend on these products).
 // Only what the CRM can sell: every kit, option and variant here has a price (kit template 1, the option
 // "Прокладка" and a few variants the ERP's demo used before have none in the pricelists). "Подушка Бамбук" is
@@ -687,7 +687,7 @@ const productionLines = new Map(); // order id -> the cart line it gets instead 
 //   { id, order_id, created, warehouse_item: { product_id, type_id, price, source_id } | null,
 //     kit: { fabric_id, kit_template_id, is_split, price, comment, custom_size, option, additional_fabric_consumption_count,
 //            components: [{ component_template_id, option, comment, custom_size, mono_fabric_type, is_custom }] } | null }
-// A kit's price is its template price plus its options — what the CRM calculator charges for the same kit.
+// A kit's price is its template price plus its options – what the CRM calculator charges for the same kit.
 
 const randCart = mulberry32(24102026);
 const cartPick = (arr) => arr[Math.floor(randCart() * arr.length)];

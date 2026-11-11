@@ -18,7 +18,7 @@ const RACK_SPECS = [
     { name: 'E', cells: 20, kind: 'product' },
 ];
 
-// assumption: capacity is counted in pieces stored in a cell — fabric rolls or finished product items
+// assumption: capacity is counted in pieces stored in a cell – fabric rolls or finished product items
 const BASE_CAPACITY = { fabric: [8, 10, 12, 15], product: [40, 50, 60] };
 
 let nextCellId = 1;

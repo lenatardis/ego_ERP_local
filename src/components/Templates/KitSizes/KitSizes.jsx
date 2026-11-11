@@ -325,7 +325,7 @@ const KitSizes = () => {
         }
     };
 
-    // колонки: зроблено “без пустоти” — fr розтягує таблицю на всю ширину
+    // колонки: зроблено “без пустоти” – fr розтягує таблицю на всю ширину
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "90px" },
@@ -351,7 +351,7 @@ const KitSizes = () => {
         []
     );
 
-    // minWidth для sticky header/ghost scroll: fr не парсимо як px — беремо адекватний мінімум
+    // minWidth для sticky header/ghost scroll: fr не парсимо як px – беремо адекватний мінімум
     const minWidthPx = useMemo(() => {
         const getMin = (w) => {
             if (!w) return 160;
@@ -360,7 +360,7 @@ const KitSizes = () => {
             if (px) return Number(px[1]);
             const mm = s.match(/minmax\(\s*(\d+)\s*px/i);
             if (mm) return Number(mm[1]);
-            // fr / інші — мінімум, щоб не “зламати” sticky header
+            // fr / інші – мінімум, щоб не “зламати” sticky header
             return 260;
         };
 

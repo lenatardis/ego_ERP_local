@@ -58,6 +58,12 @@
       width: 80px;
       height: 80px;
     }
+
+    // Demo build: the placeholder figure (33×37) at its own proportions, not stretched to the circle
+    img.userIcon {
+      width: 45%;
+      height: auto;
+    }
   }
 
   .userAvatar {
@@ -477,6 +483,11 @@
       img {
         width: 56px;
         height: 56px;
+      }
+
+      img.userIcon {
+        width: 45%;
+        height: auto;
       }
     }
 

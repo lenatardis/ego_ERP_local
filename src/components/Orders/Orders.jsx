@@ -384,19 +384,19 @@ const Orders = () => {
                                         </div>
 
                                         <div className={styles.cell} data-label="Назва">
-                                            {row.nameValue || "—"}
+                                            {row.nameValue || "–"}
                                         </div>
 
                                         <div className={styles.cell} data-label="Категорія">
-                                            {row.categoryValue || "—"}
+                                            {row.categoryValue || "–"}
                                         </div>
 
                                         <div className={styles.cell} data-label="Колір">
-                                            {row.colorValue || "—"}
+                                            {row.colorValue || "–"}
                                         </div>
 
                                         <div className={styles.cell} data-label="Розмір">
-                                            {row.setSize || "—"}
+                                            {row.setSize || "–"}
                                         </div>
 
                                         <div className={styles.cell} data-label="Коментар">
@@ -419,8 +419,8 @@ const Orders = () => {
                                 : row.completionValue;
 
                             const optionsValue = isWarehouseTab
-                                ? "—"
-                                : row.optionsValue || "—";
+                                ? "–"
+                                : row.optionsValue || "–";
 
                             return (
                                 <button
@@ -451,11 +451,11 @@ const Orders = () => {
                                     </div>
 
                                     <div className={styles.cell} data-label={thirdColumnTitle}>
-                                        {thirdColumnValue || "—"}
+                                        {thirdColumnValue || "–"}
                                     </div>
 
                                     <div className={styles.cell} data-label={fourthColumnTitle}>
-                                        {fourthColumnValue || "—"}
+                                        {fourthColumnValue || "–"}
                                     </div>
 
                                     <div className={styles.cell} data-label="Опції">
@@ -487,7 +487,7 @@ const Orders = () => {
                                                     />
                                                 </div>
                                             ) : (
-                                                "—"
+                                                "–"
                                             )}
                                         </div>
                                     )}

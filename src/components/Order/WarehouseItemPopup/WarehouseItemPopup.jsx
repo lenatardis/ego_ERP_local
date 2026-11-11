@@ -28,16 +28,16 @@ const normalizeWarehouseItemUnits = (response) => {
 
 const getLocationLabel = (unit) => {
     const warehouseName =
-        unit?.cell?.rack?.warehouse?.name || "—";
+        unit?.cell?.rack?.warehouse?.name || "–";
 
     const rackName =
-        unit?.cell?.rack?.name || "—";
+        unit?.cell?.rack?.name || "–";
 
     const cellNumber =
-        unit?.cell?.number ?? "—";
+        unit?.cell?.number ?? "–";
 
     const currentQuantity =
-        unit?.current_quantity ?? unit?.quantity ?? "—";
+        unit?.current_quantity ?? unit?.quantity ?? "–";
 
     return `Склад "${warehouseName}" / Стелаж "${rackName}" / Комірка № ${cellNumber} / Залишок ${currentQuantity}`;
 };

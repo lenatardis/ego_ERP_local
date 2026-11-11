@@ -202,7 +202,7 @@ const IncomingArrivalFabric = () => {
                 if (Number.isFinite(buyNum) && buyNum > 0) {
                     setCurrentUsdRate(buyNum);
 
-                    // тільки при створенні — ставимо цей курс у поле exchangeRate
+                    // тільки при створенні – ставимо цей курс у поле exchangeRate
                     if (mode === 'create') {
                         setValue('exchangeRate', buyNum, { shouldDirty: false });
                     }
@@ -355,7 +355,7 @@ const IncomingArrivalFabric = () => {
         // крапка або кома
         if (e.key === '.' || e.key === ',') return;
 
-        // все інше — блокуємо
+        // все інше – блокуємо
         e.preventDefault();
     };
 
@@ -552,7 +552,7 @@ const IncomingArrivalFabric = () => {
         if (!violations.length) return '';
         if (violations.length === 1) return ` (максимум ${formatCapacityNumber(violations[0].capacityLimit)})`;
         return ` (максимум: ${violations
-            .map(item => `${item.cellLabel} — ${formatCapacityNumber(item.capacityLimit)}`)
+            .map(item => `${item.cellLabel} – ${formatCapacityNumber(item.capacityLimit)}`)
             .join('; ')})`;
     };
 

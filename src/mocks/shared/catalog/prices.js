@@ -1,4 +1,4 @@
-// Seed data for the Prices page (Ціни, NewPrices.jsx) — the original backend is unavailable.
+// Seed data for the Prices page (Ціни, NewPrices.jsx) – the original backend is unavailable.
 // Served by src/mocks/handlers/prices.js, which lists the live products / templates collections and
 // attaches to each row its prices (one per pricelist) and its cost price (собівартість).
 //

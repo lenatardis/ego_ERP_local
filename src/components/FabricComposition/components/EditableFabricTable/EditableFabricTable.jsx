@@ -338,7 +338,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
         })();
     }, []);
 
-    // дерево складу з поточною вільною місткістю комірок; null — якщо не вдалося завантажити
+    // дерево складу з поточною вільною місткістю комірок; null – якщо не вдалося завантажити
     const loadWarehouseTree = async () => {
         try {
             const token = getAccessToken();

@@ -5,7 +5,7 @@
 //
 // Stored by id and expanded when a response is built:
 //   order_id     -> `order` (the CRM order; which one, and what is made, comes from SEED_PRODUCTION in the seed
-//                   shared with the CRM — ../shared/seed.js — so the CRM's cart line is the same kit / item)
+//                   shared with the CRM – ../shared/seed.js – so the CRM's cart line is the same kit / item)
 //   cutter_id / sewer_id / packer_id -> workplace { id, name, scanner_id, employee }
 //   kit.fabric_id -> `kit.fabric_image` (the fabric photo from the Storage page)
 //   warehouse_item.id (a variant of a finished product) -> name / category / color / size / image
@@ -60,7 +60,7 @@ export const DEMO_STAGE_WORKER = { cutter: 5, sewer: 6, packer: 8 };
 const OTHER = { cutter: 21, sewer: [22, 23], packer: 24 };
 
 // ---- History texts -------------------------------------------------------------------------------
-// "CRM Замовлення №1666 / 22.04.26 12:45 / Очікує пошивки" — newest first, as the original API sent them.
+// "CRM Замовлення №1666 / 22.04.26 12:45 / Очікує пошивки" – newest first, as the original API sent them.
 
 const pad = (n) => String(n).padStart(2, '0');
 const historyDate = (iso) => {
@@ -87,7 +87,7 @@ export const HISTORY = {
 
 // ---- Seed generation -------------------------------------------------------------------------------
 
-const componentName = (id) => DEMO_COMPONENT_TEMPLATES.find((c) => c.id === id)?.name || '—';
+const componentName = (id) => DEMO_COMPONENT_TEMPLATES.find((c) => c.id === id)?.name || '–';
 const kitSizeName = (id) => DEMO_KIT_SIZES.find((s) => s.id === id)?.name || '';
 
 const COMMENTS = [
@@ -282,7 +282,7 @@ const SPECS = [
     // --- Пакувальник: товари зі складу ---
     {}, // Ковдра Холофайбер, на пакуванні
     { picked: true, comment: COMMENTS[1] }, // Red Pillow, на пакуванні, уже взято зі складу
-    {}, // Подушка Бамбук, на пакуванні — немає на складі: нічого взяти
+    {}, // Подушка Бамбук, на пакуванні – немає на складі: нічого взяти
     { assign: 8 }, // Подушка Еко Пух, очікує пакування
     {}, // Ковдра Літня, очікує пакування
     { assign: OTHER.packer }, // Подушка Анатомічна, очікує пакування

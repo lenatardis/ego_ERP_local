@@ -1858,7 +1858,7 @@ export const editKitOptionTemplate = async (token, id, payload) => {
         const partArr = Array.isArray(payload.partIds) ? payload.partIds.map((x) => Number(x)) : [];
         fd.append("part", JSON.stringify(partArr));
 
-        // якщо файл не вибраний — НЕ апендимо image, щоб бек залишив старе
+        // якщо файл не вибраний – НЕ апендимо image, щоб бек залишив старе
         if (payload.imageFile instanceof File) {
             fd.append("image", payload.imageFile);
         }
@@ -1922,7 +1922,7 @@ export const createComponentType = async (token, data) => {
             if (data?.image instanceof File) {
                 fd.append('image', data.image);
             } else if (data?.image != null) {
-                // якщо раптом прилетить не File — все одно передамо як строку (бек може ігнорити)
+                // якщо раптом прилетить не File – все одно передамо як строку (бек може ігнорити)
                 fd.append('image', String(data.image));
             }
         }
@@ -1959,7 +1959,7 @@ export const editComponentType = async (token, id, data) => {
                 fd.append('mono_fabric_type', String(data.mono_fabric_type).trim());
             }
 
-            // якщо файл не вибраний — не апендимо, щоб бек лишив старе (як у твоєму createNewFabric)
+            // якщо файл не вибраний – не апендимо, щоб бек лишив старе (як у твоєму createNewFabric)
             if (data?.image instanceof File) {
                 fd.append('image', data.image);
             } else if (data?.image != null) {
@@ -2158,7 +2158,7 @@ export const editComponentTemplate = async (token, id, payload) => {
         appendIfNotEmpty(fd, 'name', payload?.name);
         appendIfNotEmpty(fd, 'short_name', payload?.short_name);
 
-        // size може бути nullable — якщо хочеш дозволити “очистити”, передавай явно ''
+        // size може бути nullable – якщо хочеш дозволити “очистити”, передавай явно ''
         // а тут ми пусте НЕ апендимо, щоб бек лишив старе:
         appendIfNotEmpty(fd, 'size', payload?.size);
 
@@ -2168,7 +2168,7 @@ export const editComponentTemplate = async (token, id, payload) => {
         appendIfInt(fd, 'type', payload?.type);
         appendIfInt(fd, 'fabric_type', payload?.fabric_type);
 
-        // якщо файл не вибраний — не апендимо image
+        // якщо файл не вибраний – не апендимо image
         if (payload?.image instanceof File) {
             fd.append('image', payload.image);
         }
@@ -2447,7 +2447,7 @@ export const editKitTemplate = async (token, id, payload) => {
             fd.append("fabric_type", String(payload.fabric_type));
         }
 
-        // якщо файл не вибраний — не апендимо image, щоб бек лишив старе
+        // якщо файл не вибраний – не апендимо image, щоб бек лишив старе
         if (payload?.image instanceof File) {
             fd.append("image", payload.image);
         }

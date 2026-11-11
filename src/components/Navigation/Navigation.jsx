@@ -84,7 +84,7 @@ const Navigation = () => {
 
     // Demo build (all widths): one group open at a time. The current page's group starts open as
     // that one group; opening another closes it. (The original kept the current group open next to
-    // the opened one — too tall for ~600 px laptop screens.)
+    // the opened one – too tall for ~600 px laptop screens.)
     useEffect(() => {
         setOpenedAccordion(currentPageAccordion);
         setIsMobileOpen(false);

@@ -3,7 +3,7 @@
 // PaymentForCRM.jsx and CRMPaymentInfo.jsx; served by src/mocks/handlers/privatPayments.js and crmPayments.js.
 //
 // Generated in src/mocks/shared/seed.js, together with the CRM demo (same file in both repos):
-//   - privatPayments  — incoming PrivatBank statement lines (ERP-private); a linked payment points to one CRM bill
+//   - privatPayments  – incoming PrivatBank statement lines (ERP-private); a linked payment points to one CRM bill
 // CRM orders, customers and payment bills are shared with the CRM demo since step 7.3: see ./crmShared.js.
 // DEMO_CRM_ORDERS below is the seed's order list as rows, still used to place the seeded manufacturing orders.
 

@@ -10,9 +10,9 @@ import {
 // Response shapes follow the original API, as consumed by PaymentForCRM.jsx and CRMPaymentInfo.jsx:
 //   GET   /accounting/payment_bill/       -> { count, next, previous, results }  (table rows, page_size per page)
 //   GET   /accounting/payment_bill/:id/   -> bill with order id, receipts and provider payment
-//   PATCH /accounting/payment_bill/:id/   -> { customer_receipt_approved } — the accountant's decision, made once;
+//   PATCH /accounting/payment_bill/:id/   -> { customer_receipt_approved } – the accountant's decision, made once;
 //                                            approving also marks the bill paid (and its order, by the CRM's rule),
-//                                            declining marks an unpaid bill not paid — both as in the CRM
+//                                            declining marks an unpaid bill not paid – both as in the CRM
 // Bills (and the orders / customers they belong to) are shared with the CRM demo and re-read on every request
 // (see ../data/crmShared.js); the "Оплата замовлень" page links Privat payments to the same bills.
 

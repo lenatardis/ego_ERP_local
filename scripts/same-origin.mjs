@@ -1,6 +1,6 @@
 // Serves the ERP and CRM demos under one origin locally, laid out as on GitHub Pages
 // (https://lenatardis.github.io/ego_ERP_local/ and /ego_CRM_local/). The two apps share data through
-// localStorage (workspace CLAUDE.md, "Cross-app contract"), which only works on one origin — their own dev
+// localStorage (workspace CLAUDE.md, "Cross-app contract"), which only works on one origin – their own dev
 // servers are different origins. Same script in both repos; expects the sibling layout of the workspace:
 //   ego_local/ego_ERP_local  and  ego_local/ego_CRM_local
 //
@@ -36,7 +36,7 @@ const appFor = (urlPath) => APPS.find((app) => urlPath.startsWith(app.base) || `
 const indexPage = () => `<!doctype html><meta charset="utf-8"><title>Ego demos</title>
 <body style="font-family:sans-serif;margin:40px">
 <h1>Ego demos on one origin (${STATIC ? 'production builds' : 'dev servers'})</h1>
-<ul>${APPS.map((a) => `<li><a href="${a.base}">${a.name}</a> — ${STATIC ? a.dir : a.dev}</li>`).join('')}</ul>
+<ul>${APPS.map((a) => `<li><a href="${a.base}">${a.name}</a> – ${STATIC ? a.dir : a.dev}</li>`).join('')}</ul>
 </body>`;
 
 const MIME = {

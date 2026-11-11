@@ -36,7 +36,7 @@ import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 const typeLabel = (t) => {
     if (t === "component") return "Компонент";
     if (t === "kit") return "Комплект";
-    return "—";
+    return "–";
 };
 
 const OPTION_PART_NAME_MAX_LENGTH = 100;
@@ -415,7 +415,7 @@ const OptionParts = () => {
             console.error("Failed to save option part:", e);
             window.alert("Не вдалося зберегти зміни. Спробуй ще раз.");
 
-            // якщо delete пройшов, а create впав — краще оновити список, щоб не було “половинчастого” стану
+            // якщо delete пройшов, а create впав – краще оновити список, щоб не було “половинчастого” стану
             fetchData(filterParams);
         }
     }, [
