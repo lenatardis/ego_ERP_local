@@ -26,7 +26,7 @@ const CentralPopup = ({children, title, onClose = () => {}, bigPopup, verticalSc
             <div className={`${popupClass} ${styles.popup}`}>
                 <div className={styles.header}>
                     <p className={styles.header__title}>{title}</p>
-                    <button className={styles.cross} onClick={(e) => close(e)}>
+                    <button className={styles.cross} onClick={(e) => close(e)} aria-label="Закрити">
                         <p>Закрити</p>
                         <span>
                             <img src={cross} alt=""/>

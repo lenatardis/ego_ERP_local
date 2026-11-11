@@ -137,3 +137,74 @@
   word-break: break-word;
 }
 
+
+// Demo build, mobile only (< 1024 px): "Прив’язка платежу" popup stacked —
+// order tabs as a 2-column grid above the bills, each bill's text above its buttons
+@media screen and (max-width: 1023px) {
+  .payPopupGrid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 12px;
+
+    &__leftColumn {
+      padding: 0 0 12px;
+      border-right: none;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    &__rightColumn {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+
+  .paymentTab {
+    &__wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    &__item {
+      padding: 6px 8px;
+      min-height: 0;
+    }
+
+    &__title h4,
+    &__info p {
+      line-height: 15px;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .paymentAccount__item {
+    flex-direction: column;
+    align-items: stretch;
+    row-gap: 10px;
+    padding: 8px;
+
+    h5 {
+      line-height: 15px;
+    }
+
+    > div:first-child {
+      flex-direction: column;
+      align-items: flex-start;
+      row-gap: 6px;
+
+      p, span {
+        line-height: 15px;
+
+        &.clarification {
+          line-height: 13px;
+        }
+      }
+    }
+  }
+
+  .btnRow {
+    padding-left: 0;
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 8px;
+  }
+}

@@ -114,4 +114,9 @@
   .popup {
     min-width: 0;
   }
+
+  // only the × on phones, no "Закрити" caption
+  .cross p {
+    display: none;
+  }
 }

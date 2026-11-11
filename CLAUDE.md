@@ -100,6 +100,8 @@ Info icons on touch screens (2026-11-10, at the user's request): MUI `Tooltip` o
 
 Options' inner tabs on phones (2026-11-10, at the user's request): "Опції компонентів" / "Опції комплектів" (`Templates/TabLinks/OptionInnerTabs.jsx`, class `innerTabs`) sit on their own `--bg-second` panel (8 px padding, rounded) below 1024 px, so they read as a sub-group of "Опції"; both tab blocks (`TabLinks` on every template page, and the inner tabs) are full-width 2-column grids there, so their edges line up with each other and the search bar (checked at 360 px: all at 16–344, inner buttons' middle edges level with the main columns, no clipped caption); desktop unchanged.
 
+Popups on phones (2026-11-11, at the user's request): `CentralPopup` shows only the × below 1024 px (its "Закрити" caption hidden; the button has `aria-label="Закрити"`) — the CRM does the same. "Прив’язка платежу" (Оплата замовлень, `PaymentForOrders.module.scss`) is stacked below 1024 px: order tabs as a 2-column grid above the bills, each bill's text above its "Чек" / "Підв'язати" row — before, the two columns didn't fit and the popup scrolled sideways. Checked at 390 px: popup at 16–374, nothing outside it.
+
 ## Project Context
 
 This repository is a local portfolio reconstruction of an existing ERP admin panel.
