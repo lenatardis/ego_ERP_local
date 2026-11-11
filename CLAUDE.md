@@ -112,6 +112,8 @@ Unchanged arrival edits (2026-11-11, at the user's request): saving an edited fa
 
 Filter selects on phones (2026-11-11, at the user's request): below 1024 px the `Filter` panel has 16 px side padding (was 10 px). MUI menus keep 16 px off the screen edges, so with 10 px an open select's list was pushed 6 px sideways off its field. Checked at 360 / 384 / 768 px on Тканини: list and field at the same x for both selects. Desktop unchanged (the panel's selects are more than 16 px from the edge there).
 
+Location popups on phones (2026-11-11, at the user's request): in "Розташування рулонів" (Тканини) and "Розташування готової продукції" (Готова продукція) the table started 12 px right of its heading below 1024 px – the mobile `.table { padding: 12px }` (`Table.module.scss`) overrode the popup table's `padding: 12px 0`. Below 1024 px `.table.popupTable` keeps `padding: 12px 0` (only these two popups use `popupTable`). Checked at 390 px: heading and table header both at 48 px; desktop unchanged (both at 352 px).
+
 Login role picker (2026-11-11, at the user's request): "Бухгалтер" is the last option – reordered in `AuthForm.jsx` only (`DEMO_USERS` is shared catalog seed, identical in both repos, left as is).
 
 ## Project Context

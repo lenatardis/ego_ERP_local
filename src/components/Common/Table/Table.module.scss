@@ -305,6 +305,11 @@
     padding: 12px;
   }
 
+  // a popup table keeps no side padding, so it starts level with its heading (as on desktop)
+  .table.popupTable {
+    padding: 12px 0;
+  }
+
   // header and rows share one minimum width, so they scroll sideways together inside .table
   // (before, the columns overflowed while each row's background stayed screen-wide)
   .gridTable__header, .tableRows {
