@@ -10,6 +10,7 @@ import InputBox from "../../../Common/InputBox/InputBox";
 import Preloader from "../../../Common/Preloader/Preloader";
 import EditableProductTable from "../EditableProductTable/EditableProductTable.jsx";
 import { createFabricArrival, fetchVendors, fetchSpecificArrival, editSpecificArrival, fetchCurrentCashRate } from '../../../../api/tablesApi.js';
+import { NO_CHANGES_MESSAGE, isSameArrivalPayload, arrivalPayloadFromProductResponse } from '../arrivalUnchanged.js';
 import { getAccessToken, getUserId } from "../../../../api/authStorage.js";
 import { getUserById } from "../../../../api/authApi.js";
 import { useSelector } from "react-redux";
@@ -77,6 +78,8 @@ const IncomingArrivalProduct = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [vendorOptions, setVendorOptions] = useState([]);
     const [bannerMsg, setBannerMsg] = useState(null);
+    // the arrival as loaded in edit mode, in payload shape: saving it unchanged is refused
+    const savedPayloadRef = useRef(null);
     const [currentUsdRate, setCurrentUsdRate] = useState(null);
     const [currentUsdSaleRate, setCurrentUsdSaleRate] = useState(null);
     const [hasSavedExchangeRate, setHasSavedExchangeRate] = useState(true);
@@ -449,6 +452,13 @@ const IncomingArrivalProduct = () => {
         };
 
 
+        if (mode === 'edit' && isSameArrivalPayload(payload, savedPayloadRef.current)) {
+            setBannerMsg(NO_CHANGES_MESSAGE);
+            return;
+        }
+        // all checks passed: the banner of an earlier failed attempt (or "no changes") no longer applies
+        setBannerMsg(null);
+
         openConfirmPopup(payload);
 
     };
@@ -503,6 +513,8 @@ const IncomingArrivalProduct = () => {
 
                 // fabric table
                 productRef.current?.loadFromEdit?.(resp.warehouse_item_units || []);
+                savedPayloadRef.current = arrivalPayloadFromProductResponse(
+                    resp, (d) => toBackendDate(fromBackendDate(d)));
             } catch (e) {
                 console.error('Failed to fetch arrival by id:', id, e);
             } finally {

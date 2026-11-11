@@ -108,6 +108,8 @@ Avatar placeholder on `/order` (2026-11-11, at the user's request; all widths): 
 
 Dashes (2026-11-11, at the user's request): no em dash (U+2014) anywhere in either repo or the workspace `CLAUDE.md` – all replaced with the en dash "–" (UI placeholders for empty values, messages, comments, docs). The code that compares with the placeholder (`Order.jsx`, `Orders.helpers.js`) changed with it; no stored demo data contained it. Write "–" in new text too.
 
+Unchanged arrival edits (2026-11-11, at the user's request): saving an edited fabric / product arrival that has no changes is refused on the page with the banner "Для збереження відредагованої накладної внесіть зміни: поточна версія не відрізняється від збереженої." (no confirm popup). `FabricComposition/components/arrivalUnchanged.js` turns the arrival as loaded into the payload shape the page sends and compares it with the new payload, normalised (cents, numeric strings, empty = null, key order); the check runs after the page's own checks, right before the confirm popup, and once all checks pass and a save goes ahead (create or edit) the page clears its banner – the original left a failed attempt's banner (e.g. "Переконайтесь…") next to the confirm popup. If the normalisation misses an equivalence, the save simply goes through as before – a real edit is never blocked. Checked: all 19 seeded arrivals with rows read as unchanged; a comment edit or a table edit opens the confirm popup; an edit undone reads as unchanged again.
+
 Login role picker (2026-11-11, at the user's request): "Бухгалтер" is the last option – reordered in `AuthForm.jsx` only (`DEMO_USERS` is shared catalog seed, identical in both repos, left as is).
 
 ## Project Context
