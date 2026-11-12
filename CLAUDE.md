@@ -118,6 +118,8 @@ Filter selects on phones (2026-11-11, at the user's request): below 1024 px the 
 
 Location popups on phones (2026-11-11, at the user's request): in "Розташування рулонів" (Тканини) and "Розташування готової продукції" (Готова продукція) the table started 12 px right of its heading below 1024 px – the mobile `.table { padding: 12px }` (`Table.module.scss`) overrode the popup table's `padding: 12px 0`. Below 1024 px `.table.popupTable` keeps `padding: 12px 0` (only these two popups use `popupTable`). Checked at 390 px: heading and table header both at 48 px; desktop unchanged (both at 352 px).
 
+Stale bundles (2026-11-13, at the user's request; same as the CRM – a phone kept an old copy of the CRM after a day of deploys and hung until its cache was cleared): the deploy workflow builds with `VITE_BUILD_ID` = the commit SHA and writes `dist/version.json` `{"build": "<sha>"}`. `src/utils/versionCheck.js` (started in `src/main.jsx`) fetches it with no caching on start and whenever the tab is shown again (at most once a minute). On a different build it reloads, once per build (sessionStorage `ego-demo:erp:reloadedForBuild`, so a CDN still serving the old index.html can't cause a reload loop). Local builds have no build id and skip the check. Checked with a static build (mismatch: one reload; match: none).
+
 Login role picker (2026-11-11, at the user's request): "Бухгалтер" is the last option – reordered in `AuthForm.jsx` only (`DEMO_USERS` is shared catalog seed, identical in both repos, left as is).
 
 ## Project Context

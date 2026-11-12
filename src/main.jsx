@@ -6,6 +6,10 @@ import {BrowserRouter} from "react-router-dom"
 
 import {store} from './store/store';
 import {startMockBackend} from './mocks/browser';
+import {startVersionCheck} from './utils/versionCheck';
+
+// Demo build: a tab running an outdated bundle reloads to the deployed one (src/utils/versionCheck.js)
+startVersionCheck();
 
 // Demo mode: the mock backend must be running before the app's first request (session check in App.jsx)
 startMockBackend()

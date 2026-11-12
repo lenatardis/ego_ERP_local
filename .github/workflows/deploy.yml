@@ -27,9 +27,12 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # VITE_BUILD_ID + version.json: a tab running an older bundle reloads (src/utils/versionCheck.js)
       - run: pnpm build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_BUILD_ID: ${{ github.sha }}
+      - run: echo "{\"build\":\"${GITHUB_SHA}\"}" > dist/version.json
       # SPA fallback: GitHub Pages serves 404.html for deep links like /<repo>/orders
       - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
