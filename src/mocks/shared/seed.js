@@ -25,7 +25,7 @@
 import { DEMO_FABRICS } from './catalog/fabrics';
 import { DEMO_PRODUCTS } from './catalog/products';
 import { DEMO_KIT_OPTION_TEMPLATES, DEMO_KIT_TEMPLATES } from './catalog/calculatorTemplates';
-import { fabricTotalLength, priceFor, priceWithDiscount, productTypeOfFabric } from './catalog/pricing';
+import { fabricTotalLength, isLatePriced, priceFor, priceWithDiscount, productTypeOfFabric } from './catalog/pricing';
 
 export const mulberry32 = (seed) => () => {
     seed |= 0;
@@ -609,7 +609,8 @@ const productionLine = (item, sourceId) => {
         const template = DEMO_KIT_TEMPLATES.find((t) => t.id === item.kit);
         const option = item.option ?? [];
         const parts = [priceFor('kit_template', template.id, sourceId), ...option.map((id) => priceFor('kit_option_template', id, sourceId))];
-        if (parts.some((price) => price === null)) return null;
+        // a kit priced for this source only by a price added later (isLatePriced) doesn't fit, as before it existed
+        if (parts.some((price) => price === null) || isLatePriced('kit_template', template.id, sourceId)) return null;
         return {
             warehouse_item: null,
             kit: {
@@ -699,8 +700,9 @@ const makeKitLine = (sourceId) => {
     // a fabric whose kits have a price for this source (most do; retry a few fabrics otherwise)
     for (let attempt = 0; attempt < 10; attempt++) {
         const fabric = cartPick(KIT_FABRICS);
+        // a kit priced for this source only by a price added later (isLatePriced) stays out, so the demo orders don't change
         const templates = DEMO_KIT_TEMPLATES.filter((t) => t.fabric_type_id === productTypeOfFabric(fabric)
-            && priceFor('kit_template', t.id, sourceId) !== null);
+            && priceFor('kit_template', t.id, sourceId) !== null && !isLatePriced('kit_template', t.id, sourceId));
         if (!templates.length) continue;
         const template = cartPick(templates);
         const pricedOptions = DEMO_KIT_OPTION_TEMPLATES.filter((opt) => priceFor('kit_option_template', opt.id, sourceId) !== null);

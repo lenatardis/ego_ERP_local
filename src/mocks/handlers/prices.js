@@ -4,7 +4,7 @@ import { getCollection, saveCollection, nextId } from '../db';
 import { C, col } from './calculatorTemplates';
 import { DEMO_PRODUCTS } from '../data/products';
 import { DEMO_PRICELISTS, PRICE_COUNT_KEYS } from '../data/pricelists';
-import { DEMO_PRICES, DEMO_COST_PRICES, ARRIVAL_COSTS, ownerKey } from '../data/prices';
+import { DEMO_PRICES, DEMO_COST_PRICES, ARRIVAL_COSTS, LATE_PRICE_IDS, ownerKey } from '../data/prices';
 
 // Response shapes follow the original API, as consumed by NewPrices.jsx:
 //   GET    /warehouses/prices/items/?is_warehouse_item_type|is_kit|is_kit_option|is_kit_component|
@@ -28,7 +28,35 @@ const PRICES = 'prices';
 const COST_PRICES = 'costPrices';
 const PAGE_SIZE = 25;
 
-const prices = () => getCollection(PRICES, DEMO_PRICES);
+// Demo access (2026-11-12): three kits got a default-list price after the catalog seed was made (LATE_PRICE_IDS,
+// shared/catalog/prices.js). A visitor whose prices were stored before gets them added once (new id; skipped where
+// that kit already has a price in that list), without resetting anything; a later deletion is respected.
+const LATE_PRICES_DONE = 'latePricesAdded';
+let latePricesChecked = false;
+const addLatePrices = (list) => {
+    if (latePricesChecked) return;
+    latePricesChecked = true;
+    const done = getCollection(LATE_PRICES_DONE, []);
+    if (done.length) return;
+    let added = false;
+    DEMO_PRICES.filter((p) => LATE_PRICE_IDS.has(p.id)).forEach((late) => {
+        const exists = list.some((p) => p.owner === late.owner && Number(p.owner_id) === late.owner_id
+            && Number(p.prices_list_id) === late.prices_list_id);
+        if (!exists) {
+            list.push({ ...late, id: nextId(list) });
+            added = true;
+        }
+    });
+    if (added) saveCollection(PRICES);
+    done.push(true);
+    saveCollection(LATE_PRICES_DONE);
+};
+
+const prices = () => {
+    const list = getCollection(PRICES, DEMO_PRICES);
+    addLatePrices(list);
+    return list;
+};
 const costPrices = () => getCollection(COST_PRICES, DEMO_COST_PRICES);
 const products = () => getCollection('products', DEMO_PRODUCTS);
 const pricelists = () => getCollection('pricelists', DEMO_PRICELISTS);

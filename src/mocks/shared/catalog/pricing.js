@@ -3,7 +3,7 @@
 // payments – with the same prices the CRM charges when a product is added or a kit is saved.
 
 import { DEMO_PRICELISTS, DEMO_SOURCES } from './pricelists';
-import { DEMO_PRICES } from './prices';
+import { DEMO_PRICES, LATE_PRICE_IDS } from './prices';
 
 // The price comes from the pricelist of the order's source (DEMO_SOURCES.prices_list_id) while that list is
 // active; a record the list has no price for, or an order without a source, takes the price of the default
@@ -13,10 +13,8 @@ import { DEMO_PRICES } from './prices';
 const isActiveList = (list) => list && list.status === 'ACTIVE' && !list.deleted_at;
 const DEFAULT_LIST = DEMO_PRICELISTS.find((pl) => pl.is_default && isActiveList(pl));
 
-const listPrice = (owner, ownerId, listId) => {
-    const p = DEMO_PRICES.find((x) => x.owner === owner && x.owner_id === Number(ownerId) && x.prices_list_id === listId);
-    return p ? Number(p.price) : null;
-};
+const listRecord = (owner, ownerId, listId) =>
+    DEMO_PRICES.find((x) => x.owner === owner && x.owner_id === Number(ownerId) && x.prices_list_id === listId) ?? null;
 
 /**
  * Sell price (number) of a catalog record (owner: 'kit_template', 'warehouse_item_type', ...) for an order source, or
@@ -24,12 +22,25 @@ const listPrice = (owner, ownerId, listId) => {
  * the CRM passes the live ones, which the ERP edits (shared `sources` collection), so a source moved to another
  * pricelist is priced from it.
  */
-export const priceFor = (owner, ownerId, sourceId, sources = DEMO_SOURCES) => {
+/** The price record an order of this source is priced from (source's active list, else the default list), or null. */
+const priceRecordFor = (owner, ownerId, sourceId, sources) => {
     const source = sources.find((s) => String(s.id) === String(sourceId));
     const list = source && DEMO_PRICELISTS.find((pl) => pl.id === source.prices_list_id);
-    const fromSource = isActiveList(list) ? listPrice(owner, ownerId, list.id) : null;
-    return fromSource ?? (DEFAULT_LIST ? listPrice(owner, ownerId, DEFAULT_LIST.id) : null);
+    const fromSource = isActiveList(list) ? listRecord(owner, ownerId, list.id) : null;
+    return fromSource ?? (DEFAULT_LIST ? listRecord(owner, ownerId, DEFAULT_LIST.id) : null);
 };
+
+export const priceFor = (owner, ownerId, sourceId, sources = DEMO_SOURCES) => {
+    const record = priceRecordFor(owner, ownerId, sourceId, sources);
+    return record ? Number(record.price) : null;
+};
+
+/**
+ * True when a kit's price for this source comes only from the default-list price added later (LATE_PRICED_KITS,
+ * prices.js) – the seed's carts skip such kits, so they are exactly what they were before those prices existed.
+ */
+export const isLatePriced = (owner, ownerId, sourceId, sources = DEMO_SOURCES) =>
+    LATE_PRICE_IDS.has(priceRecordFor(owner, ownerId, sourceId, sources)?.id);
 
 // Kit templates are made for the CRM product types (сатин, бязь, полікотон – kit / component templates'
 // fabric_type_id), while fabrics carry the ERP warehouse types: which product type's kits a fabric of a

@@ -182,3 +182,25 @@ Object.entries(basisUah)
             });
         });
     });
+
+// Demo access (2026-11-12): the three "Полуторний" kits (Satin, Bazz, Polikoton) were left without any price by the
+// generator above, and 1.5 is the first size a visitor tries for every fabric – the calculator then had nothing to
+// save. They get a price in the default list ("Стандартний список"), which every source falls back to. Added after
+// the generated prices (ids follow on, nothing generated changes) and computed from each kit's cost basis without the
+// PRNG, so the rest of the catalog chain is untouched. The seed's carts don't pick these kits (seed.js), so the demo
+// orders, bills and bank lines stay as they were. The ERP adds them once to a visitor's stored prices (handlers/prices.js).
+export const LATE_PRICED_KITS = [1, 10, 20];
+export const LATE_PRICE_IDS = new Set();
+const DEFAULT_PRICELIST_ID = DEMO_PRICELISTS.find((pl) => pl.is_default).id;
+LATE_PRICED_KITS.forEach((kitId) => {
+    const basis = basisUah[ownerKey('kit_template', kitId)];
+    LATE_PRICE_IDS.add(DEMO_PRICES.length + 1);
+    DEMO_PRICES.push({
+        id: DEMO_PRICES.length + 1,
+        owner: 'kit_template',
+        owner_id: kitId,
+        prices_list_id: DEFAULT_PRICELIST_ID,
+        price: Math.max(10, Math.round((basis * MARKUPS[DEFAULT_PRICELIST_ID]) / 10) * 10).toFixed(2),
+        manager_id: MANAGERS.length ? MANAGERS[0].id : null,
+    });
+});
