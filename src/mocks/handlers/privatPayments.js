@@ -6,6 +6,7 @@ import {
     linkedBillIds, linkedBillOf, loadCrmOrderViews, loadSharedBills, loadSharedOrders, saveSharedBills, saveSharedOrders,
     updatePaidStatus,
 } from '../data/crmShared';
+import { localizeAssignment } from '../localize';
 
 // Response shapes follow the original API, as consumed by PaymentForOrders.jsx and PrivatPaymentInfo.jsx:
 //   GET   /accounting/private                    -> { count, next, previous, results }  (table rows, 25 per page)
@@ -200,7 +201,8 @@ export const privatPaymentHandlers = [
                 if (search && ![p.id, p.counterparty, p.assignment, p.amount, row.account, row.manager, p.comment]
                     .some((f) => includesCI(f, search))) return false;
                 if (counterparty && !includesCI(p.counterparty, counterparty)) return false;
-                if (assignment && !includesCI(p.assignment, assignment)) return false;
+                // English version: the purpose matches in English too ("payment for goods")
+                if (assignment && !includesCI(`${p.assignment} ${localizeAssignment(p.assignment)}`, assignment)) return false;
                 if (isSet(account) && String(p.account_id) !== account) return false;
                 if (amount != null && Number(p.amount) !== amount) return false;
                 if (isSet(operationType) && p.operation !== operationType) return false;

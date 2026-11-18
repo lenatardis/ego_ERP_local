@@ -10,8 +10,8 @@ import * as pricelists from './shared/catalog/pricelists';
 // Demo build (2026-11-18): the mock server answers in the visitor's language, as a localized backend would
 // (same as the CRM's src/mocks/localize.js). In English:
 // - responses: catalog names (fabrics, products, kit templates, components, options, sizes, warehouses,
-//   pricelists, order sources) under the keys below, the fixed phrases of production history entries and the
-//   ERP seed's fixed values (VALUES_EN);
+//   pricelists, order sources) under the keys below, the fixed phrases of production history entries and of
+//   the seeded bank payment purposes, and the ERP seed's fixed values (VALUES_EN);
 //   people, vendors, comments and addresses stay as entered;
 // - requests: the ERP's catalog is editable, so a seed name sent back in English (an edit form saved in
 //   English) is stored as its Ukrainian original – only an exact match of a known seed name, so text the user
@@ -48,6 +48,7 @@ const localizeHistoryText = (text) => (typeof text === 'string' && text.startsWi
 // translated wherever they appear – whole values only, so text the user typed is never touched
 const VALUES_EN = {
     'створено автоматично': 'created automatically',
+    'створено автоматично; повернуто платнику': 'created automatically; refunded to the payer',
     'Каса №1 (склад)': 'Cash desk No. 1 (warehouse)',
     'Каса №2 (офіс)': 'Cash desk No. 2 (office)',
     'Робоче місце закрійника': 'Cutter\'s workplace',
@@ -69,12 +70,29 @@ const localizeValue = (value) => {
     return value;
 };
 
+// payment purposes of the seeded Privat statement lines (shared seed `assignmentFor`): fixed bank phrases
+// around the payer's name – the phrases are translated, the names stay
+const ASSIGNMENT_PHRASES = [
+    [/^Внесення готівки через термінал самообслуговування, /, 'Cash deposit via self-service terminal, '],
+    [/^Сплата за товар за /, 'Payment for goods on behalf of '],
+    [/^Сплата за товар, без ПДВ /, 'Payment for goods, VAT exempt, '],
+    [/^Сплата за товар, /, 'Payment for goods, '],
+    [/^Сплата за товар /, 'Payment for goods, '],
+    [/^(\S+) Платник (.+), код платника (\d+)$/, '$1 Payer $2, payer code $3'],
+];
+export const localizeAssignment = (text) => {
+    if (typeof text !== 'string') return text;
+    const rule = ASSIGNMENT_PHRASES.find(([re]) => re.test(text));
+    return rule ? text.replace(rule[0], rule[1]) : text;
+};
+
 const localizeDeep = (value, key) => {
     if (Array.isArray(value)) return value.map((item) => localizeDeep(item, key));
     if (value && typeof value === 'object') {
         return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, localizeDeep(v, k)]));
     }
     if (key === 'text') return localizeHistoryText(value);
+    if (key === 'assignment') return localizeAssignment(value);
     const fixed = localizeValue(value);
     if (fixed !== value) return fixed;
     return LOCALIZED_KEYS.has(key) ? localizeCatalogText(value) : value;

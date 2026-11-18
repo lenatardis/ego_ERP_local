@@ -129,7 +129,8 @@ English version (2026-11-18, at the user's request; plan and decisions: workspac
 - Components import the plain `t` from `src/i18n`. Never name a local variable `t` in a file that uses it (a `.map((t) => …)` around a `t('…')` call broke "Оплата замовлень"); those were renamed to `tp`.
 - Roles stay Ukrainian in the data (`groups`, compared in code) and are translated where shown (`t(roleLabel)`, `t(groups[0])`).
 - Mock backend (`src/mocks/localize.js`, hooked into `withAuth` / `withLatency`): in English, responses get catalog names in English (`localizeCatalogText`, shared `src/mocks/shared/catalog/en.js`, the same keys as the CRM plus `size_name`, `warehouse_name`, `rack_name`), production history phrases ("CRM Замовлення №… / … / Передано закрійнику") and the ERP seed's fixed values (cash desks, company cards, workplaces, automatic / seeded comments). Requests: the catalog is editable here, so a value that is exactly the English form of a seed name (or of a fixed value) is stored as its Ukrainian original – an edit form saved in English doesn't write English into the data; anything else (a name the user typed) is stored as typed. Catalog searches (templates, products, price lists / sources, production orders, prices) also match English names. Mock messages use `t()` where they are made; the source-delete warning has an English plural rule.
-- Vendors, people, bank-statement purposes, document numbers and comments stay as entered.
+- Bank payment purposes of the seeded Privat statement lines (`assignment`, shared seed `assignmentFor`): the fixed bank phrases are translated, the names stay ("Payment for goods, Бойко В.М., …", "Cash deposit via self-service terminal, …"; `localizeAssignment`); the purpose filter on "Оплата замовлень" matches the English phrases too (2026-11-18, at the user's request).
+- Vendors, people, document numbers and comments stay as entered.
 
 ## Project Context
 
