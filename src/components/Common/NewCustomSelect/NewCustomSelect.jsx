@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import {styled} from "@mui/material/styles";
 import sortOrderIcon from "../../../assets/icons/sort.svg";
+import { t } from '../../../i18n';
 
 const CompactFormControl = styled(FormControl, {
     shouldForwardProp: (prop) => prop !== "height",
@@ -276,7 +277,7 @@ const NewCustomSelect = ({
                     <SearchRow>
                         <SearchInput
                             inputRef={searchInputRef}
-                            placeholder="Пошук..."
+                            placeholder={t('Пошук...')}
                             value={search}
                             onChange={handleSearchChange}
                             onKeyDown={(e) => {
@@ -329,7 +330,7 @@ const NewCustomSelect = ({
                             type="button"
                             tabIndex={-1}
                             onClick={handleToggleSort}
-                            aria-label="Змінити порядок сортування"
+                            aria-label={t('Змінити порядок сортування')}
                         >
                             <img src={sortOrderIcon} alt=""/>
                         </SortIconButton>
@@ -338,7 +339,7 @@ const NewCustomSelect = ({
 
                 {visibleOptions.length === 0 && (
                     <CompactMenuItem disabled value="">
-                        <em>Нічого не знайдено</em>
+                        <em>{t('Нічого не знайдено')}</em>
                     </CompactMenuItem>
                 )}
 

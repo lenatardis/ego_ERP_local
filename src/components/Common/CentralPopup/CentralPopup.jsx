@@ -4,6 +4,7 @@ import {useAppDispatch, useAppSelector} from "../../../hooks/redux";
 import {getIsActivePopup} from "../../../store/selectors";
 import {setIsActivePopup} from "../../../store/main-slice";
 import cross from '../../../assets/icons/cross.svg';
+import { t } from '../../../i18n';
 
 const CentralPopup = ({children, title, onClose = () => {}, bigPopup, verticalScroll, infoPopup}) => {
     const activePopup = useAppSelector(getIsActivePopup);
@@ -26,8 +27,8 @@ const CentralPopup = ({children, title, onClose = () => {}, bigPopup, verticalSc
             <div className={`${popupClass} ${styles.popup}`}>
                 <div className={styles.header}>
                     <p className={styles.header__title}>{title}</p>
-                    <button className={styles.cross} onClick={(e) => close(e)} aria-label="Закрити">
-                        <p>Закрити</p>
+                    <button className={styles.cross} onClick={(e) => close(e)} aria-label={t('Закрити')}>
+                        <p>{t('Закрити')}</p>
                         <span>
                             <img src={cross} alt=""/>
                         </span>

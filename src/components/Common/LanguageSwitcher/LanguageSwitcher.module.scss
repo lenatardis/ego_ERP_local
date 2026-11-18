@@ -1,0 +1,63 @@
+// light version (start page card): purple segment on the light card
+.switcher {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 6px;
+  background-color: #D9D1E0;
+  column-gap: 2px;
+}
+
+.option {
+  flex: 1 1 0;
+  min-width: 40px;
+  height: 28px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #573971;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color .15s, color .15s;
+
+  &:hover {
+    background-color: rgba(87, 57, 113, 0.12);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #573971;
+    outline-offset: 1px;
+  }
+}
+
+.active,
+.active:hover {
+  background-color: #573971;
+  color: #fff;
+  cursor: default;
+}
+
+// dark version (menus on #30223C)
+.dark {
+  background-color: rgba(255, 255, 255, 0.1);
+
+  .option {
+    color: #fff;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    &:focus-visible {
+      outline-color: #fff;
+    }
+  }
+
+  .active,
+  .active:hover {
+    background-color: #fff;
+    color: #201827;
+  }
+}

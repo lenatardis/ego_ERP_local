@@ -19,6 +19,7 @@ import { useNavigate, useParams } from "react-router";
 import NewCustomSelect from "../../../Common/NewCustomSelect/NewCustomSelect.jsx";
 import CurrencyRateInfo from "../../../Common/CurrencyRateInfo/CurrencyRateInfo.jsx";
 import ArrBack from "../../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../../i18n';
 
 
 const parseDecimal = (value) => {
@@ -38,40 +39,40 @@ const parseDecimal = (value) => {
 
 /* Yup scheme for upper form */
 const headerSchema = Yup.object({
-    date: Yup.string().required('Оберіть дату'),
+    date: Yup.string().required(t('Оберіть дату')),
     providerOption: Yup.number()
         .transform(v => (isNaN(v) ? undefined : v))
-        .integer().positive('Оберіть постачальника')
-        .required('Оберіть постачальника'),
-    docNumber: Yup.string().trim().min(1, 'Вкажіть номер документа'),
+        .integer().positive(t('Оберіть постачальника'))
+        .required(t('Оберіть постачальника')),
+    docNumber: Yup.string().trim().min(1, t('Вкажіть номер документа')),
     docSumUAH: Yup.number()
         .transform((value, originalValue) => {
             const n = parseDecimal(originalValue);
             return Number.isNaN(n) ? undefined : n;
         })
-        .moreThan(0, 'Сума в грн має бути > 0')
-        .required('Вкажіть суму в грн'),
+        .moreThan(0, t('Сума в грн має бути > 0'))
+        .required(t('Вкажіть суму в грн')),
     docSumUSD: Yup.number()
         .transform((value, originalValue) => {
             const n = parseDecimal(originalValue);
             return Number.isNaN(n) ? undefined : n;
         })
-        .moreThan(0, 'Сума в $ має бути > 0')
-        .required('Вкажіть суму в $'),
+        .moreThan(0, t('Сума в $ має бути > 0'))
+        .required(t('Вкажіть суму в $')),
     acceptedBy: Yup.number()
         .transform(v => (isNaN(v) ? undefined : v))
-        .integer().positive('Немає ідентифікатора користувача')
-        .required('Немає ідентифікатора користувача'),
+        .integer().positive(t('Немає ідентифікатора користувача'))
+        .required(t('Немає ідентифікатора користувача')),
     exchangeRate: Yup.number()
         .transform((value, originalValue) => {
             const n = parseDecimal(originalValue);
             return Number.isNaN(n) ? undefined : n;
         })
-        .moreThan(0, 'Курс має бути > 0')
-        .required('Вкажіть закупівельний курс долара'),
+        .moreThan(0, t('Курс має бути > 0'))
+        .required(t('Вкажіть закупівельний курс долара')),
 
-    totalEstimate: Yup.string().max(100, 'До 100 символів').nullable(),
-    comment: Yup.string().max(200, 'До 200 символів').nullable(),
+    totalEstimate: Yup.string().max(100, t('До 100 символів')).nullable(),
+    comment: Yup.string().max(200, t('До 200 символів')).nullable(),
 });
 
 const IncomingArrivalProduct = () => {
@@ -83,7 +84,7 @@ const IncomingArrivalProduct = () => {
     const [currentUsdRate, setCurrentUsdRate] = useState(null);
     const [currentUsdSaleRate, setCurrentUsdSaleRate] = useState(null);
     const [hasSavedExchangeRate, setHasSavedExchangeRate] = useState(true);
-    const FAIL_BANNER = 'Переконайтесь, будь ласка, що ви заповнили всі необхідні дані';
+    const FAIL_BANNER = t('Переконайтесь, будь ласка, що ви заповнили всі необхідні дані');
 
     const { id } = useParams();
     const isReadMode = window.location.pathname.endsWith('/read');
@@ -285,24 +286,24 @@ const IncomingArrivalProduct = () => {
         if (!usdOk) {
             setError('docSumUSD', {
                 type: 'manual',
-                message: `Не збігається з рядками (${fmt2(tableUSD)})`,
+                message: t('Не збігається з рядками ({{tableUSD}})', {tableUSD: fmt2(tableUSD)}),
             });
         }
 
         if (!uahOk) {
             setError('docSumUAH', {
                 type: 'manual',
-                message: `Не збігається з рядками (${fmt2(tableUAH)})`,
+                message: t('Не збігається з рядками ({{tableUAH}})', {tableUAH: fmt2(tableUAH)}),
             });
         }
 
         if (uahOk && usdOk) {
-            setBannerMsg(`Суми співпадають ✓  ($: ${fmt2(tableUSD)}, грн: ${fmt2(tableUAH)})`);
+            setBannerMsg(t('Суми співпадають ✓  ($: {{tableUSD}}, грн: {{tableUAH}})', {tableUSD: fmt2(tableUSD), tableUAH: fmt2(tableUAH)}));
         } else {
             const parts = [];
-            if (!usdOk) parts.push(`✓ $: загальна форма внесення надходження ${fmt2(docUSD)} ≠ по рядках детальної форми ${fmt2(tableUSD)}`);
-            if (!uahOk) parts.push(`✓ грн: загальна форма внесення надходження ${fmt2(docUAH)} ≠ по рядках детальної форми ${fmt2(tableUAH)}`);
-            setBannerMsg(`Невідповідність сум!\n${parts.join('\n')}`);
+            if (!usdOk) parts.push(t('✓ $: загальна форма внесення надходження {{docUSD}} ≠ по рядках детальної форми {{tableUSD}}', {docUSD: fmt2(docUSD), tableUSD: fmt2(tableUSD)}));
+            if (!uahOk) parts.push(t('✓ грн: загальна форма внесення надходження {{docUAH}} ≠ по рядках детальної форми {{tableUAH}}', {docUAH: fmt2(docUAH), tableUAH: fmt2(tableUAH)}));
+            setBannerMsg(t('Невідповідність сум!\n{{n}}', {n: parts.join('\n')}));
         }
     };
 
@@ -312,7 +313,7 @@ const IncomingArrivalProduct = () => {
         const capacityInfo = p?.capacityValidationInfo;
 
         if (pEmpty) {
-            setBannerMsg('Додайте хоча б один рядок у таблиці продукції');
+            setBannerMsg(t('Додайте хоча б один рядок у таблиці продукції'));
 
             if (capacityInfo?.hasErrors) {
                 setPendingCapacityPopupInfo(capacityInfo);
@@ -375,7 +376,7 @@ const IncomingArrivalProduct = () => {
         if (!hasP) {
             const capacityInfo = products.capacityValidationInfo;
 
-            setBannerMsg('Додайте хоча б один рядок у таблиці продукції');
+            setBannerMsg(t('Додайте хоча б один рядок у таблиці продукції'));
 
             if (capacityInfo?.hasErrors) {
                 setPendingCapacityPopupInfo(capacityInfo);
@@ -394,7 +395,7 @@ const IncomingArrivalProduct = () => {
             const capacityInfo = products.capacityValidationInfo;
 
             if (capacityInfo?.hasErrors) {
-                setBannerMsg(`Перевірте кількість у продукції, де в комірці на складі перевищено доступну місткість${getCapacityMaxText(capacityInfo.violations)}`);
+                setBannerMsg(t('Перевірте кількість у продукції, де в комірці на складі перевищено доступну місткість{{violations}}', {violations: getCapacityMaxText(capacityInfo.violations)}));
                 setPendingCapacityPopupInfo(capacityInfo);
             } else {
                 setBannerMsg(FAIL_BANNER);
@@ -419,7 +420,7 @@ const IncomingArrivalProduct = () => {
         if (!near(docSumUAHNum, tableUAH)) {
             setError('docSumUAH', {
                 type: 'manual',
-                message: `Не збігається з рядками (${fmt2(tableUAH)})`,
+                message: t('Не збігається з рядками ({{tableUAH}})', {tableUAH: fmt2(tableUAH)}),
             });
             sumsOk = false;
         }
@@ -427,13 +428,13 @@ const IncomingArrivalProduct = () => {
         if (!near(docSumUSDNum, tableUSD)) {
             setError('docSumUSD', {
                 type: 'manual',
-                message: `Не збігається з рядками (${fmt2(tableUSD)})`,
+                message: t('Не збігається з рядками ({{tableUSD}})', {tableUSD: fmt2(tableUSD)}),
             });
             sumsOk = false;
         }
 
         if (!sumsOk) {
-            setBannerMsg('Невідповідність сум');
+            setBannerMsg(t('Невідповідність сум'));
             return;
         }
 
@@ -572,8 +573,8 @@ const IncomingArrivalProduct = () => {
     // " (максимум N)" для однієї комірки, або максимум по кожній комірці, якщо їх кілька
     const getCapacityMaxText = (violations = []) => {
         if (!violations.length) return '';
-        if (violations.length === 1) return ` (максимум ${formatCapacityNumber(violations[0].capacityLimit)})`;
-        return ` (максимум: ${violations
+        if (violations.length === 1) return ` ${t('(максимум {{capacityLimit}})', {capacityLimit: formatCapacityNumber(violations[0].capacityLimit)})}`;
+        return ` (${t('максимум:')} ${violations
             .map(item => `${item.cellLabel} – ${formatCapacityNumber(item.capacityLimit)}`)
             .join('; ')})`;
     };
@@ -618,7 +619,7 @@ const handleCapacityValidationChange = (info) => {
             console.log(resp);
 
             if (!resp || (resp.id == null && !Array.isArray(resp.warehouse_item_units))) {
-                setBannerMsg('Неочікувана відповідь від сервера.');
+                setBannerMsg(t('Неочікувана відповідь від сервера.'));
                 return;
             }
 
@@ -631,9 +632,9 @@ const handleCapacityValidationChange = (info) => {
             const reasons = Object.values(e?.data || {}).flat().filter(m => typeof m === 'string');
             setBannerMsg(
                 reasons.length
-                    ? `Вибачте, здається, щось пішло не так. Накладну не збережено:\n${reasons.join('\n')}`
-                    : 'Вибачте, здається, щось пішло не так.' +
-                    ' Повторіть, будь ласка, спробу пізніше.'
+                    ? t('Вибачте, здається, щось пішло не так. Накладну не збережено:\n{{n}}', {n: reasons.join('\n')})
+                    : t('Вибачте, здається, щось пішло не так.') +
+                    t(' Повторіть, будь ласка, спробу пізніше.')
             );
         } finally {
             setIsLoading(false);
@@ -656,18 +657,18 @@ const handleCapacityValidationChange = (info) => {
             <div className={styles.titleBlock}>
                 <h2>
                     {mode === 'read'
-                        ? 'Перегляд надходження товарів'
+                        ? t('Перегляд надходження товарів')
                         : id
-                            ? 'Редагування надходження товарів'
-                            : 'Внесення надходження товарів'}
+                            ? t('Редагування надходження товарів')
+                            : t('Внесення надходження товарів')}
                 </h2>
                 {!isReadonly && (
                     <div className={styles.form__action}>
                         <button className={'btnLight'} type="button" onClick={onCheckSum}>
-                            <span>Перевірка суми</span>
+                            <span>{t('Перевірка суми')}</span>
                         </button>
                         <button className={'btnDark'} type="submit" form="incoming-product-form">
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 )}
@@ -675,14 +676,14 @@ const handleCapacityValidationChange = (info) => {
 
             {bannerMsg && (
                 // "Перевірка суми" success gets the positive (green) banner style (IncomingArrival.module.scss)
-                <div className={`${styles.bannerError} ${bannerMsg.startsWith('Суми співпадають') ? styles.bannerOk : ''}`}>{bannerMsg}</div>
+                <div className={`${styles.bannerError} ${bannerMsg.startsWith(t('Суми співпадають')) ? styles.bannerOk : ''}`}>{bannerMsg}</div>
             )}
 
             <form id="incoming-product-form" onSubmit={isReadonly ? (e) => e.preventDefault() : handleSubmit(onSave, onInvalid)} autoComplete="off" onKeyDownCapture={stopEnterSubmit}>
                 <div className={`${styles.form} ${styles.upperForm}`}>
-                    <h3>Форма внесення надходження на склад:</h3>
+                    <h3>{t('Форма внесення надходження на склад:')}</h3>
                     <div className={styles.titleWrap}>
-                        <h4>Загальна інформація про надходження</h4>
+                        <h4>{t('Загальна інформація про надходження')}</h4>
                         <CurrencyRateInfo
                             buyRate={currentUsdRate}
                             saleRate={currentUsdSaleRate}
@@ -690,7 +691,7 @@ const handleCapacityValidationChange = (info) => {
                     </div>
                     <div className={styles.form__content}>
                         <div className={`${styles.column} ${styles.select}`}>
-                            <div className={styles.fieldLabel}>Дата надходження</div>
+                            <div className={styles.fieldLabel}>{t('Дата надходження')}</div>
                             <div className={styles.dateWrapper}>
                                 <input
                                     id="date"
@@ -699,18 +700,18 @@ const handleCapacityValidationChange = (info) => {
                                     {...register('date')}
                                     disabled={isReadonly}
                                 />
-                                <span className={styles.datePlaceholder}>Дата надходження</span>
+                                <span className={styles.datePlaceholder}>{t('Дата надходження')}</span>
                             </div>
                             {errors.date && <p className={styles.errorText}>{errors.date.message}</p>}
 
-                            <div className={styles.fieldLabel}>Постачальник</div>
+                            <div className={styles.fieldLabel}>{t('Постачальник')}</div>
                             <Controller
                                 name="providerOption"
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <>
                                         <NewCustomSelect
-                                            label="Постачальник"
+                                            label={t('Постачальник')}
                                             value={field.value}
                                             onChange={(e) => field.onChange(e.target.value)}
                                             options={vendorOptions}
@@ -724,21 +725,21 @@ const handleCapacityValidationChange = (info) => {
                                 )}
                             />
 
-                            <div className={styles.fieldLabel}>Номер документа</div>
+                            <div className={styles.fieldLabel}>{t('Номер документа')}</div>
                             <InputBox
                                 errors={errors}
                                 name="docNumber"
-                                placeholder="Номер документа"
+                                placeholder={t('Номер документа')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{ ...register('docNumber'), readOnly: isReadonly }}
                             />
 
-                            <div className={styles.fieldLabel}>Сума за документом в доларах</div>
+                            <div className={styles.fieldLabel}>{t('Сума за документом в доларах')}</div>
                             <InputBox
                                 errors={errors}
                                 name="docSumUSD"
-                                placeholder="Сума за документом в доларах"
+                                placeholder={t('Сума за документом в доларах')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{
@@ -762,11 +763,11 @@ const handleCapacityValidationChange = (info) => {
                                     },
                                 }}
                             />
-                               <div className={styles.fieldLabel}>Сума за документом в грн</div>
+                               <div className={styles.fieldLabel}>{t('Сума за документом в грн')}</div>
                             <InputBox
                                 errors={errors}
                                 name="docSumUAH"
-                                placeholder="Сума за документом в грн"
+                                placeholder={t('Сума за документом в грн')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{
@@ -797,7 +798,7 @@ const handleCapacityValidationChange = (info) => {
 
                         <div className={styles.column}>
                             <div className={styles.fieldLabel}>
-                                Хто приймав (автоматично хто заповнює форму)
+                                {t('Хто приймав (автоматично хто заповнює форму)')}
                             </div>
                             <input
                                 type="hidden"
@@ -807,7 +808,7 @@ const handleCapacityValidationChange = (info) => {
                             <InputBox
                                 errors={errors}
                                 name="acceptedByDisplay"
-                                placeholder="Хто приймав (автоматично хто заповнює форму)"
+                                placeholder={t('Хто приймав (автоматично хто заповнює форму)')}
                                 type="text"
                                 disabled={true}
                                 options={{
@@ -818,26 +819,26 @@ const handleCapacityValidationChange = (info) => {
                                 }}
                             />
 
-                            <div className={styles.fieldLabel}>Загальний кошторис</div>
+                            <div className={styles.fieldLabel}>{t('Загальний кошторис')}</div>
                             <InputBox
                                 errors={errors}
                                 name="totalEstimate"
-                                placeholder="Загальний кошторис"
+                                placeholder={t('Загальний кошторис')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{ ...register('totalEstimate'), readOnly: isReadonly }}
                             />
 
 
-                            <div className={styles.fieldLabel}>Закупівельний курс долара, грн</div>
+                            <div className={styles.fieldLabel}>{t('Закупівельний курс долара, грн')}</div>
 
                             <InputBox
                                 errors={errors}
                                 name="exchangeRate"
                                 placeholder={
                                     mode === 'edit' && !hasSavedExchangeRate
-                                        ? 'Курс не було збережено при створенні'
-                                        : 'Закупівельний курс долара, грн'
+                                        ? t('Курс не було збережено при створенні')
+                                        : t('Закупівельний курс долара, грн')
                                 }
                                 type="text"
                                 disabled={true}
@@ -859,10 +860,10 @@ const handleCapacityValidationChange = (info) => {
                                 }}
                             />
 
-                            <div className={styles.fieldLabel}>Коментар</div>
+                            <div className={styles.fieldLabel}>{t('Коментар')}</div>
                             <textarea
                                 className={`comment ${errors.comment ? styles.error : ''}`}
-                                placeholder="Коментар"
+                                placeholder={t('Коментар')}
                                 {...register('comment')}
                                 maxLength="200"
                                 readOnly={isReadonly}
@@ -874,24 +875,24 @@ const handleCapacityValidationChange = (info) => {
                 </div>
 
                 <div className={`${styles.titleBlock} ${styles.extraPadding}`}>
-                    <h3>Детальна інформація</h3>
+                    <h3>{t('Детальна інформація')}</h3>
                 </div>
                 {!isReadonly && capacityValidationInfo?.hasErrors && (
                     <div className={styles.bannerError}>
-                        <strong>Перевірте (чи за бажанням перерозподіліть) кількість у позиціях продукції, де в комірках на складі перевищено доступну місткість{getCapacityMaxText(capacityValidationInfo.violations)}.</strong>
+                        <strong>{t('Перевірте (чи за бажанням перерозподіліть) кількість у позиціях продукції, де в комірках на складі перевищено доступну місткість')}{getCapacityMaxText(capacityValidationInfo.violations)}.</strong>
                         <div style={{ paddingBottom: '8px', whiteSpace: 'pre-line' }}>
                             {capacityValidationInfo.summaryText}
                         </div>
                     </div>
                 )}
                 <div className={styles.form}>
-                    <h3>Перелік товарів</h3>
-                    <h4>Детальна інформація по кожній позиції товарів які прийшли</h4>
+                    <h3>{t('Перелік товарів')}</h3>
+                    <h4>{t('Детальна інформація по кожній позиції товарів які прийшли')}</h4>
                     <EditableProductTable ref={productRef} mode={mode} exchangeRate={watch('exchangeRate')} readOnly={isReadonly} onCapacityValidationChange={handleCapacityValidationChange} />
                 </div>
             </form>
             {isConfirmPopupOpen && (
-                <CentralPopup title="Підтвердження" onClose={closeConfirmPopup}>
+                <CentralPopup title={t('Підтвердження')} onClose={closeConfirmPopup}>
                     <div
                         style={{
                             display: "flex",
@@ -906,7 +907,7 @@ const handleCapacityValidationChange = (info) => {
                                 paddingBottom: 0,
                             }}
                         >
-                            Ви дійсно бажаєте зберегти накладну?
+                            {t('Ви дійсно бажаєте зберегти накладну?')}
                         </h3>
 
                         <button
@@ -917,7 +918,7 @@ const handleCapacityValidationChange = (info) => {
                             }}
                             onClick={handleConfirmSave}
                         >
-                            <span>Підтвердити</span>
+                            <span>{t('Підтвердити')}</span>
                         </button>
 
                         <button
@@ -928,7 +929,7 @@ const handleCapacityValidationChange = (info) => {
                             }}
                             onClick={closeConfirmPopup}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -962,7 +963,7 @@ const handleCapacityValidationChange = (info) => {
                                     textAlign: "center",
                                 }}
                             >
-                                Заповніть обов'язкові поля <br/> в таблиці з товарами
+                                {t('Заповніть обов\'язкові поля')} <br/> {t('в таблиці з товарами')}
                             </h3>
                             {productValidationInfo.map((item, index) => (
                                 <p key={index} style={{ margin: 0 }}>
@@ -986,7 +987,7 @@ const handleCapacityValidationChange = (info) => {
                             }}
                             onClick={closeProductValidationPopup}
                         >
-                            <span>Ок</span>
+                            <span>{t('Ок')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -1020,12 +1021,12 @@ const handleCapacityValidationChange = (info) => {
                                     textAlign: "center",
                                 }}
                             >
-                                Перевищено місткість комірок
+                                {t('Перевищено місткість комірок')}
                             </h3>
 
                             <p style={{ margin: 0 }}>
-                                Накладну неможливо зберегти, поки кількість у проблемних комірках
-                                перевищує доступний ліміт.
+                                {t('Накладну неможливо зберегти, поки кількість у проблемних комірках')}
+                                {t('перевищує доступний ліміт.')}
                             </p>
 
                             {capacityValidationInfo.violations.map((item, index) => {
@@ -1048,7 +1049,7 @@ const handleCapacityValidationChange = (info) => {
                                         </p>
 
                                         <p style={{ margin: 0 }}>
-                                            Максимум для поточної форми:{' '}
+                                            {t('Максимум для поточної форми:')}{' '}
                                             <strong>{formatCapacityNumber(item.capacityLimit)}</strong>
                                         </p>
 
@@ -1056,28 +1057,28 @@ const handleCapacityValidationChange = (info) => {
                                             <p style={{ margin: 0 }}>
                                                 {hasSinglePosition ? (
                                                     <>
-                                                        Ви можете вказати максимум <strong>{formatCapacityNumber(item.capacityLimit)}</strong> для позиції № <strong>{positionNumbers}</strong> або обирати інші комірки.
+                                                        {t('Ви можете вказати максимум')} <strong>{formatCapacityNumber(item.capacityLimit)}</strong> {t('для позиції №')} <strong>{positionNumbers}</strong> {t('або обирати інші комірки.')}
                                                     </>
                                                 ) : (
                                                     <>
-                                                        Ви можете перерозподіляти сумарну кількість в межах <strong>{formatCapacityNumber(item.capacityLimit)}</strong> між позиціями <strong>{positionNumbers}</strong> або обирати інші комірки.
+                                                        {t('Ви можете перерозподіляти сумарну кількість в межах')} <strong>{formatCapacityNumber(item.capacityLimit)}</strong> {t('між позиціями')} <strong>{positionNumbers}</strong> {t('або обирати інші комірки.')}
                                                     </>
                                                 )}
                                                 {' '}
-                                                (З урахуванням раніше збереженої в цій накладній кількості доступно:{' '}
+                                                {t('(З урахуванням раніше збереженої в цій накладній кількості доступно:')}{' '}
                                                 <strong>{formatCapacityNumber(item.remainingCapacity)}</strong>,
-                                                {' '}раніше збережено в цій накладній:{' '}
+                                                {' '}{t('раніше збережено в цій накладній:')}{' '}
                                                 <strong>{formatCapacityNumber(item.originalQty)}</strong>.)
                                             </p>
                                         )}
 
                                         <p style={{ margin: 0 }}>
-                                            Зараз у формі сумарно вказано:{' '}
+                                            {t('Зараз у формі сумарно вказано:')}{' '}
                                             <strong>{formatCapacityNumber(item.totalQty)}</strong>
                                         </p>
 
                                         <p style={{ margin: 0 }}>
-                                            Перевірте суму кількостей в позиціях №{' '}
+                                            {t('Перевірте суму кількостей в позиціях №')}{' '}
                                             <strong>{positionNumbers}</strong>
                                         </p>
                                     </div>
@@ -1085,7 +1086,7 @@ const handleCapacityValidationChange = (info) => {
                             })}
 
                             <p style={{ margin: 0 }}>
-                                Зменште кількість товарів або оберіть інші комірки, щоб увійти в ліміт. Ви можете перерозподіляти кількість за бажанням.
+                                {t('Зменште кількість товарів або оберіть інші комірки, щоб увійти в ліміт. Ви можете перерозподіляти кількість за бажанням.')}
                             </p>
                         </div>
 
@@ -1098,7 +1099,7 @@ const handleCapacityValidationChange = (info) => {
                             }}
                             onClick={closeCapacityValidationPopup}
                         >
-                            <span>Ок</span>
+                            <span>{t('Ок')}</span>
                         </button>
                     </div>
                 </CentralPopup>

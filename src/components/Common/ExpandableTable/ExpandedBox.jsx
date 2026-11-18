@@ -1,6 +1,7 @@
 import React from "react";
 import styles from './ExpandableTable.module.scss';
 import user from '../../../assets/icons/userPurple.svg';
+import { t } from '../../../i18n';
 
 const ExpandedBox = ({ onRemove, onManualLink, onView, row }) => {
     const isLinked = Boolean(row?.is_linked);
@@ -25,7 +26,7 @@ const ExpandedBox = ({ onRemove, onManualLink, onView, row }) => {
                                     onManualLink?.(row);
                                 }}
                             >
-                                <span>Прив'язати замовлення вручну</span>
+                                <span>{t('Прив\'язати замовлення вручну')}</span>
                             </button>
 
                             <button
@@ -35,11 +36,11 @@ const ExpandedBox = ({ onRemove, onManualLink, onView, row }) => {
                                     onView?.(row);
                                 }}
                             >
-                                <span>Переглянути</span>
+                                <span>{t('Переглянути')}</span>
                             </button>
                         </div>
 
-                        <p className={styles.info}>Оберіть, якщо вибір не був автоматичний</p>
+                        <p className={styles.info}>{t('Оберіть, якщо вибір не був автоматичний')}</p>
                     </div>
                 )}
 
@@ -53,7 +54,7 @@ const ExpandedBox = ({ onRemove, onManualLink, onView, row }) => {
                             onClick={stop}
                         >
                             <img src={user} alt="" />
-                            <span>Зв’язок з клієнтом</span>
+                            <span>{t('Зв’язок з клієнтом')}</span>
                         </a>
 
                         <button
@@ -63,7 +64,7 @@ const ExpandedBox = ({ onRemove, onManualLink, onView, row }) => {
                                 onView?.(row);
                             }}
                         >
-                            <span>Переглянути</span>
+                            <span>{t('Переглянути')}</span>
                         </button>
                     </>
                 )}

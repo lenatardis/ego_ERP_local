@@ -2,23 +2,24 @@
 import React, { useMemo, useCallback } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styles from "./TabLinks.module.scss";
+import { t } from '../../../i18n';
 
 const TabsLinks = ({ preventSameRouteNav = true, className = "" }) => {
     const location = useLocation();
 
     const links = useMemo(
         () => [
-            { key: "optionParts", label: "Частини опцій", to: "/optionParts" },
+            { key: "optionParts", label: t('Частини опцій'), to: "/optionParts" },
             {
                 key: "options",
-                label: "Опції",
+                label: t('Опції'),
                 to: "/componentOptions", // дефолт
                 groupPaths: ["/componentOptions", "/kitOptions"],
             },
-            { key: "componentTypes", label: "Типи компонентів", to: "/componentTypes" },
-            { key: "componentTemplates", label: "Компоненти", to: "/componentTemplates" },
-            { key: "kitSizes", label: "Розміри комплектів", to: "/kitSizes" },
-            { key: "kitTemplates", label: "Комплекти", to: "/kitTemplates", end: true }
+            { key: "componentTypes", label: t('Типи компонентів'), to: "/componentTypes" },
+            { key: "componentTemplates", label: t('Компоненти'), to: "/componentTemplates" },
+            { key: "kitSizes", label: t('Розміри комплектів'), to: "/kitSizes" },
+            { key: "kitTemplates", label: t('Комплекти'), to: "/kitTemplates", end: true }
         ],
         []
     );

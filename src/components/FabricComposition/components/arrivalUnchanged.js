@@ -1,3 +1,4 @@
+import { t } from '../../../i18n';
 // Demo build (2026-11-11, at the user's request): saving an edited arrival that wasn't changed
 // is refused on the page. The arrival as loaded is turned into the same payload shape the page
 // sends (`arrivalPayloadFromFabricResponse` / `…FromProductResponse`), and both are compared
@@ -6,7 +7,7 @@
 // goes ahead as before – a real edit is never blocked.
 
 export const NO_CHANGES_MESSAGE =
-    'Для збереження відредагованої накладної внесіть зміни: поточна версія не відрізняється від збереженої.';
+    t('Для збереження відредагованої накладної внесіть зміни: поточна версія не відрізняється від збереженої.');
 
 const parseNumber = (value) => {
     if (typeof value === 'number') return Number.isFinite(value) ? value : NaN;
@@ -90,14 +91,14 @@ export const arrivalPayloadFromFabricResponse = (resp, dateRoundTrip) => ({
 export const arrivalPayloadFromProductResponse = (resp, dateRoundTrip) => ({
     ...headerFromResponse(resp, dateRoundTrip),
     fabric_rolls: [],
-    warehouse_item_units: (resp?.warehouse_item_units || []).flatMap((t) =>
-        (t?.units || []).map((u) => {
+    warehouse_item_units: (resp?.warehouse_item_units || []).flatMap((tp) =>
+        (tp?.units || []).map((u) => {
             const one = {
                 cell: Number(u?.cell_id ?? u?.cell?.id),
                 price_uah: numberOrNull(u?.price_uah),
                 price_usd: numberOrNull(u?.price_usd),
                 initial_quantity: numberOrNull(u?.quantity),
-                template: Number(t?.warehouse_item_template?.id),
+                template: Number(tp?.warehouse_item_template?.id),
                 size: Number(u?.size?.id),
                 color: Number(u?.color?.id),
             };

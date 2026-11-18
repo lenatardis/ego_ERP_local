@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toBoolOrUndefined, paginate, imageFileToUrl } from './utils';
 import { getCollection, saveCollection, nextId } from '../db';
 import { DEMO_PRODUCTS, PRODUCT_CATEGORIES, PRODUCT_COLORS, PRODUCT_SIZES } from '../data/products';
+import { localizeCatalogText } from '../shared/catalog/en';
 
 // Response shapes follow the original API, as consumed by StorageProduct.jsx,
 // NewProduct.jsx and EditableProductTable.jsx:
@@ -32,7 +33,7 @@ export const productHandlers = [
 
         const filtered = products()
             .filter((p) => !isSet(category) || p.category.id === Number(category))
-            .filter((p) => !search || p.name.toLowerCase().includes(search))
+            .filter((p) => !search || `${p.name} ${localizeCatalogText(p.name)}`.toLowerCase().includes(search))
             .map((p) => ({
                 ...p,
                 // color / size filters narrow the variants shown for each product

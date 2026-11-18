@@ -35,6 +35,7 @@ import {getAccessToken, getUserId} from "../../api/authStorage.js";
 import Tooltip from "../Common/TapTooltip/TapTooltip";
 import InfoIcon from "../../assets/icons/info.svg";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../i18n';
 
 /* helpers */
 const toSizeName = (s) => `${s.width}x${s.length}`;
@@ -43,27 +44,27 @@ const safeVal = (v) => (v != null ? v : "");
 const TABS = [
     {
         key: "products",
-        label: "Товари",
+        label: t('Товари'),
         flag: {isWarehouseItemType: true},
     },
     {
         key: "kits",
-        label: "Комплекти",
+        label: t('Комплекти'),
         flag: {isKit: true},
     },
     {
         key: "kitOptions",
-        label: "Опції комплектів",
+        label: t('Опції комплектів'),
         flag: {isKitOption: true},
     },
     {
         key: "components",
-        label: "Компоненти",
+        label: t('Компоненти'),
         flag: {isKitComponent: true},
     },
     {
         key: "componentOptions",
-        label: "Опції компонентів",
+        label: t('Опції компонентів'),
         flag: {isKitComponentOption: true},
     },
 ];
@@ -86,9 +87,9 @@ const TAB_FLAGS = TABS.reduce((acc, tab) => {
 }, {});
 
 const PRICE_FILTER_OPTIONS = [
-    {name: "Усі", value: ""},
-    {name: "Тільки з цінами", value: "true"},
-    {name: "Без цін", value: "false"},
+    {name: t('Усі'), value: ""},
+    {name: t('Тільки з цінами'), value: "true"},
+    {name: t('Без цін'), value: "false"},
 ];
 
 const TAB_ENTITY_FIELD = {
@@ -345,19 +346,19 @@ const COST_BASE_FIELDS = {
 };
 
 const RAW_MATERIAL_LOCK_TABS = new Set(["products", "kits", "components"]);
-const NO_DATA_LABEL = "Немає даних";
+const NO_DATA_LABEL = t('Немає даних');
 
 const NO_DATA_TOOLTIP =
-    "По цьому товару немає надходжень";
+    t('По цьому товару немає надходжень');
 
 const NO_ARRIVALS_TOTAL_TOOLTIP =
-    "Немає надходжень, тому неможливо порахувати загальну собівартість";
+    t('Немає надходжень, тому неможливо порахувати загальну собівартість');
 
 const isNoArrivalsRow = (tabKey, row) =>
     RAW_MATERIAL_LOCK_TABS.has(tabKey) && (row?.rawMaterialUahNoData || row?.rawMaterialUsdNoData);
 
 const NO_COST_DATA_TOOLTIP =
-    "Неможливо порахувати собівартість, адже немає введених даних";
+    t('Неможливо порахувати собівартість, адже немає введених даних');
 
 // надходження є, але собівартість не збережена (або всі її складові видалені)
 const isNoCostDataRow = (tabKey, row) =>
@@ -368,8 +369,8 @@ const getNoCostDataTooltip = (row) => {
     if (row?.costPriceRef?.id) {
         const qty = parseNumber(row.baseCostRawMaterialQty);
         const unit = parseNumber(row.baseCostRawMaterialUah);
-        if (qty > 0 && unit <= 0) return `${NO_COST_DATA_TOOLTIP}. Введіть хоча б вартість одиниці сировини`;
-        if (unit > 0 && qty <= 0) return `${NO_COST_DATA_TOOLTIP}. Введіть кількість сировини`;
+        if (qty > 0 && unit <= 0) return t('{{NO_COST_DATA_TOOLTIP}}. Введіть хоча б вартість одиниці сировини', {NO_COST_DATA_TOOLTIP});
+        if (unit > 0 && qty <= 0) return t('{{NO_COST_DATA_TOOLTIP}}. Введіть кількість сировини', {NO_COST_DATA_TOOLTIP});
     }
     return NO_COST_DATA_TOOLTIP;
 };
@@ -1022,7 +1023,7 @@ const NewPrices = () => {
             const token = getAccessToken();
             if (!token) {
                 window.alert(
-                    "Не вдалося отримати токен доступу. Авторизуйся знову і повтори спробу."
+                    t('Не вдалося отримати токен доступу. Авторизуйся знову і повтори спробу.')
                 );
                 // прибираємо спінери
                 setSavingCells((prev) => {
@@ -1221,12 +1222,12 @@ const NewPrices = () => {
 
             if (hasLastPriceDeleteError) {
                 window.alert(
-                    "Не можна видалити ціну цього запису, оскільки в інших прайслистах для нього не залишиться жодної ціни. " +
-                    "Додайте ціну в іншому прайслисті і повторіть спробу."
+                    t('Не можна видалити ціну цього запису, оскільки в інших прайслистах для нього не залишиться жодної ціни. ') +
+                    t('Додайте ціну в іншому прайслисті і повторіть спробу.')
                 );
             } else if (failCount > 0) {
                 window.alert(
-                    `Не вдалося зберегти ${failCount} цін(и). Успішно збережено: ${successCount}. Деталі в консолі.`
+                    t('Не вдалося зберегти {{failCount}} цін(и). Успішно збережено: {{successCount}}. Деталі в консолі.', {failCount, successCount})
                 );
             }
         },
@@ -1287,7 +1288,7 @@ const NewPrices = () => {
             const token = getAccessToken();
             if (!token) {
                 window.alert(
-                    "Не вдалося отримати токен доступу. Авторизуйся знову і повтори спробу."
+                    t('Не вдалося отримати токен доступу. Авторизуйся знову і повтори спробу.')
                 );
                 return false;
             }
@@ -1364,7 +1365,7 @@ const NewPrices = () => {
                 }
             } catch (err) {
                 console.error("Failed to save cost price", err);
-                window.alert("Не вдалося зберегти собівартість. Деталі в консолі.");
+                window.alert(t('Не вдалося зберегти собівартість. Деталі в консолі.'));
             } finally {
                 // вимикаємо лоадер
                 setSavingCostRows((prev) => {
@@ -1532,14 +1533,14 @@ const NewPrices = () => {
     };
 
     const NO_LAST_RATE_TOOLTIP =
-        "Немає курсу останнього надходження, тому неможливо порахувати собівартість за курсом останнього надходження";
+        t('Немає курсу останнього надходження, тому неможливо порахувати собівартість за курсом останнього надходження');
 
     const renderDashWithTooltip = (tooltip) =>
         neCell(
             <div className={styles.noArrivalsCell}>
                 <span>-</span>
                 <Tooltip title={tooltip} arrow placement="top">
-                    <img src={InfoIcon} className={styles.infoIcon} alt="Інфо" />
+                    <img src={InfoIcon} className={styles.infoIcon} alt={t('Інфо')} />
                 </Tooltip>
             </div>,
             { relative: true }
@@ -1598,8 +1599,8 @@ const NewPrices = () => {
     }, [activeTab, getBackendTotalCostUah, getBackendTotalCostUsd]);
 
         const LAST_ARRIVAL_USD_EXPLAIN_TOOLTIP =
-        "Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. " +
-        "Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate.";
+        t('Розрахунок: Загальна собівартість, грн із бекенду / курс USD останнього надходження. ') +
+        t('Тобто береться backend-значення auto_calculation.uah і ділиться на last_exchange_rate.exchange_rate.');
 
 
 // ✅ $ за курсом останнього надходження + індикатор різниці від поточного курсу
@@ -1617,7 +1618,7 @@ const NewPrices = () => {
             <div className={styles.noArrivalsCell}>
                 <span>{formatMoney(r.lastUsd)}</span>
                 <Tooltip title={LAST_ARRIVAL_USD_EXPLAIN_TOOLTIP} arrow placement="top">
-                    <img src={InfoIcon} className={styles.infoIcon} alt="Інфо" />
+                    <img src={InfoIcon} className={styles.infoIcon} alt={t('Інфо')} />
                 </Tooltip>
             </div>
         ) : (
@@ -1625,7 +1626,7 @@ const NewPrices = () => {
                 <div className={styles.noArrivalsCell}>
                     <span>{formatMoney(r.lastUsd)}</span>
                     <Tooltip title={LAST_ARRIVAL_USD_EXPLAIN_TOOLTIP} arrow placement="top">
-                        <img src={InfoIcon} className={styles.infoIcon} alt="Інфо" />
+                        <img src={InfoIcon} className={styles.infoIcon} alt={t('Інфо')} />
                     </Tooltip>
                 </div>
                 <div className="rateDiff">
@@ -1647,9 +1648,9 @@ const NewPrices = () => {
 
         const statusLabel =
             status === "ACTIVE"
-                ? "активний"
+                ? t('активний')
                 : status === "DEPRECATED"
-                    ? "неактивний"
+                    ? t('неактивний')
                     : null;
 
         const statusClass =
@@ -1672,13 +1673,13 @@ const NewPrices = () => {
                     }}
                     aria-label={
                         isOpen
-                            ? "Згорнути маржу/націнку"
-                            : "Показати маржу/націнку"
+                            ? t('Згорнути маржу/націнку')
+                            : t('Показати маржу/націнку')
                     }
                     title={
                         isOpen
-                            ? "Сховати маржу і націнку"
-                            : "Показати маржу і націнку"
+                            ? t('Сховати маржу і націнку')
+                            : t('Показати маржу і націнку')
                     }
                     className={styles.extraBtn}
                 >
@@ -1689,7 +1690,7 @@ const NewPrices = () => {
                     )}
                 </button>
                 <div className={styles.innerTitle}>
-                    {title || `Прайсліст ${idx + 1}`}<br/>
+                    {title || t('Прайсліст {{idx}}', {idx: idx + 1})}<br/>
                     {statusLabel && (
                         <>
                             <span
@@ -1806,7 +1807,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
                             <img
                                 src={InfoIcon}
                                 className={styles.infoIcon}
-                                alt="Інфо"
+                                alt={t('Інфо')}
                             />
                         </Tooltip>
 
@@ -1848,7 +1849,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
             <div className={styles.noArrivalsCell}>
                 <span>-</span>
                 <Tooltip title={NO_ARRIVALS_TOTAL_TOOLTIP} arrow placement="top">
-                    <img src={InfoIcon} className={styles.infoIcon} alt="Інфо" />
+                    <img src={InfoIcon} className={styles.infoIcon} alt={t('Інфо')} />
                 </Tooltip>
             </div>,
             { relative: true }
@@ -1870,13 +1871,13 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
             },
             {
                 key: "type",
-                title: "Тип",
+                title: t('Тип'),
                 width: "140px",
                 render: (v) => neCell(v),
             },
             {
                 key: "name",
-                title: "Назва",
+                title: t('Назва'),
                 render: (v) => neCell(v),
             }
         ];
@@ -1884,7 +1885,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
         if (showSizeColumn) {
             cols.push({
                 key: "size",
-                title: "Розмір",
+                title: t('Розмір'),
                 width: "130px",
                 render: (v) => neCell(v || "-"),
             });
@@ -1893,7 +1894,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
         if (showFabricTypeColumn) {
             cols.push({
                 key: "fabricType",
-                title: "Тип тканини",
+                title: t('Тип тканини'),
                 width: "160px",
                 render: (v) => neCell(v || "-"),
             });
@@ -1902,7 +1903,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
         if (showColorColumn) {
             cols.push({
                 key: "color",
-                title: "Колір",
+                title: t('Колір'),
                 width: "140px",
                 render: (v) =>
                     neCell(
@@ -1929,13 +1930,13 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
                     }}
                     aria-label={
                         showCostExtrasUah
-                            ? "Згорнути додаткові гривневі колонки собівартості"
-                            : "Показати додаткові гривневі колонки собівартості"
+                            ? t('Згорнути додаткові гривневі колонки собівартості')
+                            : t('Показати додаткові гривневі колонки собівартості')
                     }
                     title={
                         showCostExtrasUah
-                            ? "Сховати гривневі деталі собівартості"
-                            : "Показати гривневі деталі собівартості"
+                            ? t('Сховати гривневі деталі собівартості')
+                            : t('Показати гривневі деталі собівартості')
                     }
                     className={styles.extraBtn}
                 >
@@ -1945,7 +1946,7 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
                         <PlusSquareIcon size={18}/>
                     )}
                 </button>
-                <div className={styles.innerTitle}>Загальна собівартість, грн</div>
+                <div className={styles.innerTitle}>{t('Загальна собівартість, грн')}</div>
             </div>
         ),
         width: "130px",
@@ -1966,28 +1967,28 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
     cols.push(
         {
             key: "cost_material_qty",
-            title: "К-ть сировини",
+            title: t('К-ть сировини'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costRawMaterialQty"),
             cellClassKey: "inputCellFirst",
         },
         {
             key: "cost_material_uah",
-            title: "В-ть одиниці сировини, грн",
+            title: t('В-ть одиниці сировини, грн'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costRawMaterialUah"),
             cellClassKey: "inputCell",
         },
         {
             key: "cost_work_uah",
-            title: "В-ть роботи, грн",
+            title: t('В-ть роботи, грн'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costLaborUah"),
             cellClassKey: "inputCell",
         },
         {
             key: "cost_pack_uah",
-            title: "В-ть пакування, грн",
+            title: t('В-ть пакування, грн'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costPackagingUah"),
             cellClassKey: "inputCell",
@@ -1996,9 +1997,9 @@ const renderMarkupMoneyCell = (row, priceIdx) => {
             key: "cost_usd_last_arrival",
             title: (
                 <>
-                    Заг соб-ть
+                    {t('Заг соб-ть')}
                     <br />
-                    за курсом $ ост. надходж.
+                    {t('за курсом $ ост. надходж.')}
                 </>
             ),
             width: "130px",
@@ -2024,13 +2025,13 @@ if (showAnyCostColumns) {
                     }}
                     aria-label={
                         showCostExtrasUsd
-                            ? "Згорнути додаткові доларові колонки собівартості"
-                            : "Показати додаткові доларові колонки собівартості"
+                            ? t('Згорнути додаткові доларові колонки собівартості')
+                            : t('Показати додаткові доларові колонки собівартості')
                     }
                     title={
                         showCostExtrasUsd
-                            ? "Сховати доларові деталі собівартості"
-                            : "Показати доларові деталі собівартості"
+                            ? t('Сховати доларові деталі собівартості')
+                            : t('Показати доларові деталі собівартості')
                     }
                     className={styles.extraBtn}
                 >
@@ -2040,7 +2041,7 @@ if (showAnyCostColumns) {
                         <PlusSquareIcon size={18}/>
                     )}
                 </button>
-                <div className={styles.innerTitle}>Загальна собівартість, $</div>
+                <div className={styles.innerTitle}>{t('Загальна собівартість, $')}</div>
             </div>
         ),
         width: "130px",
@@ -2052,21 +2053,21 @@ if (showAnyCostColumns && showCostExtrasUsd) {
     cols.push(
         {
             key: "cost_material_usd",
-            title: "В-ть одиниці сировини, $",
+            title: t('В-ть одиниці сировини, $'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costRawMaterialUsd"),
             cellClassKey: "inputCellFirst",
         },
         {
             key: "cost_work_usd",
-            title: "В-ть роботи, $",
+            title: t('В-ть роботи, $'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costLaborUsd"),
             cellClassKey: "inputCell",
         },
         {
             key: "cost_pack_usd",
-            title: "В-ть пакування, $",
+            title: t('В-ть пакування, $'),
             width: "130px",
             render: (_, row) => renderCostInput(row, "costPackagingUsd"),
             cellClassKey: "inputCell",
@@ -2084,7 +2085,7 @@ if (showAnyCostColumns && showCostExtrasUsd) {
                 title: (
                     <PriceHeader
                         idx={i}
-                        title={plMeta?.title || `Прайсліст ${i + 1}`}
+                        title={plMeta?.title || t('Прайсліст {{i}}', {i: i + 1})}
                         status={plMeta?.raw?.status || plMeta?.status}
                     />
                 ),
@@ -2104,13 +2105,13 @@ if (showAnyCostColumns && showCostExtrasUsd) {
             if (expandedExtras[i]) {
                 cols.push({
                     key: `pl_${plMeta?.id ?? i}_margin_pct`,
-                    title: "Маржа, %",
+                    title: t('Маржа, %'),
                     width: "120px",
                     render: (_, row) => renderMarginPercentCell(row, i),
                 });
                 cols.push({
                     key: `pl_${plMeta?.id ?? i}_markup_uah`,
-                    title: "Націнка, грн",
+                    title: t('Націнка, грн'),
                     width: "130px",
                     render: (_, row) => renderMarkupMoneyCell(row, i),
                 });
@@ -2129,8 +2130,8 @@ if (showAnyCostColumns && showCostExtrasUsd) {
                         <IconBtn
                             title={
                                 canSave
-                                    ? "Зберегти рядок"
-                                    : "Немає змін для збереження"
+                                    ? t('Зберегти рядок')
+                                    : t('Немає змін для збереження')
                             }
                             disabled={!canSave}
                             onClick={() => updateRow(row.__rowIndex)}
@@ -2144,7 +2145,7 @@ if (showAnyCostColumns && showCostExtrasUsd) {
                         </IconBtn>
 
                         <IconBtn
-                            title="Відновити рядок"
+                            title={t('Відновити рядок')}
                             onClick={() => restoreRow(row.__rowIndex)}
                             disabled={!canSave}
                         >
@@ -2312,10 +2313,10 @@ const minWidthPx =
         // якщо є незбережені зміни – попереджаємо, як і раніше
         if (totalDirty > 0) {
             const ok = window.confirm(
-                `Ви внесли зміни у ${totalDirty} запис(ах).\n` +
-                `Щоб перейти до іншої таблиці, потрібно або зберегти зміни, або скасувати їх.\n\n` +
-                `Натисніть "OK", щоб СКАСУВАТИ незбережені зміни в поточній таблиці й перейти.\n` +
-                `Натисніть "Скасувати", щоб залишитися в поточній таблиці`
+                t('Ви внесли зміни у {{totalDirty}} запис(ах).\n', {totalDirty}) +
+                t('Щоб перейти до іншої таблиці, потрібно або зберегти зміни, або скасувати їх.\n\n') +
+                t('Натисніть "OK", щоб СКАСУВАТИ незбережені зміни в поточній таблиці й перейти.\n') +
+                t('Натисніть "Скасувати", щоб залишитися в поточній таблиці')
             );
 
             if (!ok) return;
@@ -2370,7 +2371,7 @@ const minWidthPx =
                 }
                 onSearch={() => onSendFilters(activeTab, {...filterParams, page: 1})}
 
-                title={"Ціни"}
+                title={t('Ціни')}
             />
 
             {/* таби */}
@@ -2433,7 +2434,7 @@ const minWidthPx =
 
             <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <CustomSelect
-                    label="З цінами"
+                    label={t('З цінами')}
                     value={filters.hasPrice}
                     onChange={handlePriceFilterChange}
                     options={PRICE_FILTER_OPTIONS}
@@ -2457,17 +2458,17 @@ const minWidthPx =
             {totalDirty > 0 && (
                 <div className={styles.saveBox}>
                     <div className={styles.question}>
-                        Зберегти зміни у {totalDirty} запис(ах)?
+                        {t('Зберегти зміни у')} {totalDirty} {t('запис(ах)?')}
                     </div>
                     <button
                         className={"btnDark"}
                         type="button"
                         onClick={saveAll}
                     >
-                        <span>Зберегти</span>
+                        <span>{t('Зберегти')}</span>
                     </button>
                     <button type="button" onClick={restoreAll}>
-                        <span>Відновити</span>
+                        <span>{t('Відновити')}</span>
                     </button>
                 </div>
             )}

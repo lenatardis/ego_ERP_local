@@ -33,6 +33,7 @@ import { useStickyXScroll } from "../../../hooks/useStickyXScroll.jsx";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../../i18n';
 
 /* helpers */
 const mapApiTypeToRow = (item) => ({
@@ -258,11 +259,11 @@ const ComponentTypes = () => {
         const errors = {};
         const nameTrimmed = createForm.name.trim();
 
-        if (!nameTrimmed) errors.createName = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors.createName = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > MAX_OPTION_TEXT_LENGTH) {
-            errors.createName = { message: "Назва має бути не більше 100 символів" };
+            errors.createName = { message: t('Назва має бути не більше 100 символів') };
         }
-        if (!createForm.mono_fabric_type) errors.createMono = { message: "Оберіть монотканинний тип" };
+        if (!createForm.mono_fabric_type) errors.createMono = { message: t('Оберіть монотканинний тип') };
 
         if (Object.keys(errors).length > 0) {
             setCreateErrors(errors);
@@ -297,11 +298,11 @@ const ComponentTypes = () => {
         const errors = {};
         const nameTrimmed = editForm.name.trim();
 
-        if (!nameTrimmed) errors.editName = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors.editName = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > MAX_OPTION_TEXT_LENGTH) {
-            errors.editName = { message: "Назва має бути не більше 100 символів" };
+            errors.editName = { message: t('Назва має бути не більше 100 символів') };
         }
-        if (!editForm.mono_fabric_type) errors.editMono = { message: "Оберіть монотканинний тип" };
+        if (!editForm.mono_fabric_type) errors.editMono = { message: t('Оберіть монотканинний тип') };
 
         if (Object.keys(errors).length > 0) {
             setEditErrors(errors);
@@ -362,16 +363,16 @@ const ComponentTypes = () => {
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "60px" },
-            { key: "name", title: "Назва", render: (_, row) => <LimitedCell value={row.name} />, },
+            { key: "name", title: t('Назва'), render: (_, row) => <LimitedCell value={row.name} />, },
             {
                 key: "image",
-                title: "Фото",
+                title: t('Фото'),
                 width: "90px",
                 render: (_, row) => renderPhotoCell(row.image),
             },
             {
                 key: "mono_fabric_type",
-                title: "Монотканинний тип",
+                title: t('Монотканинний тип'),
                 width: "190px",
                 render: (_, row) => (row.mono_fabric_type?.trim() ? row.mono_fabric_type : "-"),
             },
@@ -382,10 +383,10 @@ const ComponentTypes = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => openDeletePopup(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -430,7 +431,7 @@ const ComponentTypes = () => {
         <div className={styles.wrapper}>
             <ArrBack />
             <SearchFilter
-                title="Типи компонентів"
+                title={t('Типи компонентів')}
                 onOpenFilter={() => setIsShowFilter(true)}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -442,7 +443,7 @@ const ComponentTypes = () => {
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати тип компонентів</span>
+                    <span>{t('Додати тип компонентів')}</span>
                 </button>
             </div>
 
@@ -498,13 +499,13 @@ const ComponentTypes = () => {
 
             {/* CREATE */}
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання типу компонентів" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання типу компонентів')} onClose={closeCreatePopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва типу"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва типу')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_OPTION_TEXT_LENGTH,
@@ -518,7 +519,7 @@ const ComponentTypes = () => {
 
                         <div>
                             <CustomSelect
-                                label="Монотканинний тип"
+                                label={t('Монотканинний тип')}
                                 value={createForm.mono_fabric_type}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -534,7 +535,7 @@ const ComponentTypes = () => {
 
                         <div>
                             <label className={styles.textareaLabel} style={{ display: "block", marginBottom: 6 }}>
-                                Фото
+                                {t('Фото')}
                             </label>
 
                             {createPreviewUrl ? (
@@ -544,7 +545,7 @@ const ComponentTypes = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Обране фото</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Обране фото')}</span>
                                 </div>
                             ) : null}
 
@@ -560,7 +561,7 @@ const ComponentTypes = () => {
 
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -568,13 +569,13 @@ const ComponentTypes = () => {
 
             {/* EDIT */}
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування типу компонентів" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування типу компонентів')} onClose={closeEditPopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва типу"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва типу')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_OPTION_TEXT_LENGTH,
@@ -588,7 +589,7 @@ const ComponentTypes = () => {
 
                         <div>
                             <CustomSelect
-                                label="Монотканинний тип"
+                                label={t('Монотканинний тип')}
                                 value={editForm.mono_fabric_type}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -602,7 +603,7 @@ const ComponentTypes = () => {
 
                         <div>
                             <label className={styles.textareaLabel} style={{ display: "block", marginBottom: 6 }}>
-                                Фото
+                                {t('Фото')}
                             </label>
 
                             {editPreviewUrl ? (
@@ -612,7 +613,7 @@ const ComponentTypes = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Обране фото (ще не збережено)</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Обране фото (ще не збережено)')}</span>
                                 </div>
                             ) : editForm.imageUrl?.trim() ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
@@ -622,7 +623,7 @@ const ComponentTypes = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Поточне фото</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Поточне фото')}</span>
                                 </div>
                             ) : null}
 
@@ -637,14 +638,14 @@ const ComponentTypes = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title="Видалення типу компонентів"
+                    title={t('Видалення типу компонентів')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -657,7 +658,7 @@ const ComponentTypes = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити тип компонентів?
+                            {t('Ви дійсно бажаєте видалити тип компонентів?')}
                         </h3>
 
                         <button
@@ -667,7 +668,7 @@ const ComponentTypes = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -677,7 +678,7 @@ const ComponentTypes = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

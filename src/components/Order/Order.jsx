@@ -13,21 +13,22 @@ import CutterFabricPopup from "./CutterFabricPopup/CutterFabricPopup.jsx";
 import WarehouseItemPopup from "./WarehouseItemPopup/WarehouseItemPopup.jsx";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
 import CompleteWorkPopup from "./CompleteWorkPopup/CompleteWorkPopup.jsx";
+import { t } from '../../i18n';
 
 
 const ORDER_STATUS_LABELS = {
-    NEW: "Нове",
-    IN_PROGRESS: "В роботі",
-    COMPLETED: "Завершено",
-    AWAITING_CUTTING: "Очікує крійки",
-    ON_CUT: "На крійці",
-    AWAITING_SEWING: "Очікує пошиття",
-    ON_SEWING: "На пошитті",
-    AWAITING_PACKAGING: "Очікує пакування",
-    ON_PACKAGING: "На пакуванні",
-    IS_PACKED: "Запаковано",
-    SHIPMENT_READY: "Готово до відправки",
-    DELIVERED: "Доставлено",
+    NEW: t('Нове'),
+    IN_PROGRESS: t('В роботі'),
+    COMPLETED: t('Завершено'),
+    AWAITING_CUTTING: t('Очікує крійки'),
+    ON_CUT: t('На крійці'),
+    AWAITING_SEWING: t('Очікує пошиття'),
+    ON_SEWING: t('На пошитті'),
+    AWAITING_PACKAGING: t('Очікує пакування'),
+    ON_PACKAGING: t('На пакуванні'),
+    IS_PACKED: t('Запаковано'),
+    SHIPMENT_READY: t('Готово до відправки'),
+    DELIVERED: t('Доставлено'),
 };
 
 const getStoredAccessToken = () => {
@@ -109,25 +110,25 @@ const getMetersLabel = (value) => {
     const number = Math.abs(Number(value));
 
     if (!Number.isFinite(number)) {
-        return "метрів";
+        return t('метрів');
     }
 
     const lastTwo = number % 100;
     const lastOne = number % 10;
 
     if (lastTwo >= 11 && lastTwo <= 14) {
-        return "метрів";
+        return t('метрів');
     }
 
     if (lastOne === 1) {
-        return "метр";
+        return t('метр');
     }
 
     if (lastOne >= 2 && lastOne <= 4) {
-        return "метри";
+        return t('метри');
     }
 
-    return "метрів";
+    return t('метрів');
 };
 
 const normalizeImageUrl = (value) => {
@@ -289,18 +290,18 @@ const getOptionsItems = (order) => {
 
 const getCurrentRoleLabel = (groups) => {
     if (!Array.isArray(groups) || groups.length === 0) {
-        return "Робітник";
+        return t('Робітник');
     }
 
     if (groups.includes("Швачка")) {
-        return "Швачка";
+        return t('Швачка');
     }
 
     if (groups.includes("Швея")) {
-        return "Швея";
+        return t('Швея');
     }
 
-    return groups[0];
+    return t(groups[0]);
 };
 
 const getEmployeeFullName = (worker) => {
@@ -313,15 +314,15 @@ const getEmployeeFullName = (worker) => {
 const getPrimaryExecutors = (order) => {
     const workers = [
         {
-            label: "Закрійник",
+            label: t('Закрійник'),
             worker: order?.cutter,
         },
         {
-            label: "Швачка",
+            label: t('Швачка'),
             worker: order?.sewer,
         },
         {
-            label: "Пакувальник",
+            label: t('Пакувальник'),
             worker: order?.packer,
         },
     ];
@@ -475,28 +476,28 @@ const Order = () => {
 
         if (isCutter) {
             return cuttingCosts.length === 0
-                ? "Спочатку покроїть тканину: натисніть «Вибір тканини» та внесіть довжину крою."
+                ? t('Спочатку покроїть тканину: натисніть «Вибір тканини» та внесіть довжину крою.')
                 : "";
         }
 
         if (isSewer) {
             const notSewn = listMissing("is_sewn");
             return notSewn.length > 0
-                ? `Спочатку позначте всі компоненти як пошиті та натисніть «Внести виконану роботу». Не пошито: ${notSewn.join(", ")}.`
+                ? t('Спочатку позначте всі компоненти як пошиті та натисніть «Внести виконану роботу». Не пошито: {{notSewn}}.', {notSewn: notSewn.join(", ")})
                 : "";
         }
 
         if (isPacker) {
             if (isWarehouseOrder) {
-                if (!hasWarehouseCell) return "Спочатку оберіть товар на складі: натисніть «Вибір товару».";
+                if (!hasWarehouseCell) return t('Спочатку оберіть товар на складі: натисніть «Вибір товару».');
                 return order.warehouse_item.is_packed
                     ? ""
-                    : "Спочатку позначте товар як спакований та натисніть «Внести виконану роботу».";
+                    : t('Спочатку позначте товар як спакований та натисніть «Внести виконану роботу».');
             }
 
             const notPacked = listMissing("is_packed");
             return notPacked.length > 0
-                ? `Спочатку позначте всі компоненти як спаковані та натисніть «Внести виконану роботу». Не спаковано: ${notPacked.join(", ")}.`
+                ? t('Спочатку позначте всі компоненти як спаковані та натисніть «Внести виконану роботу». Не спаковано: {{notPacked}}.', {notPacked: notPacked.join(", ")})
                 : "";
         }
 
@@ -538,7 +539,7 @@ const Order = () => {
             return refreshedOrder;
         } catch (error) {
             console.error("Order refresh error:", error);
-            setErrorText("Не вдалося оновити деталку замовлення.");
+            setErrorText(t('Не вдалося оновити деталку замовлення.'));
             return null;
         }
     };
@@ -719,7 +720,7 @@ const Order = () => {
                 setOrderData(updatedOrder);
             } catch (error) {
                 console.error("Warehouse item pack update error:", error);
-                setErrorText("Не вдалося зберегти статус пакування.");
+                setErrorText(t('Не вдалося зберегти статус пакування.'));
             } finally {
                 setIsSubmitting(false);
             }
@@ -754,7 +755,7 @@ const Order = () => {
                 setOrderData(updatedOrder);
             } catch (error) {
                 console.error("Sewer component update error:", error);
-                setErrorText("Не вдалося зберегти виконану роботу швачки.");
+                setErrorText(t('Не вдалося зберегти виконану роботу швачки.'));
             } finally {
                 setIsSubmitting(false);
             }
@@ -779,7 +780,7 @@ const Order = () => {
                 setOrderData(updatedOrder);
             } catch (error) {
                 console.error("Packer component update error:", error);
-                setErrorText("Не вдалося зберегти виконану роботу пакувальника.");
+                setErrorText(t('Не вдалося зберегти виконану роботу пакувальника.'));
             } finally {
                 setIsSubmitting(false);
             }
@@ -802,7 +803,7 @@ const Order = () => {
             redirectToMyActiveOrders();
         } catch (error) {
             console.error("Complete cutter work error:", error);
-            hideCompleteWorkPopupOnError("Не вдалося завершити роботу та передати замовлення швачці.");
+            hideCompleteWorkPopupOnError(t('Не вдалося завершити роботу та передати замовлення швачці.'));
         } finally {
             setIsFinishingWork(false);
         }
@@ -822,7 +823,7 @@ const Order = () => {
             redirectToMyActiveOrders();
         } catch (error) {
             console.error("Complete sewer work error:", error);
-            hideCompleteWorkPopupOnError("Не вдалося завершити роботу та передати замовлення пакувальнику.");
+            hideCompleteWorkPopupOnError(t('Не вдалося завершити роботу та передати замовлення пакувальнику.'));
         } finally {
             setIsFinishingWork(false);
         }
@@ -842,7 +843,7 @@ const Order = () => {
             redirectToMyActiveOrders();
         } catch (error) {
             console.error("Complete packer work error:", error);
-            hideCompleteWorkPopupOnError("Не вдалося завершити роботу та перевести замовлення в готовність до відправки.");
+            hideCompleteWorkPopupOnError(t('Не вдалося завершити роботу та перевести замовлення в готовність до відправки.'));
         } finally {
             setIsFinishingWork(false);
         }
@@ -852,7 +853,7 @@ const Order = () => {
         return (
             <div className={styles.order}>
                 <div className={styles.order__content}>
-                    <p>Не передано дані замовлення.</p>
+                    <p>{t('Не передано дані замовлення.')}</p>
                 </div>
             </div>
         );
@@ -862,7 +863,7 @@ const Order = () => {
         return (
             <div className={styles.order}>
                 <div className={styles.order__content}>
-                    <p>Завантаження...</p>
+                    <p>{t('Завантаження...')}</p>
                 </div>
             </div>
         );
@@ -889,7 +890,7 @@ const Order = () => {
                     <div className={styles.infoBlock}>
                         <div className={styles.timeBlock}>
                             <div className={styles.currentTime}>
-                                <p className={styles.currentTimeCaption}>Поточний час</p>
+                                <p className={styles.currentTimeCaption}>{t('Поточний час')}</p>
                                 <Clock />
                             </div>
                         </div>
@@ -903,7 +904,7 @@ const Order = () => {
                 <div className={styles.grid}>
                     <div>
                         <div className={styles.titleRow}>
-                            <h2>CRM замовлення №{orderNumber}</h2>
+                            <h2>{t('CRM замовлення №')}{orderNumber}</h2>
                             <div className={styles.label}>
                                 <span>{statusLabel}</span>
                             </div>
@@ -913,43 +914,43 @@ const Order = () => {
                             <div>
                                 <h3>
                                     {isWarehouseOrder
-                                        ? "Інформація про готову продукцію"
-                                        : "Інформація про комплект"}
+                                        ? t('Інформація про готову продукцію')
+                                        : t('Інформація про комплект')}
                                 </h3>
 
                                 <div className={styles.paramsBlock}>
                                     {isWarehouseOrder ? (
                                         <>
                                             <p>
-                                                Назва: <span>{warehouseName}</span>
+                                                {t('Назва:')} <span>{warehouseName}</span>
                                             </p>
 
                                             <p>
-                                                Категорія: <span>{warehouseCategory}</span>
+                                                {t('Категорія:')} <span>{warehouseCategory}</span>
                                             </p>
 
                                             <p>
-                                                Колір: <span>{warehouseColor}</span>
+                                                {t('Колір:')} <span>{warehouseColor}</span>
                                             </p>
 
                                             <p>
-                                                Розмір: <span>{warehouseSize}</span>
+                                                {t('Розмір:')} <span>{warehouseSize}</span>
                                             </p>
                                         </>
                                     ) : (
                                         <>
                                             <p>
-                                                Назва: <span>{setSize}</span>
+                                                {t('Назва:')} <span>{setSize}</span>
                                             </p>
 
                                             <p>
-                                                Комплектація:{" "}
+                                                {t('Комплектація:')}{" "}
                                                 <span>{completionItems.join(", ")}</span>
                                             </p>
 
                                             {order?.kit && optionsItems.length > 0 && (
                                                 <p>
-                                                    Опції: <span>{optionsItems.join(", ")}</span>
+                                                    {t('Опції:')} <span>{optionsItems.join(", ")}</span>
                                                 </p>
                                             )}
                                         </>
@@ -959,12 +960,12 @@ const Order = () => {
 
                             <div className={styles.historyBlock}>
                                 <div className={styles.historyBlock__header}>
-                                    <p>Історія замовлення</p>
+                                    <p>{t('Історія замовлення')}</p>
                                 </div>
 
                                 <div className={styles.historyBlock__content}>
                                     <p className={styles.historyBlock__caption}>
-                                        Відповідальний
+                                        {t('Відповідальний')}
                                     </p>
                                     <div className={styles.historyBlock__name}>
                                         {primaryExecutors.length > 0 ? (
@@ -979,7 +980,7 @@ const Order = () => {
                                     </div>
 
                                     <p className={styles.historyBlock__caption}>
-                                        Останнє оновлення
+                                        {t('Останнє оновлення')}
                                     </p>
                                     <p>{formatDateTime(order?.modified)}</p>
                                 </div>
@@ -988,13 +989,13 @@ const Order = () => {
 
                         {isSewer && cuttingCostItems.length > 0 && (
                             <div className={styles.sewerCuttingInfo}>
-                                <h3>Кройка рулонів: </h3>
+                                <h3>{t('Кройка рулонів:')} </h3>
 
                                 {cuttingCostItems.map((item) => (
                                     <p key={item.id}>
-                                        · викроїно рулон <strong>#{item.fabricRollId}</strong> (тканина{" "}
-                                        <strong>{item.fabricName}</strong>, тип {item.fabricType}) на довжину{" "}
-                                        <strong>{item.usedLength}</strong> {getMetersLabel(item.usedLength)} закройщиком{" "}
+                                        {t('· викроїно рулон')} <strong>#{item.fabricRollId}</strong> {t('(тканина')}{" "}
+                                        <strong>{item.fabricName}</strong>{t(', тип')} {item.fabricType}{t(') на довжину')}{" "}
+                                        <strong>{item.usedLength}</strong> {getMetersLabel(item.usedLength)} {t('закройщиком')}{" "}
                                         "<strong>{item.cutterFullName}</strong>"
                                     </p>
                                 ))}
@@ -1008,10 +1009,10 @@ const Order = () => {
                                         <div className={styles.cuttingInfo}>
                                             {cuttingCosts.map((cost) => (
                                                 <p key={cost.id}>
-                                                    · викроїно рулон <strong>#{cost?.fabric_roll?.id}</strong> (
-                                                    тканина <strong>{cost?.fabric_roll?.fabric?.name || "–"}</strong>, тип{" "}
+                                                    {t('· викроїно рулон')} <strong>#{cost?.fabric_roll?.id}</strong> (
+                                                    {t('тканина')} <strong>{cost?.fabric_roll?.fabric?.name || "–"}</strong>{t(', тип')}{" "}
                                                     {cost?.fabric_roll?.fabric?.type?.type || "–"})
-                                                    {" "}на довжину <strong>{cost?.used_length ?? "–"}</strong>{" "}
+                                                    {" "}{t('на довжину')} <strong>{cost?.used_length ?? "–"}</strong>{" "}
                                                     {getMetersLabel(cost?.used_length)}.
                                                 </p>
                                             ))}
@@ -1024,7 +1025,7 @@ const Order = () => {
                                         onClick={openCutterPopup}
                                         disabled={!canUpdateOrder}
                                     >
-                                        <span>Вибір тканини</span>
+                                        <span>{t('Вибір тканини')}</span>
                                     </button>
                                 </>
                             ) : isWarehouseOrder && !hasWarehouseCell ? (
@@ -1034,7 +1035,7 @@ const Order = () => {
                                     onClick={openWarehouseItemPopup}
                                     disabled={!canUpdateOrder}
                                 >
-                                    <span>Вибір товару</span>
+                                    <span>{t('Вибір товару')}</span>
                                 </button>
                             ) : (
                                 <>
@@ -1055,7 +1056,7 @@ const Order = () => {
                                             (isWarehouseOrder && hasWarehouseCell && !hasWarehousePackedChanged)
                                         }
                                     >
-                                        <span>{isSubmitting ? "Збереження..." : "Внести виконану роботу"}</span>
+                                        <span>{isSubmitting ? t('Збереження...') : t('Внести виконану роботу')}</span>
                                     </button>
                                 </>
                             )}
@@ -1066,7 +1067,7 @@ const Order = () => {
                         <div className={styles.imgWrap}>
                             <ProtectedImage
                                 src={imageUrl}
-                                alt={`Замовлення № ${orderNumber}`}
+                                alt={t('Замовлення № {{orderNumber}}', {orderNumber})}
                                 token={token}
                                 className={styles.photo}
                                 fallbackClassName={styles.photoPlaceholder}
@@ -1078,7 +1079,7 @@ const Order = () => {
                 <div className={`${styles.actionGrid}`}>
                     <div>
                         <div className={styles.actionHistory}>
-                            <h4>Історія дій робітника по даному замовленню</h4>
+                            <h4>{t('Історія дій робітника по даному замовленню')}</h4>
 
                             <div className={styles.actionRow}>
                                 {historyItems.length > 0 ? (
@@ -1089,7 +1090,7 @@ const Order = () => {
                                     ))
                                 ) : (
                                     <div>
-                                        <p># Замовлення № {orderNumber} / Історія відсутня</p>
+                                        <p># {t('Замовлення № {{orderNumber}} / Історія відсутня', {orderNumber})}</p>
                                     </div>
                                 )}
                             </div>
@@ -1103,7 +1104,7 @@ const Order = () => {
                                 disabled={!canUpdateOrder || isFinishingWork}
                                 style={{ marginTop: "20px", width: "100%" }}
                             >
-                                <span>{isFinishingWork ? "Завершення..." : "Завершити роботу"}</span>
+                                <span>{isFinishingWork ? t('Завершення...') : t('Завершити роботу')}</span>
                             </button>
                         )}
                     </div>
@@ -1151,10 +1152,10 @@ const Order = () => {
                     blockerText={completeWorkBlocker}
                     text={
                         completeWorkRole === "packer"
-                            ? "Після завершення дане замовлення буде переведено в готовність до відправки."
+                            ? t('Після завершення дане замовлення буде переведено в готовність до відправки.')
                             : completeWorkRole === "sewer"
-                                ? "Після завершення дане замовлення буде передано пакувальнику."
-                                : "Після завершення дане замовлення буде передано швачці."
+                                ? t('Після завершення дане замовлення буде передано пакувальнику.')
+                                : t('Після завершення дане замовлення буде передано швачці.')
                     }
                 />
             )}

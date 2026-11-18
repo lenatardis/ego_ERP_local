@@ -22,6 +22,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux.jsx";
 import { getIsActivePopup } from "../../../store/selectors";
 import { setIsActivePopup } from "../../../store/main-slice";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../i18n';
 
 /* helpers */
 const toSizeLabel = (s) => (s ? `${s.width}x${s.length}` : "");
@@ -42,9 +43,9 @@ const toOptions = (arr = [], mapName = (x) => x.name) =>
 const computeAggregates = (types = []) => {
     let totalQty = 0;
 
-    for (const t of types) {
-        if (typeof t?.quantity === "number" && !Number.isNaN(t.quantity)) {
-            totalQty += t.quantity;
+    for (const tp of types) {
+        if (typeof tp?.quantity === "number" && !Number.isNaN(tp.quantity)) {
+            totalQty += tp.quantity;
         }
     }
 
@@ -62,9 +63,9 @@ const normalizeLocationsFromTypes = (types = []) => {
         units.forEach((unit) => {
             rows.push({
                 num: rows.length + 1,
-                warehouse: unit?.cell?.rack?.warehouse?.name ?? "Немає",
-                rack: unit?.cell?.rack?.name ?? "Немає",
-                cell: unit?.cell?.number ?? unit?.cell?.id ?? "Немає",
+                warehouse: unit?.cell?.rack?.warehouse?.name ?? t('Немає'),
+                rack: unit?.cell?.rack?.name ?? t('Немає'),
+                cell: unit?.cell?.number ?? unit?.cell?.id ?? t('Немає'),
                 remainder: unit?.current_quantity ?? 0,
                 color: colorLabel,
                 size: sizeLabel,
@@ -88,13 +89,13 @@ const StorageProduct = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     const [categoryOptions, setCategoryOptions] = useState([
-        { name: "Усі категорії", value: "" },
+        { name: t('Усі категорії'), value: "" },
     ]);
     const [colorOptions, setColorOptions] = useState([
-        { name: "Усі кольори", value: "" },
+        { name: t('Усі кольори'), value: "" },
     ]);
     const [sizeOptions, setSizeOptions] = useState([
-        { name: "Усі розміри", value: "" },
+        { name: t('Усі розміри'), value: "" },
     ]);
 
     const [filters, setFilters] = useState({
@@ -114,9 +115,9 @@ const StorageProduct = () => {
     });
 
     const stockOptions = useMemo(() => [
-        { name: "Є на складі", value: "true" },
-        { name: "Немає на складі", value: "false" },
-        { name: "Вся продукція", value: "all" },
+        { name: t('Є на складі'), value: "true" },
+        { name: t('Немає на складі'), value: "false" },
+        { name: t('Вся продукція'), value: "all" },
     ], []);
 
     const [expandedIds, setExpandedIds] = useState(() => new Set());
@@ -160,12 +161,12 @@ const StorageProduct = () => {
 
     // МАПІНГ ПІД НОВИЙ БЕКЕНД (types)
     const mapTemplatesToRowsWithSubrows = useCallback((templates = []) => {
-        return templates.map((t) => {
-            const types = Array.isArray(t.types) ? t.types : [];
+        return templates.map((tp) => {
+            const types = Array.isArray(tp.types) ? tp.types : [];
             const hasMultiple = types.length > 1;
             const hasAny = types.length > 0;
 
-            const tplId = t.id;
+            const tplId = tp.id;
             const locationRows = normalizeLocationsFromTypes(types);
 
             const onToggleExpand = () => {
@@ -201,9 +202,9 @@ const StorageProduct = () => {
                     __variantsCount: types.length,
                     __locationRows: locationRows,
 
-                    category: t?.category?.name ?? "",
-                    name: t?.name ?? "",
-                    photo: t?.images?.[0] ?? "",
+                    category: tp?.category?.name ?? "",
+                    name: tp?.name ?? "",
+                    photo: tp?.images?.[0] ?? "",
                     quantity: agg.totalQty,
                 };
             }
@@ -219,9 +220,9 @@ const StorageProduct = () => {
                 __variantsCount: hasAny ? 1 : 0,
                 __locationRows: locationRows,
 
-                category: t?.category?.name ?? "",
-                name: t?.name ?? "",
-                photo: t?.images?.[0] ?? "",
+                category: tp?.category?.name ?? "",
+                name: tp?.name ?? "",
+                photo: tp?.images?.[0] ?? "",
                 quantity: first?.quantity != null ? first.quantity : "",
                 colors: colorToArray(first?.color),
                 sizes: sizeToArray(first?.size ?? null),
@@ -236,22 +237,22 @@ const StorageProduct = () => {
                 const token = getAccessToken();
                 const props = await fetchProductProperties(token);
                 setCategoryOptions([
-                    { name: "Усі категорії", value: "" },
+                    { name: t('Усі категорії'), value: "" },
                     ...toOptions(props?.categories || []),
                 ]);
                 setColorOptions([
-                    { name: "Усі кольори", value: "" },
+                    { name: t('Усі кольори'), value: "" },
                     ...toOptions(props?.colors || []),
                 ]);
                 setSizeOptions([
-                    { name: "Усі розміри", value: "" },
+                    { name: t('Усі розміри'), value: "" },
                     ...toOptions(props?.sizes || [], toSizeName),
                 ]);
             } catch (e) {
                 console.error("product properties fetch failed", e);
-                setCategoryOptions([{ name: "Усі категорії", value: "" }]);
-                setColorOptions([{ name: "Усі кольори", value: "" }]);
-                setSizeOptions([{ name: "Усі розміри", value: "" }]);
+                setCategoryOptions([{ name: t('Усі категорії'), value: "" }]);
+                setColorOptions([{ name: t('Усі кольори'), value: "" }]);
+                setSizeOptions([{ name: t('Усі розміри'), value: "" }]);
             } finally {
                 setLoadingProps(false);
             }
@@ -374,7 +375,7 @@ const StorageProduct = () => {
         () => [
             {
                 key: "location",
-                title: "Розташування",
+                title: t('Розташування'),
                 width: "70px",
                 render: (_, row) => {
                     if (row?.__isSubrow) {
@@ -396,8 +397,8 @@ const StorageProduct = () => {
                                 padding: 0,
                                 cursor: "pointer",
                             }}
-                            title="Розташування"
-                            aria-label="Розташування"
+                            title={t('Розташування')}
+                            aria-label={t('Розташування')}
                         >
                             <img
                                 src={packageIcon}
@@ -408,12 +409,12 @@ const StorageProduct = () => {
                     );
                 },
             },
-            { key: "category", title: "Категорія" },
-            { key: "name", title: "Назва", width: "60px" },
+            { key: "category", title: t('Категорія') },
+            { key: "name", title: t('Назва'), width: "60px" },
 
             {
                 key: "photo",
-                title: "Фото",
+                title: t('Фото'),
                 width: "65px",
                 render: (_, row) => {
                     if (row?.__isSubrow) {
@@ -424,14 +425,14 @@ const StorageProduct = () => {
                     return src ? (
                         <img
                             src={src}
-                            alt="Фото"
+                            alt={t('Фото')}
                             className="photoSkeleton"
                             style={{ width: 65, height: 65, objectFit: "cover", borderRadius: 4 }}
                         />
                     ) : (
                         <img
                             src={ImgPlaceholder}
-                            alt="Фото"
+                            alt={t('Фото')}
                             style={{ width: 65, height: 65, objectFit: "cover", borderRadius: 4 }}
                         />
                     );
@@ -440,7 +441,7 @@ const StorageProduct = () => {
 
             {
                 key: "quantity",
-                title: "Кількість",
+                title: t('Кількість'),
                 width: "120px",
                 render: (value, row) => {
                     const isAgg = !!row?.__isAggregate;
@@ -473,13 +474,13 @@ const StorageProduct = () => {
                                     }}
                                 >
                                     <span>
-                                        {isExpanded ? "Сховати варіанти" : "Показати варіанти"}
+                                        {isExpanded ? t('Сховати варіанти') : t('Показати варіанти')}
                                     </span>
                                     {/* phones: an eye instead of the caption (StorageProduct.module.scss) */}
                                     <img
                                         className={styles.varIcon}
                                         src={isExpanded ? eyeClosedIcon : eyeIcon}
-                                        alt={isExpanded ? "Сховати варіанти" : "Показати варіанти"}
+                                        alt={isExpanded ? t('Сховати варіанти') : t('Показати варіанти')}
                                     />
                                 </button>
                             )}
@@ -489,7 +490,7 @@ const StorageProduct = () => {
             },
             {
                 key: "colors",
-                title: "Колір",
+                title: t('Колір'),
                 width: "120px",
                 render: (_, row) => {
                     if (row?.__isAggregate) {
@@ -505,7 +506,7 @@ const StorageProduct = () => {
 
             {
                 key: "sizes",
-                title: "Розмір",
+                title: t('Розмір'),
                 width: "120px",
                 render: (_, row) => {
                     if (row?.__isAggregate) {
@@ -542,12 +543,12 @@ const StorageProduct = () => {
     const locationColumns = useMemo(
         () => [
             { key: "num", title: "№", width: "50px" },
-            { key: "warehouse", title: "Склад", width: "140px" },
-            { key: "rack", title: "Стелаж", width: "120px" },
-            { key: "cell", title: "Комірка", width: "100px" },
-            { key: "remainder", title: "Залишок", width: "100px" },
-            { key: "color", title: "Колір", width: "120px" },
-            { key: "size", title: "Розмір", width: "120px" },
+            { key: "warehouse", title: t('Склад'), width: "140px" },
+            { key: "rack", title: t('Стелаж'), width: "120px" },
+            { key: "cell", title: t('Комірка'), width: "100px" },
+            { key: "remainder", title: t('Залишок'), width: "100px" },
+            { key: "color", title: t('Колір'), width: "120px" },
+            { key: "size", title: t('Розмір'), width: "120px" },
         ],
         []
     );
@@ -557,7 +558,7 @@ const StorageProduct = () => {
             <ArrBack/>
             <SearchFilter
                 onOpenFilter={onOpenFilter}
-                title={"Готова продукція"}
+                title={t('Готова продукція')}
                 isAdd
                 onAdd={null}
                 composition
@@ -615,25 +616,25 @@ const StorageProduct = () => {
 
             <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
-                    label="Категорія"
+                    label={t('Категорія')}
                     value={filters.category}
                     onChange={handleFilterChange("category")}
                     options={categoryOptions}
                 />
                 <NewCustomSelect
-                    label="Колір"
+                    label={t('Колір')}
                     value={filters.prices__color}
                     onChange={handleFilterChange("prices__color")}
                     options={colorOptions}
                 />
                 <NewCustomSelect
-                    label="Розмір"
+                    label={t('Розмір')}
                     value={filters.prices__size}
                     onChange={handleFilterChange("prices__size")}
                     options={sizeOptions}
                 />
                 <NewCustomSelect
-                    label="Наявність"
+                    label={t('Наявність')}
                     value={filters.stock}
                     onChange={handleFilterChange("stock")}
                     options={stockOptions}
@@ -656,7 +657,7 @@ const StorageProduct = () => {
 
             {isActivePopup && selectedProduct?.id != null && (
                 <CentralPopup
-                    title={"Розташування готової продукції"}
+                    title={t('Розташування готової продукції')}
                     onClose={closeLocationPopup}
                     bigPopup
                     verticalScroll
@@ -674,10 +675,10 @@ const StorageProduct = () => {
                         </div>
 
                         {locationRows.length === 0 ? (
-                            <p className={styles.infoText}>Немає розташування</p>
+                            <p className={styles.infoText}>{t('Немає розташування')}</p>
                         ) : (
                             <>
-                                <p className={styles.infoTitle}>Готова продукція:</p>
+                                <p className={styles.infoTitle}>{t('Готова продукція:')}</p>
 
                                 <Table
                                     columns={locationColumns}

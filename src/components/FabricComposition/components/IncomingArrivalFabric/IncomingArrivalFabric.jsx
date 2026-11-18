@@ -19,6 +19,7 @@ import { useNavigate, useParams } from "react-router";
 import NewCustomSelect from "../../../Common/NewCustomSelect/NewCustomSelect.jsx";
 import CurrencyRateInfo from "../../../Common/CurrencyRateInfo/CurrencyRateInfo.jsx";
 import ArrBack from "../../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../../i18n';
 
 // універсальний парсер "1,56" / "1.56" / "1 234,56" → число
 const parseDecimal = (value) => {
@@ -38,40 +39,40 @@ const parseDecimal = (value) => {
 
 /* Yup scheme for upper form */
 const headerSchema = Yup.object({
-    date: Yup.string().required('Оберіть дату'),
+    date: Yup.string().required(t('Оберіть дату')),
     providerOption: Yup.number()
         .transform(v => (isNaN(v) ? undefined : v))
-        .integer().positive('Оберіть постачальника')
-        .required('Оберіть постачальника'),
-    docNumber: Yup.string().trim().min(1, 'Вкажіть номер документа'),
+        .integer().positive(t('Оберіть постачальника'))
+        .required(t('Оберіть постачальника')),
+    docNumber: Yup.string().trim().min(1, t('Вкажіть номер документа')),
     docSumUAH: Yup.number()
         .transform((value, originalValue) => {
             const n = parseDecimal(originalValue);
             return Number.isNaN(n) ? undefined : n;
         })
-        .moreThan(0, 'Сума в грн має бути > 0')
-        .required('Вкажіть суму в грн'),
+        .moreThan(0, t('Сума в грн має бути > 0'))
+        .required(t('Вкажіть суму в грн')),
     docSumUSD: Yup.number()
         .transform((value, originalValue) => {
             const n = parseDecimal(originalValue);
             return Number.isNaN(n) ? undefined : n;
         })
-        .moreThan(0, 'Сума в $ має бути > 0')
-        .required('Вкажіть суму в $'),
+        .moreThan(0, t('Сума в $ має бути > 0'))
+        .required(t('Вкажіть суму в $')),
     acceptedBy: Yup.number()
         .transform(v => (isNaN(v) ? undefined : v))
-        .integer().positive('Немає ідентифікатора користувача')
-        .required('Немає ідентифікатора користувача'),
+        .integer().positive(t('Немає ідентифікатора користувача'))
+        .required(t('Немає ідентифікатора користувача')),
     exchangeRate: Yup.number()
         .transform((value, originalValue) => {
             const n = parseDecimal(originalValue);
             return Number.isNaN(n) ? undefined : n;
         })
-        .moreThan(0, 'Курс має бути > 0')
-        .required('Вкажіть закупівельний курс долара'),
+        .moreThan(0, t('Курс має бути > 0'))
+        .required(t('Вкажіть закупівельний курс долара')),
 
-    totalEstimate: Yup.string().max(100, 'До 100 символів').nullable(),
-    comment: Yup.string().max(200, 'До 200 символів').nullable(),
+    totalEstimate: Yup.string().max(100, t('До 100 символів')).nullable(),
+    comment: Yup.string().max(200, t('До 200 символів')).nullable(),
 });
 
 const IncomingArrivalFabric = () => {
@@ -83,7 +84,7 @@ const IncomingArrivalFabric = () => {
     const [currentUsdRate, setCurrentUsdRate] = useState(null);
     const [currentUsdSaleRate, setCurrentUsdSaleRate] = useState(null);
     const [hasSavedExchangeRate, setHasSavedExchangeRate] = useState(true);
-    const FAIL_BANNER = 'Переконайтесь, будь ласка, що ви заповнили всі необхідні дані';
+    const FAIL_BANNER = t('Переконайтесь, будь ласка, що ви заповнили всі необхідні дані');
 
     const { id } = useParams();
     const isReadMode = window.location.pathname.endsWith('/read');
@@ -278,24 +279,24 @@ const IncomingArrivalFabric = () => {
         if (!uahOk) {
             setError('docSumUAH', {
                 type: 'manual',
-                message: `Не збігається з рядками (${fmt2(tableUAH)})`,
+                message: t('Не збігається з рядками ({{tableUAH}})', {tableUAH: fmt2(tableUAH)}),
             });
         }
 
         if (!usdOk) {
             setError('docSumUSD', {
                 type: 'manual',
-                message: `Не збігається з рядками (${fmt2(tableUSD)})`,
+                message: t('Не збігається з рядками ({{tableUSD}})', {tableUSD: fmt2(tableUSD)}),
             });
         }
 
         if (uahOk && usdOk) {
-            setBannerMsg(`Суми співпадають ✓  (грн: ${fmt2(tableUAH)}, $: ${fmt2(tableUSD)})`);
+            setBannerMsg(t('Суми співпадають ✓  (грн: {{tableUAH}}, $: {{tableUSD}})', {tableUAH: fmt2(tableUAH), tableUSD: fmt2(tableUSD)}));
         } else {
             const parts = [];
-            if (!usdOk) parts.push(`✓ $: загальна форма внесення надходження ${fmt2(docUSD)} ≠ по рядках детальної форми ${fmt2(tableUSD)}`);
-            if (!uahOk) parts.push(`✓ грн: загальна форма внесення надходження ${fmt2(docUAH)} ≠ по рядках детальної форми ${fmt2(tableUAH)}`);
-            setBannerMsg(`Невідповідність сум!\n${parts.join('\n')}`);
+            if (!usdOk) parts.push(t('✓ $: загальна форма внесення надходження {{docUSD}} ≠ по рядках детальної форми {{tableUSD}}', {docUSD: fmt2(docUSD), tableUSD: fmt2(tableUSD)}));
+            if (!uahOk) parts.push(t('✓ грн: загальна форма внесення надходження {{docUAH}} ≠ по рядках детальної форми {{tableUAH}}', {docUAH: fmt2(docUAH), tableUAH: fmt2(tableUAH)}));
+            setBannerMsg(t('Невідповідність сум!\n{{n}}', {n: parts.join('\n')}));
         }
     };
 
@@ -305,7 +306,7 @@ const IncomingArrivalFabric = () => {
         const capacityInfo = f?.capacityValidationInfo;
 
         if (fEmpty) {
-            setBannerMsg('Додайте хоча б один рядок у таблиці тканин');
+            setBannerMsg(t('Додайте хоча б один рядок у таблиці тканин'));
 
             if (capacityInfo?.hasErrors) {
                 setPendingCapacityPopupInfo(capacityInfo);
@@ -372,7 +373,7 @@ const IncomingArrivalFabric = () => {
         if (!hasF) {
             const capacityInfo = fabrics.capacityValidationInfo;
 
-            setBannerMsg('Додайте хоча б один рядок у таблиці тканин');
+            setBannerMsg(t('Додайте хоча б один рядок у таблиці тканин'));
 
             if (capacityInfo?.hasErrors) {
                 setPendingCapacityPopupInfo(capacityInfo);
@@ -391,7 +392,7 @@ const IncomingArrivalFabric = () => {
             const capacityInfo = fabrics.capacityValidationInfo;
 
             if (capacityInfo?.hasErrors) {
-                setBannerMsg(`Перевірте кількість у тканинах, де в комірці на складі перевищено доступну місткість${getCapacityMaxText(capacityInfo.violations)}`);
+                setBannerMsg(t('Перевірте кількість у тканинах, де в комірці на складі перевищено доступну місткість{{violations}}', {violations: getCapacityMaxText(capacityInfo.violations)}));
                 setPendingCapacityPopupInfo(capacityInfo);
             } else {
                 setBannerMsg(FAIL_BANNER);
@@ -414,15 +415,15 @@ const IncomingArrivalFabric = () => {
 
         let sumsOk = true;
         if (!near(docSumUAHNum, tableUAH)) {
-            setError('docSumUAH', { type: 'manual', message: `Не збігається з рядками (${fmt2(tableUAH)})` });
+            setError('docSumUAH', { type: 'manual', message: t('Не збігається з рядками ({{tableUAH}})', {tableUAH: fmt2(tableUAH)}) });
             sumsOk = false;
         }
         if (!near(docSumUSDNum, tableUSD)) {
-            setError('docSumUSD', { type: 'manual', message: `Не збігається з рядками (${fmt2(tableUSD)})` });
+            setError('docSumUSD', { type: 'manual', message: t('Не збігається з рядками ({{tableUSD}})', {tableUSD: fmt2(tableUSD)}) });
             sumsOk = false;
         }
         if (!sumsOk) {
-            setBannerMsg('Невідповідність сум');
+            setBannerMsg(t('Невідповідність сум'));
             return;
         }
 
@@ -562,8 +563,8 @@ const IncomingArrivalFabric = () => {
     // " (максимум N)" для однієї комірки, або максимум по кожній комірці, якщо їх кілька
     const getCapacityMaxText = (violations = []) => {
         if (!violations.length) return '';
-        if (violations.length === 1) return ` (максимум ${formatCapacityNumber(violations[0].capacityLimit)})`;
-        return ` (максимум: ${violations
+        if (violations.length === 1) return ` ${t('(максимум {{capacityLimit}})', {capacityLimit: formatCapacityNumber(violations[0].capacityLimit)})}`;
+        return ` (${t('максимум:')} ${violations
             .map(item => `${item.cellLabel} – ${formatCapacityNumber(item.capacityLimit)}`)
             .join('; ')})`;
     };
@@ -608,7 +609,7 @@ const IncomingArrivalFabric = () => {
             console.log(resp);
 
             if (!resp || (resp.id == null && !Array.isArray(resp.fabric_rolls))) {
-                setBannerMsg('Неочікувана відповідь від сервера.');
+                setBannerMsg(t('Неочікувана відповідь від сервера.'));
                 return;
             }
 
@@ -621,9 +622,9 @@ const IncomingArrivalFabric = () => {
             const reasons = Object.values(e?.data || {}).flat().filter(m => typeof m === 'string');
             setBannerMsg(
                 reasons.length
-                    ? `Вибачте, здається, щось пішло не так. Накладну не збережено:\n${reasons.join('\n')}`
-                    : 'Вибачте, здається, щось пішло не так.' +
-                    ' Повторіть, будь ласка, спробу пізніше.'
+                    ? t('Вибачте, здається, щось пішло не так. Накладну не збережено:\n{{n}}', {n: reasons.join('\n')})
+                    : t('Вибачте, здається, щось пішло не так.') +
+                    t(' Повторіть, будь ласка, спробу пізніше.')
             );
         } finally {
             setIsLoading(false);
@@ -646,18 +647,18 @@ const IncomingArrivalFabric = () => {
             <div className={styles.titleBlock}>
                 <h2>
                     {mode === 'read'
-                        ? 'Перегляд надходження тканини'
+                        ? t('Перегляд надходження тканини')
                         : id
-                            ? 'Редагування надходження тканини'
-                            : 'Внесення надходження тканини'}
+                            ? t('Редагування надходження тканини')
+                            : t('Внесення надходження тканини')}
                 </h2>
                 {!isReadonly && (
                     <div className={styles.form__action}>
                         <button className={'btnLight'} type="button" onClick={onCheckSum}>
-                            <span>Перевірка суми</span>
+                            <span>{t('Перевірка суми')}</span>
                         </button>
                         <button className={'btnDark'} type="submit" form="incoming-fabric-form">
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 )}
@@ -665,7 +666,7 @@ const IncomingArrivalFabric = () => {
 
             {bannerMsg && (
                 // "Перевірка суми" success gets the positive (green) banner style (IncomingArrival.module.scss)
-                <div className={`${styles.bannerError} ${bannerMsg.startsWith('Суми співпадають') ? styles.bannerOk : ''}`}>{bannerMsg}</div>
+                <div className={`${styles.bannerError} ${bannerMsg.startsWith(t('Суми співпадають')) ? styles.bannerOk : ''}`}>{bannerMsg}</div>
             )}
 
             <form
@@ -675,9 +676,9 @@ const IncomingArrivalFabric = () => {
                 onKeyDownCapture={stopEnterSubmit}
             >
                 <div className={`${styles.form} ${styles.upperForm}`}>
-                    <h3>Форма внесення надходження на склад:</h3>
+                    <h3>{t('Форма внесення надходження на склад:')}</h3>
                     <div className={styles.titleWrap}>
-                        <h4>Загальна інформація про надходження</h4>
+                        <h4>{t('Загальна інформація про надходження')}</h4>
                         <CurrencyRateInfo
                             buyRate={currentUsdRate}
                             saleRate={currentUsdSaleRate}
@@ -685,7 +686,7 @@ const IncomingArrivalFabric = () => {
                     </div>
                     <div className={styles.form__content}>
                         <div className={`${styles.column} ${styles.select}`}>
-                            <div className={styles.fieldLabel}>Дата надходження</div>
+                            <div className={styles.fieldLabel}>{t('Дата надходження')}</div>
                             <div className={styles.dateWrapper}>
                                 <input
                                     id="date"
@@ -694,18 +695,18 @@ const IncomingArrivalFabric = () => {
                                     {...register('date')}
                                     disabled={isReadonly}
                                 />
-                                <span className={styles.datePlaceholder}>Дата надходження</span>
+                                <span className={styles.datePlaceholder}>{t('Дата надходження')}</span>
                             </div>
                             {errors.date && <p className={styles.errorText}>{errors.date.message}</p>}
 
-                            <div className={styles.fieldLabel}>Постачальник</div>
+                            <div className={styles.fieldLabel}>{t('Постачальник')}</div>
                             <Controller
                                 name="providerOption"
                                 control={control}
                                 render={({ field, fieldState }) => (
                                     <>
                                         <NewCustomSelect
-                                            label="Постачальник"
+                                            label={t('Постачальник')}
                                             value={field.value}
                                             onChange={(e) => field.onChange(e.target.value)}
                                             options={vendorOptions}
@@ -719,21 +720,21 @@ const IncomingArrivalFabric = () => {
                                 )}
                             />
 
-                            <div className={styles.fieldLabel}>Номер документа</div>
+                            <div className={styles.fieldLabel}>{t('Номер документа')}</div>
                             <InputBox
                                 errors={errors}
                                 name="docNumber"
-                                placeholder="Номер документа"
+                                placeholder={t('Номер документа')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{ ...register('docNumber'), readOnly: isReadonly}}
                             />
 
-                            <div className={styles.fieldLabel}>Сума за документом в доларах</div>
+                            <div className={styles.fieldLabel}>{t('Сума за документом в доларах')}</div>
                             <InputBox
                                 errors={errors}
                                 name="docSumUSD"
-                                placeholder="Сума за документом в доларах"
+                                placeholder={t('Сума за документом в доларах')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{
@@ -757,11 +758,11 @@ const IncomingArrivalFabric = () => {
                                     },
                                 }}
                             />
-                             <div className={styles.fieldLabel}>Сума за документом в грн</div>
+                             <div className={styles.fieldLabel}>{t('Сума за документом в грн')}</div>
                             <InputBox
                                 errors={errors}
                                 name="docSumUAH"
-                                placeholder="Сума за документом в грн"
+                                placeholder={t('Сума за документом в грн')}
                                 type="text"
                                 disabled={isReadonly}
                                 options={{
@@ -789,7 +790,7 @@ const IncomingArrivalFabric = () => {
 
                         <div className={styles.column}>
                             <div className={styles.fieldLabel}>
-                                Хто приймав (автоматично хто заповнює форму)
+                                {t('Хто приймав (автоматично хто заповнює форму)')}
                             </div>
                             {/* технічне поле для id, як і раніше, йде в форму / на бек */}
                             <input
@@ -800,7 +801,7 @@ const IncomingArrivalFabric = () => {
                             <InputBox
                                 errors={errors}
                                 name="acceptedByDisplay"
-                                placeholder="Хто приймав (автоматично хто заповнює форму)"
+                                placeholder={t('Хто приймав (автоматично хто заповнює форму)')}
                                 type="text"
                                 disabled={true}
                                 options={{
@@ -811,24 +812,24 @@ const IncomingArrivalFabric = () => {
                                 }}
                             />
 
-                            <div className={styles.fieldLabel}>Загальний кошторис</div>
+                            <div className={styles.fieldLabel}>{t('Загальний кошторис')}</div>
                             <InputBox
                                 errors={errors}
                                 name="totalEstimate"
-                                placeholder="Загальний кошторис"
+                                placeholder={t('Загальний кошторис')}
                                 type="text"
                                 options={{ ...register('totalEstimate'), readOnly: isReadonly }}
                                 disabled={isReadonly}
                             />
 
-                            <div className={styles.fieldLabel}>Закупівельний курс $, грн</div>
+                            <div className={styles.fieldLabel}>{t('Закупівельний курс $, грн')}</div>
                             <InputBox
                                 errors={errors}
                                 name="exchangeRate"
                                 placeholder={
                                     mode === 'edit' && !hasSavedExchangeRate
-                                        ? 'Курс не було збережено при створенні'
-                                        : 'Закупівельний курс долара, грн'
+                                        ? t('Курс не було збережено при створенні')
+                                        : t('Закупівельний курс долара, грн')
                                 }
                                 type="text"
                                 disabled={true}
@@ -850,10 +851,10 @@ const IncomingArrivalFabric = () => {
                                 }}
                             />
 
-                            <div className={styles.fieldLabel}>Коментар</div>
+                            <div className={styles.fieldLabel}>{t('Коментар')}</div>
                             <textarea
                                 className={`comment ${errors.comment ? styles.error : ''}`}
-                                placeholder="Коментар"
+                                placeholder={t('Коментар')}
                                 {...register('comment')}
                                 maxLength="200"
                                 readOnly={isReadonly}
@@ -865,24 +866,24 @@ const IncomingArrivalFabric = () => {
                 </div>
 
                 <div className={`${styles.titleBlock} ${styles.extraPadding}`}>
-                    <h3>Детальна інформація</h3>
+                    <h3>{t('Детальна інформація')}</h3>
                 </div>
                 {!isReadonly && capacityValidationInfo?.hasErrors && (
                     <div className={styles.bannerError}>
-                        <strong>Перевірте (чи за бажанням перерозподіліть) кількість у рядках, де в комірках на складі перевищено доступну місткість{getCapacityMaxText(capacityValidationInfo.violations)}.</strong>
+                        <strong>{t('Перевірте (чи за бажанням перерозподіліть) кількість у рядках, де в комірках на складі перевищено доступну місткість')}{getCapacityMaxText(capacityValidationInfo.violations)}.</strong>
                         <div style={{ paddingBottom: '8px', whiteSpace: 'pre-line' }}>
                             {capacityValidationInfo.summaryText}
                         </div>
                     </div>
                 )}
                 <div className={styles.form} id="fabric-table">
-                    <h3>Перелік тканин:</h3>
-                    <h4>Детальна інформація по кожній позиції тканини які прийшли</h4>
+                    <h3>{t('Перелік тканин:')}</h3>
+                    <h4>{t('Детальна інформація по кожній позиції тканини які прийшли')}</h4>
                     <EditableFabricTable ref={fabricRef} mode={mode} exchangeRate={watch('exchangeRate')} readOnly={isReadonly} onCapacityValidationChange={handleCapacityValidationChange} />
                 </div>
             </form>
             {isConfirmPopupOpen && (
-                <CentralPopup title="Підтвердження" onClose={closeConfirmPopup}>
+                <CentralPopup title={t('Підтвердження')} onClose={closeConfirmPopup}>
                     <div
                         style={{
                             display: "flex",
@@ -894,18 +895,18 @@ const IncomingArrivalFabric = () => {
                     >
                         <h3 style={{
                             paddingBottom: 0,
-                        }}>Ви дійсно бажаєте зберегти накладну?</h3>
+                        }}>{t('Ви дійсно бажаєте зберегти накладну?')}</h3>
 
                         <button type="button" className="btnDark" style={{
                             width: "200px",
                         }} onClick={handleConfirmSave}>
-                            <span>Підтвердити</span>
+                            <span>{t('Підтвердити')}</span>
                         </button>
 
                         <button type="button" className="btnLight" style={{
                             width: "200px",
                         }} onClick={closeConfirmPopup}>
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -939,7 +940,7 @@ const IncomingArrivalFabric = () => {
                                     textAlign: "center",
                                 }}
                             >
-                                Заповніть обов'язкові поля <br /> в таблиці з тканинами
+                                {t('Заповніть обов\'язкові поля')} <br /> {t('в таблиці з тканинами')}
                             </h3>
 
                             {fabricValidationInfo.map((item, index) => (
@@ -964,7 +965,7 @@ const IncomingArrivalFabric = () => {
                             }}
                             onClick={closeFabricValidationPopup}
                         >
-                            <span>Ок</span>
+                            <span>{t('Ок')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -998,12 +999,12 @@ const IncomingArrivalFabric = () => {
                                     textAlign: "center",
                                 }}
                             >
-                                Перевищено місткість комірок
+                                {t('Перевищено місткість комірок')}
                             </h3>
 
                             <p style={{ margin: 0 }}>
-                                Накладну неможливо зберегти, поки кількість у проблемних комірках
-                                перевищує доступний ліміт.
+                                {t('Накладну неможливо зберегти, поки кількість у проблемних комірках')}
+                                {t('перевищує доступний ліміт.')}
                             </p>
 
                             {capacityValidationInfo.violations.map((item, index) => (
@@ -1022,35 +1023,35 @@ const IncomingArrivalFabric = () => {
                                     </p>
 
                                     <p style={{ margin: 0 }}>
-                                        Максимум для поточної форми:{' '}
+                                        {t('Максимум для поточної форми:')}{' '}
                                         <strong>{formatCapacityNumber(item.capacityLimit)}</strong>
                                     </p>
 
                                     {mode === 'edit' && (
                                         <p style={{ margin: 0 }}>
-                                            Ви можете перерозподіляти сумарну кількість в межах <strong>{formatCapacityNumber(item.capacityLimit)}</strong> між рядками  <strong>{item.rows.map(row => row.rowNumber).join(', ')}</strong> або обирати інші комірки.
-                                            (З урахуванням раніше збереженої в цій накладній кількості доступно:{' '}
+                                            {t('Ви можете перерозподіляти сумарну кількість в межах')} <strong>{formatCapacityNumber(item.capacityLimit)}</strong> {t('між рядками')}  <strong>{item.rows.map(row => row.rowNumber).join(', ')}</strong> {t('або обирати інші комірки.')}
+                                            {t('(З урахуванням раніше збереженої в цій накладній кількості доступно:')}{' '}
                                             <strong>{formatCapacityNumber(item.remainingCapacity)}</strong>,
-                                            {' '}раніше збережено в цій накладній:{' '}
+                                            {' '}{t('раніше збережено в цій накладній:')}{' '}
                                             <strong>{formatCapacityNumber(item.originalQty)}</strong>.)
                                         </p>
                                     )}
 
                                     <p style={{ margin: 0 }}>
-                                        Зараз у формі в різних рядках сумарно вказано:{' '}
+                                        {t('Зараз у формі в різних рядках сумарно вказано:')}{' '}
                                         <strong>{formatCapacityNumber(item.totalQty)}</strong>
                                     </p>
 
 
                                     <p style={{ margin: 0 }}>
-                                        Перевірте суму кількостей в рядках № {' '}
+                                        {t('Перевірте суму кількостей в рядках №')} {' '}
                                         <strong>{item.rows.map(row => row.rowNumber).join(', ')}</strong>
                                     </p>
                                 </div>
                             ))}
 
                             <p style={{ margin: 0 }}>
-                                Зменште кількість рулонів або оберіть інші комірки, щоб увійти в ліміт. Також ви можете перерозподіляти кількість між рядками.
+                                {t('Зменште кількість рулонів або оберіть інші комірки, щоб увійти в ліміт. Також ви можете перерозподіляти кількість між рядками.')}
                             </p>
                         </div>
 
@@ -1063,7 +1064,7 @@ const IncomingArrivalFabric = () => {
                 }}
                 onClick={closeCapacityValidationPopup}
             >
-                <span>Ок</span>
+                <span>{t('Ок')}</span>
             </button>
         </div>
     </CentralPopup>

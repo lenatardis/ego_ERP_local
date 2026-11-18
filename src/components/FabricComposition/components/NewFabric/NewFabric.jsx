@@ -11,17 +11,18 @@ import * as Yup from "yup";
 import Preloader from "../../../Common/Preloader/Preloader.jsx";
 import { useNavigate } from "react-router-dom";
 import ArrBack from "../../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../../i18n';
 
 /* Yup: обов'язкові поля name, type, monoType */
 const schema = Yup.object({
-    name: Yup.string().trim().max(50, 'До 50 символів').required("Вкажіть назву"),
+    name: Yup.string().trim().max(50, t('До 50 символів')).required(t('Вкажіть назву')),
     type: Yup.number()
         .transform(v => (isNaN(v) ? undefined : v))
-        .integer().positive('Оберіть тип').required('Оберіть тип'),
+        .integer().positive(t('Оберіть тип')).required(t('Оберіть тип')),
     monoType: Yup.string()
-        .oneOf(['A', 'B', 'A,B'], 'Оберіть mono type')
-        .required('Оберіть mono type'),
-    description: Yup.string().trim().max(1000, 'До 1000 символів').nullable(),
+        .oneOf(['A', 'B', 'A,B'], t('Оберіть mono type'))
+        .required(t('Оберіть mono type')),
+    description: Yup.string().trim().max(1000, t('До 1000 символів')).nullable(),
 });
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -74,9 +75,9 @@ const NewFabric = ({
                 const resp = await fetchFilters(token);
 
                 if (Array.isArray(resp?.types)) {
-                    setTypeOptions(resp.types.map(t => ({
-                        name: t.type,
-                        value: t.id,
+                    setTypeOptions(resp.types.map(tp => ({
+                        name: tp.type,
+                        value: tp.id,
                     })));
                 } else {
                     setTypeOptions([]);
@@ -84,9 +85,9 @@ const NewFabric = ({
 
                 if (Array.isArray(resp?.tags)) {
                     setTagsOptions(
-                        resp.tags.map(t => ({
-                            name: t.name,
-                            value: t.id
+                        resp.tags.map(tp => ({
+                            name: tp.name,
+                            value: tp.id
                         }))
                     );
                 } else {
@@ -163,7 +164,7 @@ const NewFabric = ({
         });
 
         if (rejectedNames.length) {
-            setPhotoError(`Ці файли перевищують 10 МБ: ${rejectedNames.join(', ')}`);
+            setPhotoError(t('Ці файли перевищують 10 МБ: {{rejectedNames}}', {rejectedNames: rejectedNames.join(', ')}));
         }
 
         if (!validFiles.length) {
@@ -267,7 +268,7 @@ const NewFabric = ({
             if (e?.code === 'FABRIC_ALREADY_EXISTS') {
                 setExistingFabricError(true);
             } else {
-                setBannerMsg('Вибачте, здається, щось пішло не так. Повторіть, будь ласка, спробу пізніше.');
+                setBannerMsg(t('Вибачте, здається, щось пішло не так. Повторіть, будь ласка, спробу пізніше.'));
             }
         } finally {
             setIsLoading(false);
@@ -289,14 +290,14 @@ const NewFabric = ({
                 </div>
             )}
             <div className={styles.titleBlock}>
-                <h2>{popupMode ? 'Створення нової тканини' : 'Створення нової тканини'}</h2>
+                <h2>{popupMode ? t('Створення нової тканини') : t('Створення нової тканини')}</h2>
                 <button
                     type={popupMode ? "button" : "submit"}
                     className={'btnDark'}
                     disabled={isLoading || alreadyExists}
                     onClick={popupMode ? formSubmit : undefined}
                 >
-                    <span>Зберегти</span>
+                    <span>{t('Зберегти')}</span>
                 </button>
             </div>
 
@@ -308,7 +309,7 @@ const NewFabric = ({
                         <InputBox
                             errors={errors}
                             name="name"
-                            placeholder="Ім'я"
+                            placeholder={t('Ім\'я')}
                             type="text"
                             options={{ ...register('name') }}
                         />
@@ -320,7 +321,7 @@ const NewFabric = ({
                                     <>
                                         <WhiteCustomSelect
                                             height="36px"
-                                            label="Оберіть тип"
+                                            label={t('Оберіть тип')}
                                             value={field.value}
                                             onChange={(e) => {
                                                 field.onChange(e.target.value);
@@ -341,7 +342,7 @@ const NewFabric = ({
                     </div>
 
                     <textarea
-                        placeholder="Опис тканини"
+                        placeholder={t('Опис тканини')}
                         className={`${styles.description} ${errors.description ? styles.error : ''}`}
                         {...register('description')}
                         maxLength={1000}
@@ -355,7 +356,7 @@ const NewFabric = ({
                             <>
                                 <WhiteCustomSelect
                                     height="36px"
-                                    label="Оберіть mono type"
+                                    label={t('Оберіть mono type')}
                                     value={field.value}
                                     onChange={(e) => {
                                         field.onChange(e.target.value);
@@ -372,7 +373,7 @@ const NewFabric = ({
                         )}
                     />
 
-                    <h3>Теги</h3>
+                    <h3>{t('Теги')}</h3>
                     <div className={styles.checkboxBlock}>
                         {tagsOptions.map(tag => (
                             <CustomCheckbox
@@ -404,15 +405,15 @@ const NewFabric = ({
                                                 type="button"
                                                 className={styles.removePhotoBtn}
                                                 onClick={() => onRemovePhoto(item.id)}
-                                                aria-label="Видалити фото"
-                                                title="Видалити фото"
+                                                aria-label={t('Видалити фото')}
+                                                title={t('Видалити фото')}
                                             >
                                                 ×
                                             </button>
                                             <img
                                                 src={item.preview}
                                                 className={styles.photo}
-                                                alt="Фото тканини"
+                                                alt={t('Фото тканини')}
                                             />
                                         </div>
                                     ))}
@@ -440,12 +441,12 @@ const NewFabric = ({
                                         onClick={onAddPhotoClick}
                                         disabled={isLoading}
                                     >
-                                        <span>Додати фото</span>
+                                        <span>{t('Додати фото')}</span>
                                     </button>
                                 </div>
 
-                                <p className={styles.uploadHint}>* Можна обрати декілька файлів</p>
-                                <p className={styles.uploadHint}>* Максимум 10 МБ на 1 файл</p>
+                                <p className={styles.uploadHint}>{t('* Можна обрати декілька файлів')}</p>
+                                <p className={styles.uploadHint}>{t('* Максимум 10 МБ на 1 файл')}</p>
                             </div>
 
                             <button
@@ -454,7 +455,7 @@ const NewFabric = ({
                                 onClick={onRemoveAllPhotos}
                                 disabled={!photoPreviews.length}
                             >
-                                <span>Видалити всі фото</span>
+                                <span>{t('Видалити всі фото')}</span>
                             </button>
                         </div>
                     </div>

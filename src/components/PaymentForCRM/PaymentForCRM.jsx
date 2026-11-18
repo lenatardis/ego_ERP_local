@@ -26,67 +26,68 @@ import {
 import DocumentIcon from "../../assets/icons/document.svg";
 import InfoIcon from "../../assets/icons/info.svg";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../i18n';
 
 const ITEMS_PER_PAGE = 25;
 
 const TYPE_MAP = {
-  ONLINE: "Онлайн",
+  ONLINE: t('Онлайн'),
   IBAN: "IBAN",
-  TAX: "Накладений платіж",
+  TAX: t('Накладений платіж'),
 };
 
 const METHOD_MAP = {
-  FULL: "Повна оплата",
-  PREPAYMENT: "Передплата",
-  POSTPAID: "Післяплата",
+  FULL: t('Повна оплата'),
+  PREPAYMENT: t('Передплата'),
+  POSTPAID: t('Післяплата'),
 };
 
 const STATUS_MAP = {
-  PAY_WAIT: "Очікує оплати",
-  PAID: "Оплачено",
-  NOT_PAID: "Не оплачено",
-  REFUND: "Повернення",
+  PAY_WAIT: t('Очікує оплати'),
+  PAID: t('Оплачено'),
+  NOT_PAID: t('Не оплачено'),
+  REFUND: t('Повернення'),
 };
 
 const APPROVED_MAP = {
-  IN_PROC: "На розгляді",
-  APPROVED: "Підтверджено",
-  DECLINED: "Відхилено",
+  IN_PROC: t('На розгляді'),
+  APPROVED: t('Підтверджено'),
+  DECLINED: t('Відхилено'),
 };
 
 const typeOptions = [
-  { value: "", name: "Усі" },
-  { value: "ONLINE", name: "Онлайн" },
+  { value: "", name: t('Усі') },
+  { value: "ONLINE", name: t('Онлайн') },
   { value: "IBAN", name: "IBAN" },
-  { value: "TAX", name: "Накладений платіж" },
+  { value: "TAX", name: t('Накладений платіж') },
 ];
 
 const methodOptions = [
-  { value: "", name: "Усі" },
-  { value: "FULL", name: "Повна оплата" },
-  { value: "PREPAYMENT", name: "Передплата" },
-  { value: "POSTPAID", name: "Післяплата" },
+  { value: "", name: t('Усі') },
+  { value: "FULL", name: t('Повна оплата') },
+  { value: "PREPAYMENT", name: t('Передплата') },
+  { value: "POSTPAID", name: t('Післяплата') },
 ];
 
 const statusOptions = [
-  { value: "", name: "Усі" },
-  { value: "PAY_WAIT", name: "Очікує оплати" },
-  { value: "PAID", name: "Оплачено" },
-  { value: "NOT_PAID", name: "Не оплачено" },
-  { value: "REFUND", name: "Повернення" },
+  { value: "", name: t('Усі') },
+  { value: "PAY_WAIT", name: t('Очікує оплати') },
+  { value: "PAID", name: t('Оплачено') },
+  { value: "NOT_PAID", name: t('Не оплачено') },
+  { value: "REFUND", name: t('Повернення') },
 ];
 
 const receiptApprovedOptions = [
-  { value: "", name: "Усі" },
-  { value: "APPROVED", name: "Підтверджено" },
-  { value: "DECLINED", name: "Відхилено" },
-  { value: "IN_PROC", name: "На розгляді" },
+  { value: "", name: t('Усі') },
+  { value: "APPROVED", name: t('Підтверджено') },
+  { value: "DECLINED", name: t('Відхилено') },
+  { value: "IN_PROC", name: t('На розгляді') },
 ];
 
 const linkedOptions = [
-  { value: "", name: "Усі" },
-  { value: "true", name: "Так" },
-  { value: "false", name: "Ні" },
+  { value: "", name: t('Усі') },
+  { value: "true", name: t('Так') },
+  { value: "false", name: t('Ні') },
 ];
 
 const formatMoney = (value) => {
@@ -119,7 +120,7 @@ const TooltipDateCell = ({ value, tooltip }) => {
     <div className={styles.tooltipCell}>
       <span>{displayValue}</span>
       <Tooltip title={tooltip} arrow placement="top">
-        <img src={InfoIcon} className={styles.infoIcon} alt="Інфо" />
+        <img src={InfoIcon} className={styles.infoIcon} alt={t('Інфо')} />
       </Tooltip>
     </div>
   );
@@ -182,10 +183,10 @@ const ActionButtons = ({ row, onView, onConfirm }) => {
       <button
         type="button"
         style={btnStyle}
-        title="Переглянути"
+        title={t('Переглянути')}
         onClick={() => onView(row)}
       >
-        <img src={DocumentIcon} alt="Переглянути" style={iconStyle} />
+        <img src={DocumentIcon} alt={t('Переглянути')} style={iconStyle} />
       </button>
 
       <button
@@ -195,11 +196,11 @@ const ActionButtons = ({ row, onView, onConfirm }) => {
         disabled={isAlreadyProcessed}
         title={
           isAlreadyProcessed
-            ? "Платіж вже був оброблений бухгалтером"
-            : "Підтвердити платіж"
+            ? t('Платіж вже був оброблений бухгалтером')
+            : t('Підтвердити платіж')
         }
       >
-        <span>Підтвердити платіж</span>
+        <span>{t('Підтвердити платіж')}</span>
       </button>
     </div>
   );
@@ -391,65 +392,65 @@ const PaymentForCRM = () => {
   const columns = useMemo(() => [
     {
       key: "type",
-      title: "Тип",
+      title: t('Тип'),
       width: "0.58fr",
       render: (val) => TYPE_MAP[val] || val || "",
     },
     {
       key: "method",
-      title: "Метод",
+      title: t('Метод'),
       width: "0.78fr",
       render: (val) => METHOD_MAP[val] || val || "",
     },
     {
       key: "status",
-      title: "Статус",
+      title: t('Статус'),
       width: "0.78fr",
       render: (val) => STATUS_MAP[val] || val || "",
     },
     {
       key: "prepayment_amount",
-      title: "Сума",
+      title: t('Сума'),
       width: "0.72fr",
       render: (val) => formatMoney(val),
     },
     {
       key: "prepayment_datetime",
-      title: "Орієнтовна дата сплати",
+      title: t('Орієнтовна дата сплати'),
       width: "1.08fr",
       render: (val) => (
         <TooltipDateCell
           value={val}
-          tooltip="Менеджер вказує дату, коли клієнт орієнтовно зробить оплату"
+          tooltip={t('Менеджер вказує дату, коли клієнт орієнтовно зробить оплату')}
         />
       ),
     },
     {
       key: "paid_datetime",
-      title: "Дата оплати",
+      title: t('Дата оплати'),
       width: "0.96fr",
       render: (val) => (
         <TooltipDateCell
           value={val}
-          tooltip="Дата і час, коли клієнт зробив оплату"
+          tooltip={t('Дата і час, коли клієнт зробив оплату')}
         />
       ),
     },
     {
       key: "order",
-      title: "№ замовлення",
+      title: t('№ замовлення'),
       width: "0.62fr",
       render: (val) => val || "",
     },
     {
       key: "customer_receipt_approved",
-      title: "Підтверджено бухгалтером",
+      title: t('Підтверджено бухгалтером'),
       width: "0.92fr",
       render: (val) => <ApprovedBadge value={val} />,
     },
     {
       key: "actions",
-      title: "Дії",
+      title: t('Дії'),
       width: "1.3fr",
       render: (val, row) => (
         <ActionButtons
@@ -488,7 +489,7 @@ const PaymentForCRM = () => {
       <ArrBack/>
       <SearchFilter
         onOpenFilter={onOpenFilter}
-        title={"CRM платежі"}
+        title={t('CRM платежі')}
         searchValue={filterParams.search}
         setSearchValue={(value) =>
           setFilterParams((prev) => ({ ...prev, search: value }))
@@ -534,7 +535,7 @@ const PaymentForCRM = () => {
 
       <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
         <NewCustomSelect
-          label="Тип"
+          label={t('Тип')}
           value={filterParams.type}
           onChange={(e) => {
             const next = { ...filterParams, type: e.target.value };
@@ -544,7 +545,7 @@ const PaymentForCRM = () => {
         />
 
         <NewCustomSelect
-          label="Метод"
+          label={t('Метод')}
           value={filterParams.method}
           onChange={(e) => {
             const next = { ...filterParams, method: e.target.value };
@@ -554,7 +555,7 @@ const PaymentForCRM = () => {
         />
 
         <NewCustomSelect
-          label="Статус"
+          label={t('Статус')}
           value={filterParams.status}
           onChange={(e) => {
             const next = { ...filterParams, status: e.target.value };
@@ -564,7 +565,7 @@ const PaymentForCRM = () => {
         />
 
         <NewCustomSelect
-          label="Підтвердження чека"
+          label={t('Підтвердження чека')}
           value={filterParams.receipt_approved}
           onChange={(e) => {
             const next = {
@@ -577,7 +578,7 @@ const PaymentForCRM = () => {
         />
 
         <InputBox
-          label="Дата оплати"
+          label={t('Дата оплати')}
           name="paid_date"
           type="date"
           errors={{}}
@@ -594,7 +595,7 @@ const PaymentForCRM = () => {
         />
 
         <NewCustomSelect
-          label="Прив'язано"
+          label={t('Прив\'язано')}
           value={filterParams.is_linked}
           onChange={(e) => {
             const next = { ...filterParams, is_linked: e.target.value };
@@ -620,22 +621,22 @@ const PaymentForCRM = () => {
 
       {showConfirmPopup && selectedRow && (
         <CentralPopup
-          title={"Підтвердження CRM платежу"}
+          title={t('Підтвердження CRM платежу')}
           onClose={closeConfirmPopup}
         >
           <div className={styles.confirmPopupContent}>
             <p>
-              Перевірте дані платежу #{selectedRow.id} CRM замовлення #{selectedRow.order} перед підтвердженням.
+              {t('Перевірте дані платежу #')}{selectedRow.id} {t('CRM замовлення #')}{selectedRow.order} {t('перед підтвердженням.')}
             </p>
 
             <p>
-              Підтвердження означає, що платіж дійсно був здійснений.
+              {t('Підтвердження означає, що платіж дійсно був здійснений.')}
               <br />
-              Відхилення означає, що платіж потребує додаткової перевірки або не відповідає дійсності.
+              {t('Відхилення означає, що платіж потребує додаткової перевірки або не відповідає дійсності.')}
             </p>
 
             <p>
-              Якщо ви не впевнені, закрийте це вікно – жодних змін не буде внесено.
+              {t('Якщо ви не впевнені, закрийте це вікно – жодних змін не буде внесено.')}
             </p>
 
             <div className={styles.confirmPopupActions}>
@@ -644,7 +645,7 @@ const PaymentForCRM = () => {
                 className={styles.btnGreen}
                 onClick={() => handleChangeApproveStatus("APPROVED")}
               >
-                <span>Підтвердити</span>
+                <span>{t('Підтвердити')}</span>
               </button>
 
               <button
@@ -652,12 +653,12 @@ const PaymentForCRM = () => {
                 className={styles.btnRed}
                 onClick={() => handleChangeApproveStatus("DECLINED")}
               >
-                <span>Відхилити</span>
+                <span>{t('Відхилити')}</span>
               </button>
             </div>
             <p className={styles.confirmPopupWarning}>
               <strong>
-                Увага! Після підтвердження або відхилення платіж не підлягає повторній обробці.
+                {t('Увага! Після підтвердження або відхилення платіж не підлягає повторній обробці.')}
               </strong>
             </p>
           </div>

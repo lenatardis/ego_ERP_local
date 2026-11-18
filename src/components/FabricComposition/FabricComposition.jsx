@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux.jsx";
 import { getIsActivePopup } from "../../store/selectors";
 import { setIsActivePopup } from "../../store/main-slice";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../i18n';
 
 const normalizeFabricsToRows = (list = []) =>
     list.map(f => ({
@@ -110,7 +111,7 @@ const FabricComposition = () => {
     const columns = useMemo(() => ([
         {
             key: "location",
-            title: "Розташування",
+            title: t('Розташування'),
             width: "70px",
             render: (_, row) => (
                 <button
@@ -126,28 +127,28 @@ const FabricComposition = () => {
                         padding: 0,
                         cursor: "pointer",
                     }}
-                    title="Розташування"
-                    aria-label="Розташування"
+                    title={t('Розташування')}
+                    aria-label={t('Розташування')}
                 >
                     <img src={packageIcon} alt="" style={{ width: 22, height: 22, objectFit: "contain" }} />
                 </button>
             ),
         },
-        { key: "category", title: "Категорія" },
-        { key: "code", title: "Код тканини", width: "60px" },
+        { key: "category", title: t('Категорія') },
+        { key: "code", title: t('Код тканини'), width: "60px" },
         {
             key: "photo",
-            title: "Фото",
+            title: t('Фото'),
             width: "65px",
             render: (value) =>
                 value
-                    ? <img src={value} alt="Фото" className="photoSkeleton" style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
-                    : <img src={ImgPlaceholder} alt="Фото" style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
+                    ? <img src={value} alt={t('Фото')} className="photoSkeleton" style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
+                    : <img src={ImgPlaceholder} alt={t('Фото')} style={{ display: 'block', margin: '0 auto', width: 65, height: 65, objectFit: "cover", borderRadius: 4 }} />
         },
-        { key: "remaining", title: "Залишок відкритих рулонів", width: "120px" },
-        { key: "remainingMeters", title: "Залишок відкритих рулонів в метрах", width: "120px" },
-        { key: "remainingClosed", title: "Залишок закритих рулонів", width: "110px" },
-        { key: "remainingClosedMeters", title: "Залишок закритих рулонів в метрах", width: "110px" }
+        { key: "remaining", title: t('Залишок відкритих рулонів'), width: "120px" },
+        { key: "remainingMeters", title: t('Залишок відкритих рулонів в метрах'), width: "120px" },
+        { key: "remainingClosed", title: t('Залишок закритих рулонів'), width: "110px" },
+        { key: "remainingClosedMeters", title: t('Залишок закритих рулонів в метрах'), width: "110px" }
     ]), [openLocationPopup]);
 
     // ghost scroll, as on the other tables (KitSizes, NewPrices, …); 120 px per column, so a desktop of 1366 px+ needs no scroll
@@ -165,10 +166,10 @@ const FabricComposition = () => {
 
     const rollsColumns = useMemo(() => ([
         { key: "num", title: "№", width: "50px" },
-        { key: "warehouse", title: "Склад", width: "120px" },
-        { key: "rack", title: "Стелаж", width: "120px" },
-        { key: "cell", title: "Комірка", width: "90px" },
-        { key: "remainder", title: "Залишок, м", width: "100px" },
+        { key: "warehouse", title: t('Склад'), width: "120px" },
+        { key: "rack", title: t('Стелаж'), width: "120px" },
+        { key: "cell", title: t('Комірка'), width: "90px" },
+        { key: "remainder", title: t('Залишок, м'), width: "100px" },
     ]), []);
 
     const handleFilterChange = (key) => (event) => {
@@ -200,14 +201,14 @@ const FabricComposition = () => {
         }
     };
     const categoryOptions = useMemo(() => [
-        { name: 'Усі категорії', value: '' },
+        { name: t('Усі категорії'), value: '' },
         ...filterOptions.map(o => ({ name: o.name, value: String(o.value) }))
     ], [filterOptions]);
 
     const stockOptions = useMemo(() => [
-        { name: 'Є на складі', value: 'true' },
-        { name: 'Немає на складі', value: 'false' },
-        { name: 'Всі тканини', value: 'all' },
+        { name: t('Є на складі'), value: 'true' },
+        { name: t('Немає на складі'), value: 'false' },
+        { name: t('Всі тканини'), value: 'all' },
     ], []);
 
     useEffect(() => {
@@ -221,7 +222,7 @@ const FabricComposition = () => {
                     setTotalPages(fabricsResponse?.total_pages);
                 }
                 if (Array.isArray(filtersResponse?.types)) {
-                    setFilterOptions(filtersResponse.types.map(t => ({ name: t.type, value: t.id })));
+                    setFilterOptions(filtersResponse.types.map(tp => ({ name: tp.type, value: tp.id })));
                 } else {
                     setFilterOptions([]);
                 }
@@ -337,7 +338,7 @@ const FabricComposition = () => {
             <ArrBack/>
             <SearchFilter
                 onOpenFilter={onOpenFilter}
-                title={'Тканини'}
+                title={t('Тканини')}
                 isAdd
                 composition
                 onProductNavigate={onProductNavigate}
@@ -383,13 +384,13 @@ const FabricComposition = () => {
 
             <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
-                    label="Категорія"
+                    label={t('Категорія')}
                     value={filters.f5}
                     onChange={handleFilterChange('f5')}
                     options={categoryOptions}
                 />
                 <NewCustomSelect
-                    label="Наявність"
+                    label={t('Наявність')}
                     value={filters.f6}
                     onChange={handleFilterChange('f6')}
                     options={stockOptions}
@@ -397,7 +398,7 @@ const FabricComposition = () => {
 
                 <div style={{ marginBottom: 16 }}>
                     <div style={{ marginBottom: 8 }}>
-                        <p style={{ fontSize: 12, color: '#ffffff' }}>Мінімальний і максимальний залишок закритих рулонів, шт</p>
+                        <p style={{ fontSize: 12, color: '#ffffff' }}>{t('Мінімальний і максимальний залишок закритих рулонів, шт')}</p>
                     </div>
                     <Slider
                         value={closedRollsRange}
@@ -416,7 +417,7 @@ const FabricComposition = () => {
                             });
                         }}
                         valueLabelDisplay="auto"
-                        valueLabelFormat={(v) => `${v} шт`}
+                        valueLabelFormat={(v) => t('{{v}} шт', {v})}
                         min={0}
                         max={MAX_CLOSED_ROLLS}
                         marks={[
@@ -504,7 +505,7 @@ const FabricComposition = () => {
 
             {isActivePopup && selectedFabric?.id != null && (
                 <CentralPopup
-                    title={"Розташування рулонів"}
+                    title={t('Розташування рулонів')}
                     onClose={closeLocationPopup}
                     bigPopup
                     verticalScroll
@@ -521,10 +522,10 @@ const FabricComposition = () => {
                             </p>
                         </div>
                         {rollsRows.length === 0 && !isRollsLoading ? (
-                            <p className={styles.infoText}>Немає рулонів</p>
+                            <p className={styles.infoText}>{t('Немає рулонів')}</p>
                         ) : (
                             <>
-                                <p className={styles.infoTitle}>Рулони:</p>
+                                <p className={styles.infoTitle}>{t('Рулони:')}</p>
 
                                 <Table
                                     columns={rollsColumns}

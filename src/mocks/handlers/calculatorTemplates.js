@@ -12,6 +12,7 @@ import {
     DEMO_KIT_TEMPLATES,
 } from '../data/calculatorTemplates';
 import { toIso } from '../data/vendors';
+import { localizeCatalogText } from '../shared/catalog/en';
 
 // Bedding templates section (Шаблони постільної білизни). Response shapes follow the original API,
 // as consumed by the Templates/* pages:
@@ -65,7 +66,8 @@ const nextPartId = (type) => nextId(col(C.optionParts).filter((p) => p.type === 
 
 const newestFirst = (a, b) => b.created.localeCompare(a.created) || b.id - a.id;
 const lower = (v) => (isSet(v) ? String(v).trim().toLowerCase() : '');
-const includesText = (value, search) => String(value ?? '').toLowerCase().includes(search);
+// English version: catalog names match in English too ("double" finds Двоспальний)
+const includesText = (value, search) => String(localizeCatalogText(String(value ?? '')) + ' ' + String(value ?? '')).toLowerCase().includes(search);
 const toIds = (v) => (isSet(v) ? String(v).split(',').map(Number).filter(Number.isFinite) : []);
 const now = () => toIso(new Date());
 

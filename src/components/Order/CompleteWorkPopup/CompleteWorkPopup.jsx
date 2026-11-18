@@ -1,15 +1,16 @@
 import React from "react";
 import CentralPopup from "../../Common/CentralPopup/CentralPopup";
+import { t } from '../../../i18n';
 
 const CompleteWorkPopup = ({
     onClose,
     onConfirm,
     isSubmitting = false,
-    title = "Завершення роботи",
+    title = t('Завершення роботи'),
     text,
     blockerText = "",
-    confirmText = "Так",
-    cancelText = "Ні",
+    confirmText = t('Так'),
+    cancelText = t('Ні'),
 }) => {
     return (
         <CentralPopup
@@ -28,7 +29,7 @@ const CompleteWorkPopup = ({
                 {blockerText ? (
                     <>
                         <h3 style={{ paddingBottom: 0 }}>
-                            Роботу ще не можна завершити
+                            {t('Роботу ще не можна завершити')}
                         </h3>
 
                         <p>{blockerText}</p>
@@ -39,13 +40,13 @@ const CompleteWorkPopup = ({
                             style={{ width: "200px" }}
                             onClick={onClose}
                         >
-                            <span>Зрозуміло</span>
+                            <span>{t('Зрозуміло')}</span>
                         </button>
                     </>
                 ) : (
                     <>
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте завершити роботу?
+                            {t('Ви дійсно бажаєте завершити роботу?')}
                         </h3>
 
                         <p>{text}</p>
@@ -57,7 +58,7 @@ const CompleteWorkPopup = ({
                             onClick={onConfirm}
                             disabled={isSubmitting}
                         >
-                            <span>{isSubmitting ? "Завершення..." : confirmText}</span>
+                            <span>{isSubmitting ? t('Завершення...') : confirmText}</span>
                         </button>
 
                         <button

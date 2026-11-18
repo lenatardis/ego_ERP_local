@@ -6,11 +6,12 @@ import * as Yup from "yup";
 import InputBox from "../Common/InputBox/InputBox";
 import WhiteCustomSelect from "../Common/WhiteCustomSelect/WhiteCustomSelect";
 import ArrBack from "../Common/ArrBack/ArrBack";
+import { t } from '../../i18n';
 
 const view = [
-    {name: 'Фінансова', value: 'Financial'},
-    {name: 'Інвестиційна', value: 'Investment'},
-    {name: 'Операційна', value: 'Operating'},
+    {name: t('Фінансова'), value: 'Financial'},
+    {name: t('Інвестиційна'), value: 'Investment'},
+    {name: t('Операційна'), value: 'Operating'},
 ]
 
 const validationSchema = Yup.object().shape({
@@ -67,64 +68,64 @@ const FinancesCreate = () => {
     return (
         <div className={styles.financesCreate}>
             <ArrBack/>
-            <h2>Внесення надходження тканини</h2>
+            <h2>{t('Внесення надходження тканини')}</h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
                 <div className={styles.form__content}>
                     <div className={styles.column}>
-                        <InputBox errors={errors} name={'date'} placeholder={'Дата операції'}
+                        <InputBox errors={errors} name={'date'} placeholder={t('Дата операції')}
                                   type={'text'} options={{
                             ...register('date')
                         }}/>
-                        <InputBox errors={errors} name={'sum'} placeholder={'Сума'}
+                        <InputBox errors={errors} name={'sum'} placeholder={t('Сума')}
                                   type={'text'} options={{
                             ...register('sum')
                         }}/>
-                        {/*<InputBox errors={errors} name={'view'} placeholder={'Вид операції'}*/}
+                        {/*<InputBox errors={errors} name={'view'} placeholder={t('Вид операції')}*/}
                         {/*          type={'text'} options={{*/}
                         {/*    ...register('view')*/}
                         {/*}}/>*/}
                         <WhiteCustomSelect
-                            label="Вид операції"
+                            label={t('Вид операції')}
                             value={filters.view}
                             onChange={handleFilterChange('view')}
                             options={view}
                         />
-                        <InputBox errors={errors} name={'type'} placeholder={'Тип операції'}
+                        <InputBox errors={errors} name={'type'} placeholder={t('Тип операції')}
                                   type={'text'} options={{
                             ...register('type')
                         }}/>
-                        <InputBox errors={errors} name={'category'} placeholder={'Категорія'}
+                        <InputBox errors={errors} name={'category'} placeholder={t('Категорія')}
                                   type={'text'} options={{
                             ...register('category')
                         }}/>
-                        <InputBox errors={errors} name={'group'} placeholder={'Група'}
+                        <InputBox errors={errors} name={'group'} placeholder={t('Група')}
                                   type={'text'} options={{
                             ...register('group')
                         }}/>
                     </div>
                     <div className={styles.column}>
-                        <InputBox errors={errors} name={'currency'} placeholder={'Валюта'}
+                        <InputBox errors={errors} name={'currency'} placeholder={t('Валюта')}
                                   type={'text'} options={{
                             ...register('currency')
                         }}/>
-                        <InputBox errors={errors} name={'counterAgent'} placeholder={'Контрагент'}
+                        <InputBox errors={errors} name={'counterAgent'} placeholder={t('Контрагент')}
                                   type={'text'} options={{
                             ...register('counterAgent')
                         }}/>
-                        <InputBox errors={errors} name={'comment'} placeholder={'Коментар'}
+                        <InputBox errors={errors} name={'comment'} placeholder={t('Коментар')}
                                   type={'text'} options={{
                             ...register('comment')
                         }}/>
-                        <InputBox errors={errors} name={'else'} placeholder={'Інше'}
+                        <InputBox errors={errors} name={'else'} placeholder={t('Інше')}
                                   type={'text'} options={{
                             ...register('else')
                         }}/>
-                        <InputBox errors={errors} name={'file'} placeholder={'Прикріплення файлу'}
+                        <InputBox errors={errors} name={'file'} placeholder={t('Прикріплення файлу')}
                                   type={'text'} options={{
                             ...register('file')
                         }}/>
-                        <InputBox errors={errors} name={'bills'} placeholder={'Надходження-витрати (рахунки)'}
+                        <InputBox errors={errors} name={'bills'} placeholder={t('Надходження-витрати (рахунки)')}
                                   type={'text'} options={{
                             ...register('bills')
                         }}/>
@@ -133,7 +134,7 @@ const FinancesCreate = () => {
                 </div>
                 <div className={styles.form__action}>
                     <button type='submit' className={'btnDark'}>
-                        <span>Зберегти</span>
+                        <span>{t('Зберегти')}</span>
                     </button>
                 </div>
             </form>

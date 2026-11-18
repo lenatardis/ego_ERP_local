@@ -29,6 +29,7 @@ import { setIsActivePopup } from "../../store/main-slice.js";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../i18n';
 
 // ===== helpers =====
 
@@ -38,16 +39,16 @@ const mapApiPricelistToRow = (item) => {
     const statusRaw = item.status ?? "";
     const statusUa =
         statusRaw === "ACTIVE"
-            ? "Активний"
+            ? t('Активний')
             : statusRaw === "DEPRECATED"
-                ? "Неактивний"
+                ? t('Неактивний')
                 : statusRaw;
 
     return {
         id: item.id,
         name: item.title ?? "",
         description: item.description ?? "",
-        isDefault: item.is_default ? "Так" : "Ні",
+        isDefault: item.is_default ? t('Так') : t('Ні'),
         isDefaultRaw: !!item.is_default,
         status: statusUa,
         statusRaw,
@@ -58,11 +59,11 @@ const mapApiPricelistToRow = (item) => {
 };
 
 const PRICE_COUNT_LABELS = {
-    warehouse_item_type: "Товар",
-    kit_template: "Комплект",
-    kit_option_template: "Опція комплекту",
-    kit_component_template: "Компонент",
-    component_option_template: "Опція компоненту",
+    warehouse_item_type: t('Товар'),
+    kit_template: t('Комплект'),
+    kit_option_template: t('Опція комплекту'),
+    kit_component_template: t('Компонент'),
+    component_option_template: t('Опція компоненту'),
 };
 
 const MAX_PRICELIST_NAME_LENGTH = 50;
@@ -107,9 +108,9 @@ const Pricelist = () => {
 
     // статуси як у бекенду (ACTIVE/DEPRECATED)
     const statusOptions = [
-        { name: "Усі статуси", value: "" },
-        { name: "Активні", value: "ACTIVE" },
-        { name: "Неактивні", value: "DEPRECATED" },
+        { name: t('Усі статуси'), value: "" },
+        { name: t('Активні'), value: "ACTIVE" },
+        { name: t('Неактивні'), value: "DEPRECATED" },
     ];
 
     const fetchData = async (params) => {
@@ -275,19 +276,19 @@ const Pricelist = () => {
         const descTrimmed = editForm.description.trim();
 
         if (!nameTrimmed) {
-            errors.pricelistName = { message: "Вкажіть назву прайслиста" };
+            errors.pricelistName = { message: t('Вкажіть назву прайслиста') };
         }
 
         if (nameTrimmed.length > MAX_PRICELIST_NAME_LENGTH) {
-            errors.pricelistName = { message: "Назва має бути не більше 50 символів" };
+            errors.pricelistName = { message: t('Назва має бути не більше 50 символів') };
         }
 
         if (!descTrimmed) {
-            errors.pricelistDescription = { message: "Вкажіть опис прайслиста" };
+            errors.pricelistDescription = { message: t('Вкажіть опис прайслиста') };
         }
 
         if (descTrimmed.length > MAX_PRICELIST_DESCRIPTION_LENGTH) {
-            errors.pricelistDescription = { message: "Опис має бути не більше 100 символів" };
+            errors.pricelistDescription = { message: t('Опис має бути не більше 100 символів') };
         }
 
         if (Object.keys(errors).length > 0) {
@@ -319,14 +320,14 @@ const Pricelist = () => {
 
             if (isMultipleDefaultPricelistError(e)) {
                 window.alert(
-                    "Не може бути кілька прайслистів за замовчуванням.\n" +
-                    "Щоб зробити цей прайслист основним, спочатку зніміть прапорець «За замовчуванням» " +
-                    "у поточного основного прайслиста, а потім повторіть збереження."
+                    t('Не може бути кілька прайслистів за замовчуванням.\n') +
+                    t('Щоб зробити цей прайслист основним, спочатку зніміть прапорець «За замовчуванням» ') +
+                    t('у поточного основного прайслиста, а потім повторіть збереження.')
                 );
                 return;
             }
 
-            window.alert("Не вдалося зберегти прайслист. Спробуй ще раз.");
+            window.alert(t('Не вдалося зберегти прайслист. Спробуй ще раз.'));
         }
 
     };
@@ -404,13 +405,13 @@ const Pricelist = () => {
             if (isDefaultPricelistDeleteError(e)) {
                 closeDeletePopup();
                 window.alert(
-                    "Не можна видалити прайслист за замовчуванням.\n" +
-                    "Спочатку оберіть інший прайслист за замовчуванням, а потім повторіть видалення."
+                    t('Не можна видалити прайслист за замовчуванням.\n') +
+                    t('Спочатку оберіть інший прайслист за замовчуванням, а потім повторіть видалення.')
                 );
                 return;
             }
 
-            window.alert("Не вдалося видалити прайслист. Спробуй ще раз.");
+            window.alert(t('Не вдалося видалити прайслист. Спробуй ще раз.'));
         } finally {
             setIsDeleting(false);
         }
@@ -451,19 +452,19 @@ const Pricelist = () => {
         const descTrimmed = createForm.description.trim();
 
         if (!nameTrimmed) {
-            errors.createName = { message: "Вкажіть назву прайслиста" };
+            errors.createName = { message: t('Вкажіть назву прайслиста') };
         }
 
         if (nameTrimmed.length > MAX_PRICELIST_NAME_LENGTH) {
-            errors.createName = { message: "Назва має бути не більше 50 символів" };
+            errors.createName = { message: t('Назва має бути не більше 50 символів') };
         }
 
         if (!descTrimmed) {
-            errors.createDescription = { message: "Вкажіть опис прайслиста" };
+            errors.createDescription = { message: t('Вкажіть опис прайслиста') };
         }
 
         if (descTrimmed.length > MAX_PRICELIST_DESCRIPTION_LENGTH) {
-            errors.createDescription = { message: "Опис має бути не більше 100 символів" };
+            errors.createDescription = { message: t('Опис має бути не більше 100 символів') };
         }
         if (Object.keys(errors).length > 0) {
             setCreateErrors(errors);
@@ -506,14 +507,14 @@ const Pricelist = () => {
 
             if (isMultipleDefaultPricelistError(e)) {
                 window.alert(
-                    "Не може бути кілька прайслистів за замовчуванням.\n" +
-                    "Щоб зробити цей прайслист основним, спочатку зніміть прапорець «За замовчуванням» " +
-                    "у поточного основного прайслиста, а потім повторіть збереження."
+                    t('Не може бути кілька прайслистів за замовчуванням.\n') +
+                    t('Щоб зробити цей прайслист основним, спочатку зніміть прапорець «За замовчуванням» ') +
+                    t('у поточного основного прайслиста, а потім повторіть збереження.')
                 );
                 return;
             }
 
-            window.alert("Не вдалося зберегти прайслист. Спробуй ще раз.");
+            window.alert(t('Не вдалося зберегти прайслист. Спробуй ще раз.'));
         }
 
     };
@@ -522,11 +523,11 @@ const Pricelist = () => {
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "60px" },
-            { key: "name", title: "Назва прайслиста", render: (_, row) => <LimitedCell value={row.name} />, },
-            { key: "description", title: "Опис", render: (_, row) => <LimitedCell value={row.description} lineClamp={8} />, },
+            { key: "name", title: t('Назва прайслиста'), render: (_, row) => <LimitedCell value={row.name} />, },
+            { key: "description", title: t('Опис'), render: (_, row) => <LimitedCell value={row.description} lineClamp={8} />, },
             {
                 key: "price_count",
-                title: "К-ть цін",
+                title: t('К-ть цін'),
                 width: "140px",
                 render: (_, row) => {
                     const isExpanded = !!priceCountExpanded[row.id];
@@ -551,7 +552,7 @@ const Pricelist = () => {
                                     }))
                                 }
                             >
-                                <span>{isExpanded ? "Сховати" : "Показати"}</span>
+                                <span>{isExpanded ? t('Сховати') : t('Показати')}</span>
                             </button>
 
                             {isExpanded && (
@@ -571,18 +572,18 @@ const Pricelist = () => {
                 },
             },
 
-            { key: "isDefault", title: "За замовчуванням" },
-            { key: "status", title: "Статус" },
+            { key: "isDefault", title: t('За замовчуванням') },
+            { key: "status", title: t('Статус') },
             {
                 key: "sources",
-                title: "Джерела",
+                title: t('Джерела'),
                 render: (_, row) => {
                     const sources = (row.sources || [])
                         .map((s) => s.name)
                         .filter(Boolean);
 
                     if (!sources.length) {
-                        return <LimitedCell value="Немає" lineClamp={1} />;
+                        return <LimitedCell value={t('Немає')} lineClamp={1} />;
                     }
 
                     return (
@@ -612,21 +613,21 @@ const Pricelist = () => {
                                 className="btnDark"
                                 onClick={() => handleToggleStatus(row)}
                             >
-                                <span>{isDeprecated ? "Активувати" : "Деактивувати"}</span>
+                                <span>{isDeprecated ? t('Активувати') : t('Деактивувати')}</span>
                             </button>
                             <button
                                 type="button"
                                 className="btnDark"
                                 onClick={() => openEditPopup(row)}
                             >
-                                <span>Редагувати</span>
+                                <span>{t('Редагувати')}</span>
                             </button>
                             <button
                                 type="button"
                                 className="btnDark"
                                 onClick={() => openDeletePopup(row)}
                             >
-                                <span>Видалити</span>
+                                <span>{t('Видалити')}</span>
                             </button>
                         </div>
                     );
@@ -656,12 +657,12 @@ const Pricelist = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 onSearch={handleSearch}
-                title="Прайслісти"
+                title={t('Прайслісти')}
             />
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати прайслист</span>
+                    <span>{t('Додати прайслист')}</span>
                 </button>
             </div>
 
@@ -700,7 +701,7 @@ const Pricelist = () => {
             {/* фільтри */}
             <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <CustomSelect
-                    label="Статус"
+                    label={t('Статус')}
                     value={filters.status}
                     onChange={handleStatusChange}
                     options={statusOptions}
@@ -723,13 +724,13 @@ const Pricelist = () => {
             {isLoading && <Preloader />}
 
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування прайслиста" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування прайслиста')} onClose={closeEditPopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="pricelistName"
-                            label={<OptionLimitLabel text="Назва" maxLength={MAX_PRICELIST_NAME_LENGTH} />}
-                            placeholder="Назва прайслиста"
+                            label={<OptionLimitLabel text={t('Назва')} maxLength={MAX_PRICELIST_NAME_LENGTH} />}
+                            placeholder={t('Назва прайслиста')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_PRICELIST_NAME_LENGTH,
@@ -743,13 +744,13 @@ const Pricelist = () => {
 
                         <div className={styles.textareaBox}>
                             <label className={styles.textareaLabel} htmlFor="pricelistDescription">
-                                <OptionLimitLabel text="Опис" maxLength={MAX_PRICELIST_DESCRIPTION_LENGTH} />
+                                <OptionLimitLabel text={t('Опис')} maxLength={MAX_PRICELIST_DESCRIPTION_LENGTH} />
                             </label>
                             <textarea
                                 id="pricelistDescription"
                                 className={`${styles.textarea} ${editErrors.pricelistDescription ? styles.textareaError : ""
                                     }`}
-                                placeholder="Опис прайслиста"
+                                placeholder={t('Опис прайслиста')}
                                 value={editForm.description}
                                 onChange={(e) => {
                                     const value = e.target.value.slice(0, MAX_PRICELIST_DESCRIPTION_LENGTH);
@@ -767,7 +768,7 @@ const Pricelist = () => {
 
                         <div>
                             <CustomCheckbox
-                                name="За замовчуванням"
+                                name={t('За замовчуванням')}
                                 value="is_default"
                                 isChecked={editForm.isDefault}
                                 isLoading={false}
@@ -778,20 +779,20 @@ const Pricelist = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
 
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання прайслиста" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання прайслиста')} onClose={closeCreatePopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" maxLength={MAX_PRICELIST_NAME_LENGTH} />}
-                            placeholder="Назва прайслиста"
+                            label={<OptionLimitLabel text={t('Назва')} maxLength={MAX_PRICELIST_NAME_LENGTH} />}
+                            placeholder={t('Назва прайслиста')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_PRICELIST_NAME_LENGTH,
@@ -805,13 +806,13 @@ const Pricelist = () => {
 
                         <div className={styles.textareaBox}>
                             <label className={styles.textareaLabel} htmlFor="createDescription">
-                                <OptionLimitLabel text="Опис" maxLength={MAX_PRICELIST_DESCRIPTION_LENGTH} />
+                                <OptionLimitLabel text={t('Опис')} maxLength={MAX_PRICELIST_DESCRIPTION_LENGTH} />
                             </label>
                             <textarea
                                 id="createDescription"
                                 className={`${styles.textarea} ${createErrors.createDescription ? styles.textareaError : ""
                                     }`}
-                                placeholder="Опис прайслиста"
+                                placeholder={t('Опис прайслиста')}
                                 value={createForm.description}
                                 onChange={(e) => {
                                     const value = e.target.value.slice(0, MAX_PRICELIST_DESCRIPTION_LENGTH);
@@ -829,7 +830,7 @@ const Pricelist = () => {
 
                         <div>
                             <CustomCheckbox
-                                name="За замовчуванням"
+                                name={t('За замовчуванням')}
                                 value="is_default"
                                 isChecked={createForm.isDefault}
                                 isLoading={false}
@@ -840,14 +841,14 @@ const Pricelist = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title={"Видалення прайслиста"}
+                    title={t('Видалення прайслиста')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -860,7 +861,7 @@ const Pricelist = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити прайслист?
+                            {t('Ви дійсно бажаєте видалити прайслист?')}
                         </h3>
 
                         <button
@@ -870,7 +871,7 @@ const Pricelist = () => {
                             onClick={handleDeletePricelist}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -880,7 +881,7 @@ const Pricelist = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

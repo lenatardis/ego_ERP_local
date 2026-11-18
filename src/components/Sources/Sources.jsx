@@ -30,6 +30,7 @@ import { setIsActivePopup } from "../../store/main-slice.js";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../i18n';
 
 /*helpers*/
 
@@ -251,13 +252,13 @@ const Sources = () => {
         const nameTrimmed = createForm.name.trim();
         const plId = createForm.pricesListId;
 
-        if (!nameTrimmed) errors.createName = { message: "Вкажіть назву джерела" };
+        if (!nameTrimmed) errors.createName = { message: t('Вкажіть назву джерела') };
 
         if (nameTrimmed.length > MAX_SOURCE_NAME_LENGTH) {
-            errors.createName = { message: "Назва має бути не більше 50 символів" };
+            errors.createName = { message: t('Назва має бути не більше 50 символів') };
         }
 
-        if (!plId) errors.createPricesList = { message: "Оберіть прайслист" };
+        if (!plId) errors.createPricesList = { message: t('Оберіть прайслист') };
         if (Object.keys(errors).length > 0) {
             setCreateErrors(errors);
             return;
@@ -341,13 +342,13 @@ const Sources = () => {
         const nameTrimmed = editForm.name.trim();
         const plId = editForm.pricesListId;
 
-        if (!nameTrimmed) errors.editName = { message: "Вкажіть назву джерела" };
+        if (!nameTrimmed) errors.editName = { message: t('Вкажіть назву джерела') };
 
         if (nameTrimmed.length > MAX_SOURCE_NAME_LENGTH) {
-            errors.editName = { message: "Назва має бути не більше 50 символів" };
+            errors.editName = { message: t('Назва має бути не більше 50 символів') };
         }
 
-        if (!plId) errors.editPricesList = { message: "Оберіть прайслист" };
+        if (!plId) errors.editPricesList = { message: t('Оберіть прайслист') };
         if (Object.keys(errors).length > 0) {
             setEditErrors(errors);
             return;
@@ -417,7 +418,7 @@ const Sources = () => {
             if (
                 e?.status === 400 &&
                 e?.data?.error &&
-                String(e.data.error).includes("Ви дійсно хочете")
+                String(e.data.error).includes(t("Ви дійсно хочете"))
             ) {
                 setDeleteWarningText(formatDeleteWarningText(e.data.error));
                 return;
@@ -434,12 +435,12 @@ const Sources = () => {
             { key: "id", title: "ID", width: "60px" },
             {
                 key: "name",
-                title: "Назва",
+                title: t('Назва'),
                 render: (_, row) => <LimitedCell value={row.name} />,
             },
             {
                 key: "pricesListTitle",
-                title: "Прайслист",
+                title: t('Прайслист'),
                 render: (_, row) => <LimitedCell value={row.pricesListTitle || "–"} />,
             },
             {
@@ -453,14 +454,14 @@ const Sources = () => {
                             className="btnDark"
                             onClick={() => openEditPopup(row)}
                         >
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button
                             type="button"
                             className="btnDark"
                             onClick={() => openDeletePopup(row)}
                         >
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -488,13 +489,13 @@ const Sources = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 onSearch={handleSearch}
-                title="Джерела"
+                title={t('Джерела')}
                 hideFilterButton
             />
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати джерело</span>
+                    <span>{t('Додати джерело')}</span>
                 </button>
             </div>
 
@@ -545,13 +546,13 @@ const Sources = () => {
             {isLoading && <Preloader />}
 
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання джерела" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання джерела')} onClose={closeCreatePopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" maxLength={MAX_SOURCE_NAME_LENGTH} />}
-                            placeholder="Назва джерела"
+                            label={<OptionLimitLabel text={t('Назва')} maxLength={MAX_SOURCE_NAME_LENGTH} />}
+                            placeholder={t('Назва джерела')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_SOURCE_NAME_LENGTH,
@@ -565,7 +566,7 @@ const Sources = () => {
 
                         <div>
                             <CustomSelect
-                                label="Прайслист"
+                                label={t('Прайслист')}
                                 value={createForm.pricesListId}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -580,25 +581,25 @@ const Sources = () => {
                                 </div>
                             )}
                             {isPricelistsLoading && (
-                                <div className={styles.helperText}>Завантаження прайслистів…</div>
+                                <div className={styles.helperText}>{t('Завантаження прайслистів…')}</div>
                             )}
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
 
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування джерела" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування джерела')} onClose={closeEditPopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" maxLength={MAX_SOURCE_NAME_LENGTH} />}
-                            placeholder="Назва джерела"
+                            label={<OptionLimitLabel text={t('Назва')} maxLength={MAX_SOURCE_NAME_LENGTH} />}
+                            placeholder={t('Назва джерела')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_SOURCE_NAME_LENGTH,
@@ -611,7 +612,7 @@ const Sources = () => {
                         />
                         <div>
                             <CustomSelect
-                                label="Прайслист"
+                                label={t('Прайслист')}
                                 value={editForm.pricesListId}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -628,7 +629,7 @@ const Sources = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -636,7 +637,7 @@ const Sources = () => {
 
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title={deleteWarningText ? "Джерело використовується" : "Видалення джерела"}
+                    title={deleteWarningText ? t('Джерело використовується') : t('Видалення джерела')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -655,7 +656,7 @@ const Sources = () => {
                                 lineHeight: "1.4",
                             }}
                         >
-                            {deleteWarningText || "Ви дійсно бажаєте видалити джерело?"}
+                            {deleteWarningText || t('Ви дійсно бажаєте видалити джерело?')}
                         </h3>
 
                         <button
@@ -665,7 +666,7 @@ const Sources = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -675,7 +676,7 @@ const Sources = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

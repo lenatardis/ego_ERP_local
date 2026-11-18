@@ -11,6 +11,7 @@ import NewProduct from "../NewProduct/NewProduct.jsx";
 import Tooltip from "../../../Common/TapTooltip/TapTooltip";
 import InfoIcon from "../../../../assets/icons/info.svg";
 import IconClose from "../../../../assets/icons/cross.svg";
+import { t } from '../../../../i18n';
 
 const toSizeName = (s) => `${s.width}x${s.length}`;
 const toOptions = (arr = [], mapName = (x) => x.name) => arr.map(x => ({ value: x.id, name: mapName(x) }));
@@ -68,10 +69,10 @@ const EditableProductTable = ({ mode = 'create', exchangeRate, readOnly = false,
     const [isCreateProductPopupOpen, setIsCreateProductPopupOpen] = useState(false);
     const [createProductRowIndex, setCreateProductRowIndex] = useState(null);
     const productTooltip =
-        'Введіть назву існуючого товару або створіть новий у попапі (кнопка +). Якщо товар існує, його категорія заповниться автоматично. Є підказки для швидкого вибору назви';
+        t('Введіть назву існуючого товару або створіть новий у попапі (кнопка +). Якщо товар існує, його категорія заповниться автоматично. Є підказки для швидкого вибору назви');
 
     const priceUAHTooltip =
-        'Розраховується автоматично від ціни за одиницю в доларах по поточному курсу, але ви можете відкорегувати це значення вручну';
+        t('Розраховується автоматично від ціни за одиницю в доларах по поточному курсу, але ви можете відкорегувати це значення вручну');
 
     const gridTemplate = { gridTemplateColumns: '20px minmax(100px,1fr) minmax(20px,1fr) minmax(100px,1fr) minmax(100px,1fr) minmax(110px,0.8fr) minmax(130px,1fr) minmax(100px,1fr) minmax(100px,1fr) minmax(20px,1fr) minmax(20px,1fr) minmax(20px,1fr) minmax(20px,1fr)' };
 
@@ -300,10 +301,10 @@ const EditableProductTable = ({ mode = 'create', exchangeRate, readOnly = false,
     const rackOptions = (wid) => toOptions((findById(whTree, wid)?.racks) || []);
 
     const getRackLabel = (wid) => {
-        if (!wid) return <>Спочатку<br />склад</>;
+        if (!wid) return <>{t('Спочатку')}<br />{t('склад')}</>;
 
         const options = rackOptions(wid);
-        return options.length ? 'Оберіть' : 'Немає';
+        return options.length ? t('Оберіть') : t('Немає');
     };
 
     const cellOptions = (wid, rid) => {
@@ -313,10 +314,10 @@ const EditableProductTable = ({ mode = 'create', exchangeRate, readOnly = false,
     };
 
     const getCellLabel = (wid, rid) => {
-        if (!rid) return <>Спочатку<br />стелаж</>;
+        if (!rid) return <>{t('Спочатку')}<br />{t('стелаж')}</>;
 
         const options = cellOptions(wid, rid);
-        return options.length ? 'Оберіть' : 'Немає';
+        return options.length ? t('Оберіть') : t('Немає');
     };
 
     const formatCapacityNumber = (value) => {
@@ -351,12 +352,12 @@ const EditableProductTable = ({ mode = 'create', exchangeRate, readOnly = false,
     };
 
     const getCellDisplayName = (cellMeta) => {
-        if (!cellMeta) return 'комірка не визначена';
+        if (!cellMeta) return t('комірка не визначена');
 
         return [
-            cellMeta.warehouseName ? `склад ${cellMeta.warehouseName}` : '',
-            cellMeta.rackName ? `стелаж ${cellMeta.rackName}` : '',
-            cellMeta.name ? `комірка ${cellMeta.name}` : '',
+            cellMeta.warehouseName ? t('склад {{warehouseName}}', {warehouseName: cellMeta.warehouseName}) : '',
+            cellMeta.rackName ? t('стелаж {{rackName}}', {rackName: cellMeta.rackName}) : '',
+            cellMeta.name ? t('комірка {{name}}', {name: cellMeta.name}) : '',
         ].filter(Boolean).join(' / ');
     };
 
@@ -372,12 +373,12 @@ const getProductVariantLabel = (row, variant, rowNumber, variantNumber) => {
     const sizeName = getSizeName(variant?.sizeId);
 
     const parts = [
-        productName ? `товар ${productName}` : `товар у рядку № ${rowNumber}`,
-        colorName ? `колір ${colorName}` : '',
-        sizeName ? `розмір ${sizeName}` : '',
+        productName ? t('товар {{productName}}', {productName}) : t('товар у рядку № {{rowNumber}}', {rowNumber}),
+        colorName ? t('колір {{colorName}}', {colorName}) : '',
+        sizeName ? t('розмір {{sizeName}}', {sizeName}) : '',
     ].filter(Boolean);
 
-    return `${parts.join(', ')} – позиція № ${rowNumber}.${variantNumber}`;
+    return t('{{parts}} – позиція № {{rowNumber}}.{{variantNumber}}', {parts: parts.join(', '), rowNumber, variantNumber});
 };
 
 const getOriginalQtyByCell = (cellId, sourceRows = rowsRef.current) => {
@@ -462,17 +463,17 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
 
                 const editCapacityText = mode === 'edit'
                     ? hasSinglePosition
-                        ? `Ви можете вказати максимум ${formatCapacityNumber(item.capacityLimit)} для позиції № ${positionNumbers} або обирати інші комірки на складі. (З урахуванням раніше збереженої кількості доступно: ${formatCapacityNumber(item.remainingCapacity)}, раніше збережено в цій накладній в цій комірці: ${formatCapacityNumber(item.originalQty)}). `
-                        : `Ви можете перерозподіляти сумарну кількість в межах ${formatCapacityNumber(item.capacityLimit)} між позиціями № ${positionNumbers} або обирати інші комірки на складі. (Без урахування раніше збереженої кількості доступно: ${formatCapacityNumber(item.remainingCapacity)}, раніше збережено в цій накладній в цій комірці: ${formatCapacityNumber(item.originalQty)}). `
-                    : `Максимум доступно: ${formatCapacityNumber(item.capacityLimit)}. `;
+                        ? `${t('Ви можете вказати максимум {{capacityLimit}} для позиції № {{positionNumbers}} або обирати інші комірки на складі. (З урахуванням раніше збереженої кількості доступно: {{remainingCapacity}}, раніше збережено в цій накладній в цій комірці: {{originalQty}}).', {capacityLimit: formatCapacityNumber(item.capacityLimit), positionNumbers, remainingCapacity: formatCapacityNumber(item.remainingCapacity), originalQty: formatCapacityNumber(item.originalQty)})} `
+                        : `${t('Ви можете перерозподіляти сумарну кількість в межах {{capacityLimit}} між позиціями № {{positionNumbers}} або обирати інші комірки на складі. (Без урахування раніше збереженої кількості доступно: {{remainingCapacity}}, раніше збережено в цій накладній в цій комірці: {{originalQty}}).', {capacityLimit: formatCapacityNumber(item.capacityLimit), positionNumbers, remainingCapacity: formatCapacityNumber(item.remainingCapacity), originalQty: formatCapacityNumber(item.originalQty)})} `
+                    : `${t('Максимум доступно: {{capacityLimit}}.', {capacityLimit: formatCapacityNumber(item.capacityLimit)})} `;
 
-                return `✓ ${item.cellLabel}: ${editCapacityText}У формі сумарно (в різних позиціях товарів) вказано - ${formatCapacityNumber(item.totalQty)}. Перевірте кількість в позиціях № ${positionNumbers}.`;
+                return t('✓ {{cellLabel}}: {{editCapacityText}}У формі сумарно (в різних позиціях товарів) вказано - {{totalQty}}. Перевірте кількість в позиціях № {{positionNumbers}}.', {cellLabel: item.cellLabel, editCapacityText, totalQty: formatCapacityNumber(item.totalQty), positionNumbers});
             })
             .join('\n');
     };
 
     const getCapacityFieldErrorText = () => {
-        return 'Перевищено місткість комірки на складі';
+        return t('Перевищено місткість комірки на складі');
     };
 
     const makeActiveViolationPopupInfo = (violation, touchedVariant) => {
@@ -1013,14 +1014,14 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
         );
 
     const VALIDATION_FIELD_LABELS = {
-        template: 'назва товару',
-        color: 'колір',
-        size: 'розмір',
-        quantity: 'кількість',
-        cell: 'комірка',
-        capacity: 'місткість комірки',
-        priceUAH: 'ціна од., грн',
-        priceUSD: 'ціна од., $',
+        template: t('назва товару'),
+        color: t('колір'),
+        size: t('розмір'),
+        quantity: t('кількість'),
+        cell: t('комірка'),
+        capacity: t('місткість комірки'),
+        priceUAH: t('ціна од., грн'),
+        priceUSD: t('ціна од., $'),
     };
 
     const getVariantValidationFieldNames = (errors = {}) =>
@@ -1063,23 +1064,23 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                     const productDetails = [colorName, sizeName].filter(Boolean);
 
                     return productDetails.length
-                        ? `В рядку ${rowNumber} в товарі ${productName}, ${productDetails.join(', ')}`
-                        : `В рядку ${rowNumber} в товарі ${productName}`;
+                        ? t('В рядку {{rowNumber}} в товарі {{productName}}, {{productDetails}}', {rowNumber, productName, productDetails: productDetails.join(', ')})
+                        : t('В рядку {{rowNumber}} в товарі {{productName}}', {rowNumber, productName});
                 }
 
                 const details = [];
 
                 if (colorName) {
-                    details.push(`з кольором ${colorName}`);
+                    details.push(t('з кольором {{colorName}}', {colorName}));
                 }
 
                 if (sizeName) {
-                    details.push(`з розміром ${sizeName}`);
+                    details.push(t('з розміром {{sizeName}}', {sizeName}));
                 }
 
                 return details.length
-                    ? `В рядку ${rowNumber} в товарі ${details.join(' і ')}`
-                    : `В рядку ${rowNumber} в товарі без назви`;
+                    ? t('В рядку {{rowNumber}} в товарі {{details}}', {rowNumber, details: details.join(t(' і '))})
+                    : t('В рядку {{rowNumber}} в товарі без назви', {rowNumber});
             };
 
             const hasOnlyProductName =
@@ -1089,8 +1090,8 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
 
             if (hasOnlyProductName) {
                 messages.push({
-                    prefix: `В рядку ${rowNumber} вказано назву товару ${productName}, але не заповнено дані варіанта. Щоб зберегти товар, додайте:`,
-                    fields: ['колір', 'розмір', 'кількість', 'комірку', 'ціну од., $', 'ціну од., грн'],
+                    prefix: t('В рядку {{rowNumber}} вказано назву товару {{productName}}, але не заповнено дані варіанта. Щоб зберегти товар, додайте:', {rowNumber, productName}),
+                    fields: [t('колір'), t('розмір'), t('кількість'), t('комірку'), t('ціну од., $'), t('ціну од., грн')],
                 });
 
                 return;
@@ -1103,14 +1104,14 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                 const uniqueParts = [...new Set(parts)];
 
                 messages.push({
-                    prefix: `${getProductLabel(variant)} є незаповнені поля:`,
+                    prefix: t('{{variant}} є незаповнені поля:', {variant: getProductLabel(variant)}),
                     fields: uniqueParts,
                 });
             });
 
             if (rowFieldNames.length && !variantsWithErrors.length) {
                 messages.push({
-                    prefix: `${getProductLabel()} є незаповнені поля:`,
+                    prefix: t('{{getProductLabel}} є незаповнені поля:', {getProductLabel: getProductLabel()}),
                     fields: rowFieldNames,
                 });
             }
@@ -1132,7 +1133,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
             if (!rowTouched) return;
 
             if (!row.template?.id) {
-                rErrors[ri] = { ...(rErrors[ri] || {}), template: 'Оберіть товар з підказки' };
+                rErrors[ri] = { ...(rErrors[ri] || {}), template: t('Оберіть товар з підказки') };
             }
 
             (row.variants || []).forEach((v, vi) => {
@@ -1145,16 +1146,16 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                 const priceUAHNum = toNum(v.priceUAH);
                 const priceUSDNum = toNum(v.priceUSD);
 
-                if (!v.colorId) ve.color = 'Оберіть колір';
-                if (!v.sizeId) ve.size = 'Оберіть розмір';
+                if (!v.colorId) ve.color = t('Оберіть колір');
+                if (!v.sizeId) ve.size = t('Оберіть розмір');
 
                 if (!Number.isInteger(qtyNum) || qtyNum < 1) {
-                    ve.quantity = 'К-ть ≥ 1';
+                    ve.quantity = t('К-ть ≥ 1');
                 }
 
-                if (!v.cell?.id) ve.cell = 'Оберіть комірку';
-                if (!(priceUAHNum > 0)) ve.priceUAH = 'Ціна > 0';
-                if (!(priceUSDNum > 0)) ve.priceUSD = 'Ціна > 0';
+                if (!v.cell?.id) ve.cell = t('Оберіть комірку');
+                if (!(priceUAHNum > 0)) ve.priceUAH = t('Ціна > 0');
+                if (!(priceUSDNum > 0)) ve.priceUSD = t('Ціна > 0');
 
                 if (Object.keys(ve).length) {
                     vErrors[`${ri}:${vi}`] = ve;
@@ -1222,24 +1223,24 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
     };
 
     const loadFromEditAndRecalc = async (templates = []) => {
-        const mapped = (templates || []).map(t => {
+        const mapped = (templates || []).map(tp => {
             const row = emptyRow(true);
             row.isPersisted = true;
 
             row.template = {
-                id: t?.warehouse_item_template?.id ?? '',
-                name: t?.warehouse_item_template?.name ?? '',
+                id: tp?.warehouse_item_template?.id ?? '',
+                name: tp?.warehouse_item_template?.name ?? '',
             };
 
             row.category = {
-                id: t?.warehouse_item_template?.category_id ?? '',
+                id: tp?.warehouse_item_template?.category_id ?? '',
                 name:
-                    t?.warehouse_item_template?.category_name ??
-                    t?.warehouse_item_template?.category?.name ??
+                    tp?.warehouse_item_template?.category_name ??
+                    tp?.warehouse_item_template?.category?.name ??
                     '',
             };
 
-            row.variants = (t?.units || []).map(u => {
+            row.variants = (tp?.units || []).map(u => {
                 const rawCellId = u?.cell_id ?? u?.cell?.id ?? '';
                 const cellId = rawCellId === '' ? '' : Number(rawCellId);
 
@@ -1280,24 +1281,24 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
         validateAndBuildPayload,
         // loadFromEdit очікує структуру warehouse_item_units
         loadFromEdit: (templates = []) => {
-            const mapped = (templates || []).map(t => {
+            const mapped = (templates || []).map(tp => {
                 const row = emptyRow(true); // у edit блокуємо назву
                 row.isPersisted = true;
 
                 row.template = {
-                    id: t?.warehouse_item_template?.id ?? '',
-                    name: t?.warehouse_item_template?.name ?? '',
+                    id: tp?.warehouse_item_template?.id ?? '',
+                    name: tp?.warehouse_item_template?.name ?? '',
                 };
 
                 row.category = {
-                    id: t?.warehouse_item_template?.category_id ?? '',
+                    id: tp?.warehouse_item_template?.category_id ?? '',
                     name:
-                        t?.warehouse_item_template?.category_name ??
-                        t?.warehouse_item_template?.category?.name ??
+                        tp?.warehouse_item_template?.category_name ??
+                        tp?.warehouse_item_template?.category?.name ??
                         '',
                 };
 
-                row.variants = (t?.units || []).map(u => {
+                row.variants = (tp?.units || []).map(u => {
                     const rawCellId = u?.cell_id ?? u?.cell?.id ?? '';
                     const cellId = rawCellId === '' ? '' : Number(rawCellId);
                     const priceUSD = u?.price_usd ?? '';
@@ -1366,18 +1367,18 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
             <div className={`${styles.editableTable} ${styles.productEditableTable} ${innerStyles.muiLocal} editableTable`}>
                 <div className={styles.gridTable__header} style={gridTemplate}>
                     <div>№</div>
-                    <div>Назва</div>
-                    <div>Категорія</div>
-                    <div>Колір</div>
-                    <div>Розмір</div>
-                    <div>К-ть</div>
-                    <div>Склад</div>
-                    <div>Стелаж</div>
-                    <div>Комірка</div>
-                    <div>Ціна од.,$</div>
-                    <div>Ціна од.,грн</div>
-                    <div>Сума, $</div>
-                    <div>Сума, грн</div>
+                    <div>{t('Назва')}</div>
+                    <div>{t('Категорія')}</div>
+                    <div>{t('Колір')}</div>
+                    <div>{t('Розмір')}</div>
+                    <div>{t('К-ть')}</div>
+                    <div>{t('Склад')}</div>
+                    <div>{t('Стелаж')}</div>
+                    <div>{t('Комірка')}</div>
+                    <div>{t('Ціна од.,$')}</div>
+                    <div>{t('Ціна од.,грн')}</div>
+                    <div>{t('Сума, $')}</div>
+                    <div>{t('Сума, грн')}</div>
                 </div>
 
                 <div className={styles.tableRows}>
@@ -1396,7 +1397,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                         type="button"
                                         className={innerStyles.removeRowBtn}
                                         onClick={() => handleRemoveRow(ri)}
-                                        aria-label="Видалити рядок"
+                                        aria-label={t('Видалити рядок')}
                                     >
                                         <img src={IconClose} alt="" />
                                     </button>
@@ -1413,16 +1414,16 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                 <button
                                                     type="button"
                                                     className={`${innerStyles.createFabricBtn} ${innerStyles.productAddIcon}`}
-                                                    title="Створити новий товар"
+                                                    title={t('Створити новий товар')}
                                                     onClick={() => openCreateProductPopup(ri)}
-                                                    aria-label="Створити новий товар"
+                                                    aria-label={t('Створити новий товар')}
                                                 />
                                             )}
 
                                             {!isLocked && !readOnly && (
                                                 <div className={`${innerStyles.fabricTooltip} ${innerStyles.productTooltip}`}>
                                                     <Tooltip title={productTooltip} arrow placement="top">
-                                                        <img src={InfoIcon} className={innerStyles.infoIcon} alt="Інфо" />
+                                                        <img src={InfoIcon} className={innerStyles.infoIcon} alt={t('Інфо')} />
                                                     </Tooltip>
                                                 </div>
                                             )}
@@ -1432,7 +1433,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                 value={row.template.name}
                                                 onChange={isLocked || readOnly ? undefined : (e) => handleNameChange(ri, e.target.value)}
                                                 onBlur={isLocked || readOnly ? undefined : () => handleNameBlur(ri)}
-                                                placeholder="Введіть назву"
+                                                placeholder={t('Введіть назву')}
                                                 autoComplete="off"
                                                 autoCorrect="off"
                                                 spellCheck={false}
@@ -1459,7 +1460,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                             && productHints[ri] !== undefined
                                             && productHints[ri]?.length > 0 && (
                                                 <div className={innerStyles.hintEmpty}>
-                                                    Знайдено схожі товари. Оберіть потрібний товар з підказки або створіть новий, натиснувши +
+                                                    {t('Знайдено схожі товари. Оберіть потрібний товар з підказки або створіть новий, натиснувши +')}
                                                 </div>
                                             )}
 
@@ -1471,7 +1472,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                             && productHints[ri] !== undefined
                                             && productHints[ri]?.length === 0 && (
                                                 <div className={innerStyles.hintEmpty}>
-                                                    Товар з такою назвою не знайдено. Ви можете створити його, натиснувши +
+                                                    {t('Товар з такою назвою не знайдено. Ви можете створити його, натиснувши +')}
                                                 </div>
                                             )}
 
@@ -1494,7 +1495,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                         value={v.colorId ?? ''}
                                                         onChange={readOnly ? undefined : (e) => updateVariant(ri, vi, { colorId: e.target.value === '' ? '' : Number(e.target.value) })}
                                                         options={colorOptions}
-                                                        label="Оберіть"
+                                                        label={t('Оберіть')}
                                                         height="32px"
                                                         disabled={readOnly}
                                                         menuLeftAlign
@@ -1512,7 +1513,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                         value=""
                                                         onChange={(e) => handleAddColor(ri, e.target.value)}
                                                         options={colorOptions}
-                                                        label={<>+ Додати<br />колір</>}
+                                                        label={<>{t('+ Додати')}<br />{t('колір')}</>}
                                                         height="32px"
                                                         menuLeftAlign
                                                     />
@@ -1530,7 +1531,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                         value={v.sizeId ?? ''}
                                                         onChange={readOnly ? undefined : (e) => updateVariant(ri, vi, { sizeId: e.target.value === '' ? '' : Number(e.target.value) })}
                                                         options={sizeOptions}
-                                                        label="Оберіть"
+                                                        label={t('Оберіть')}
                                                         height="32px"
                                                         numeric
                                                         disabled={readOnly}
@@ -1548,7 +1549,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                     value=""
                                                     onChange={(e) => handleAddSize(ri, e.target.value)}
                                                     options={sizeOptions}
-                                                    label={<>+ Додати<br />розмір</>}
+                                                    label={<>{t('+ Додати')}<br />{t('розмір')}</>}
                                                     height="32px"
                                                     numeric
                                                     menuLeftAlign
@@ -1567,7 +1568,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                     className={activeCapacityErrorVariants[`${ri}:${vi}`] ? `${innerStyles.fullBorder} ${innerStyles.capacityWarningBorder}` : innerStyles.noRightBorder}
                                                     value={v.quantity}
                                                     onChange={readOnly ? undefined : (e) => updateVariant(ri, vi, { quantity: e.target.value })}
-                                                    placeholder="Введіть"
+                                                    placeholder={t('Введіть')}
                                                     disabled={readOnly}
                                                     readOnly={readOnly}
                                                 />
@@ -1591,7 +1592,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                         value={v.warehouse.id ?? ''}
                                                         onChange={readOnly ? undefined : (e) => handleVarWarehouse(ri, vi, e.target.value)}
                                                         options={whOptions()}
-                                                        label="Оберіть"
+                                                        label={t('Оберіть')}
                                                         height="32px"
                                                         disabled={readOnly}
                                                         menuLeftAlign
@@ -1667,7 +1668,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                                     {!readOnly && (
                                                         <div className={`${innerStyles.fabricTooltip} ${innerStyles.priceTooltipRight}`}>
                                                             <Tooltip title={priceUAHTooltip} arrow placement="top">
-                                                                <img src={InfoIcon} className={innerStyles.infoIcon} alt="Інфо" />
+                                                                <img src={InfoIcon} className={innerStyles.infoIcon} alt={t('Інфо')} />
                                                             </Tooltip>
                                                         </div>
                                                     )}
@@ -1716,7 +1717,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                     type="button"
                     onClick={() => setRows(prev => [...prev, emptyRow(false)])}
                 >
-                    <span>Додати новий запис</span>
+                    <span>{t('Додати новий запис')}</span>
                 </button>
             )}
 
@@ -1749,16 +1750,16 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                     textAlign: "center",
                                 }}
                             >
-                                Перевищено місткість комірки на складі
+                                {t('Перевищено місткість комірки на складі')}
                             </h3>
 
                             <p style={{ margin: 0 }}>
-                                Для <strong>{capacityPopupInfo.cellLabel}</strong> перевищено сумарну допустиму кількість (максимум <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>).
+                                {t('Для')} <strong>{capacityPopupInfo.cellLabel}</strong> {t('перевищено сумарну допустиму кількість (максимум')} <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>).
                             </p>
 
                             {mode !== 'edit' && (
                                 <p style={{ margin: 0 }}>
-                                    Максимум для поточної форми:{' '}
+                                    {t('Максимум для поточної форми:')}{' '}
                                     <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>
                                 </p>
                             )}
@@ -1767,28 +1768,28 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                                 <p style={{ margin: 0 }}>
                                     {capacityPopupInfo.rows.length === 1 ? (
                                         <>
-                                            Ви можете вказати максимум <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> для позиції № <strong>{capacityPopupInfo.rows.map(row => row.positionLabel).join(', ')}</strong> або обирати інші комірки на складі.
+                                            {t('Ви можете вказати максимум')} <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> {t('для позиції №')} <strong>{capacityPopupInfo.rows.map(row => row.positionLabel).join(', ')}</strong> {t('або обирати інші комірки на складі.')}
                                         </>
                                     ) : (
                                         <>
-                                            Ви можете перерозподіляти сумарну кількість в межах <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> між позиціями <strong> {capacityPopupInfo.rows.map(row => row.positionLabel).join(', ')}</strong> або обирати інші комірки на складі.
+                                            {t('Ви можете перерозподіляти сумарну кількість в межах')} <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> {t('між позиціями')} <strong> {capacityPopupInfo.rows.map(row => row.positionLabel).join(', ')}</strong> {t('або обирати інші комірки на складі.')}
                                         </>
                                     )}
                                     {' '}
-                                    (З урахуванням раніше збереженої кількості доступно:{' '}
+                                    {t('(З урахуванням раніше збереженої кількості доступно:')}{' '}
                                     <strong>{formatCapacityNumber(capacityPopupInfo.remainingCapacity)}</strong>,
-                                    {' '}раніше збережено в цій накладній в цій комірці:{' '}
+                                    {' '}{t('раніше збережено в цій накладній в цій комірці:')}{' '}
                                     <strong>{formatCapacityNumber(capacityPopupInfo.originalQty)}</strong>).
                                 </p>
                             )}
 
                             <p style={{ margin: 0 }}>
-                                Зараз у формі для цієї комірки сумарно вказано:{' '}
+                                {t('Зараз у формі для цієї комірки сумарно вказано:')}{' '}
                                 <strong>{formatCapacityNumber(capacityPopupInfo.totalQty)}</strong>
                             </p>
 
                             <p style={{ margin: 0 }}>
-                                Перевірте сумарну кількість в позиціях №{' '}
+                                {t('Перевірте сумарну кількість в позиціях №')}{' '}
                                 <strong>
                                     {capacityPopupInfo.rows.map(row => row.positionLabel).join(', ')}
                                 </strong>
@@ -1797,13 +1798,13 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                             <p style={{ margin: 0 }}>
                                 {mode === 'edit' && capacityPopupInfo.rows.length === 1 ? (
                                     <>
-                                        Щоб увійти в ліміт зменште кількість в цій позиції товару або оберіть іншу комірку.
+                                        {t('Щоб увійти в ліміт зменште кількість в цій позиції товару або оберіть іншу комірку.')}
                                     </>
                                 ) : (
                                     <>
-                                        Щоб увійти в ліміт зменште кількість в цій позиції товару або перерозподіліть кількість з іншою позицією товару, що зберігається в цій комірці (цю комірку використовують позиції: <strong>
+                                        {t('Щоб увійти в ліміт зменште кількість в цій позиції товару або перерозподіліть кількість з іншою позицією товару, що зберігається в цій комірці (цю комірку використовують позиції:')} <strong>
                                             {capacityPopupInfo.rows.map(row => row.positionLabel).join(', ')}
-                                        </strong>), або оберіть іншу комірку.
+                                        </strong>{t('), або оберіть іншу комірку.')}
                                     </>
                                 )}
                             </p>
@@ -1818,7 +1819,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
                             }}
                             onClick={() => setCapacityPopupInfo(null)}
                         >
-                            <span>Ок</span>
+                            <span>{t('Ок')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -1826,7 +1827,7 @@ const buildCapacityViolations = (inputRows = rowsRef.current) => {
 
             {!readOnly && isCreateProductPopupOpen && (
                 <CentralPopup
-                    title="Створення нового товару"
+                    title={t('Створення нового товару')}
                     onClose={closeCreateProductPopup}
                     verticalScroll
                     bigPopup

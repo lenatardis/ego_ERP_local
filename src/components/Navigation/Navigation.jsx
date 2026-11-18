@@ -10,8 +10,16 @@ import { logout } from "../../api/authApi";
 import { getProfile } from "../../store/selectors";
 import useScrollLock from "../../hooks/useScrollLock";
 import useWindowSize from "../../hooks/useWindowSize";
+import { t } from "../../i18n";
+import LanguageSwitcher from "../Common/LanguageSwitcher/LanguageSwitcher";
+import { useUnsavedCtx } from "../../guards/UnsavedChangesContext";
 
 const Navigation = () => {
+    // Demo build (2026-11-18): a language switch re-mounts the pages – ask first when there are unsaved changes
+    const { dirtyCount } = useUnsavedCtx();
+    const confirmLanguageSwitch = () => dirtyCount === 0 || window.confirm(
+        t('Ви внесли зміни у {{count}} запис(ах). Якщо змінити мову без збереження, вони будуть втрачені.', { count: dirtyCount })
+    );
     const { pathname } = useLocation();
     const dispatch = useAppDispatch();
     const { first_name, last_name, photo, groups } = useAppSelector(getProfile);
@@ -256,12 +264,12 @@ const Navigation = () => {
                 type="button"
                 className={styles.mobileBar__toggle}
                 onClick={() => setIsMobileOpen(true)}
-                aria-label="Відкрити меню"
+                aria-label={t('Відкрити меню')}
             >
                 <span/><span/><span/>
             </button>
             <img className={styles.mobileBar__logo} src={logo} alt="logo" width={36} height={36}/>
-            <p className={styles.mobileBar__title}>{activeLink ? activeLink.name : 'Ego Textile'}</p>
+            <p className={styles.mobileBar__title}>{activeLink ? t(activeLink.name) : 'Ego Textile'}</p>
         </div>
         {isMobileOpen && <div className={styles.mobileOverlay} onClick={() => setIsMobileOpen(false)}/>}
         <div className={`${styles.navigation} ${isMobileOpen ? styles.navigationOpen : ''}`}>
@@ -283,7 +291,7 @@ const Navigation = () => {
                             onClick={group.toggle}
                             className={styles.accordionHead}
                         >
-                            <span>{group.title}</span>
+                            <span>{t(group.title)}</span>
                             <img
                                 src={arrIcon2}
                                 alt=""
@@ -302,7 +310,7 @@ const Navigation = () => {
                                         className={isActive ? styles.linkActive : styles.link}
                                         onClick={() => setIsMobileOpen(false)}
                                     >
-                                        <span>{link.name}</span>
+                                        <span>{t(link.name)}</span>
                                     </Link>
                                 );
                             })}
@@ -312,13 +320,15 @@ const Navigation = () => {
             </ul>
 
             <div className={styles.logout}>
+                <LanguageSwitcher dark className={styles.logout__lang} confirmSwitch={confirmLanguageSwitch}/>
+
                 <a
                     href="/ego_CRM_local/"
                     className={`btnDark ${styles.logout__crm}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <span>Перейти в CRM</span>
+                    <span>{t('Перейти в CRM')}</span>
                 </a>
 
                 <div className={styles.logout__block}>

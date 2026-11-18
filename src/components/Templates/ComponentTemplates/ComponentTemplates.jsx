@@ -37,6 +37,7 @@ import CustomLoadSelect from "../../Common/CustomLoadSelect/CustomLoadSelect.jsx
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../../i18n';
 
 
 
@@ -123,10 +124,10 @@ const ComponentTemplates = () => {
 
     // select options
     const [typeOptions, setTypeOptions] = useState([
-        { name: "Тип (завантаження...)", value: "" },
+        { name: t('Тип (завантаження...)'), value: "" },
     ]);
     const [fabricTypeOptions, setFabricTypeOptions] = useState([
-        { name: "Тип тканини (завантаження...)", value: "" },
+        { name: t('Тип тканини (завантаження...)'), value: "" },
     ]);
 
     const resetXScrollToStart = useCallback(() => {
@@ -159,7 +160,7 @@ const ComponentTemplates = () => {
 
             const ctList = Array.isArray(ct?.component_types) ? ct.component_types : [];
             const ctOptions = [
-                { name: "Тип", value: "" },
+                { name: t('Тип'), value: "" },
                 ...ctList.map((x) => ({ name: x?.name ?? `ID ${x?.id}`, value: x?.id })),
             ];
             setTypeOptions(ctOptions);
@@ -168,7 +169,7 @@ const ComponentTemplates = () => {
             const ft = await fetchProductTypesCRM(token);
             const ftList = Array.isArray(ft) ? ft : [];
             const ftOptions = [
-                { name: "Тип тканини", value: "" },
+                { name: t('Тип тканини'), value: "" },
                 ...ftList
                     .filter((x) => x?.is_available !== false)
                     .map((x) => ({ name: x?.type ?? `ID ${x?.id}`, value: x?.id })),
@@ -176,8 +177,8 @@ const ComponentTemplates = () => {
             setFabricTypeOptions(ftOptions);
         } catch (e) {
             console.error("Failed to load select options:", e);
-            setTypeOptions([{ name: "Тип", value: "" }]);
-            setFabricTypeOptions([{ name: "Тип тканини", value: "" }]);
+            setTypeOptions([{ name: t('Тип'), value: "" }]);
+            setFabricTypeOptions([{ name: t('Тип тканини'), value: "" }]);
         }
     }, []);
 
@@ -426,30 +427,30 @@ const ComponentTemplates = () => {
         const aKey = mode === "create" ? "createA" : "editA";
         const bKey = mode === "create" ? "createB" : "editB";
 
-        if (!nameTrimmed) errors[nameKey] = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors[nameKey] = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > MAX_NAME_LENGTH) {
-            errors[nameKey] = { message: "Назва має бути не більше 100 символів" };
+            errors[nameKey] = { message: t('Назва має бути не більше 100 символів') };
         }
 
-        if (!shortTrimmed) errors[shortKey] = { message: "Вкажіть коротку назву" };
+        if (!shortTrimmed) errors[shortKey] = { message: t('Вкажіть коротку назву') };
         if (shortTrimmed.length > MAX_SHORT_FIELD_LENGTH) {
-            errors[shortKey] = { message: "Коротка назва має бути не більше 10 символів" };
+            errors[shortKey] = { message: t('Коротка назва має бути не більше 10 символів') };
         }
 
         if (sizeTrimmed.length > MAX_SHORT_FIELD_LENGTH) {
-            errors[sizeKey] = { message: "Розмір має бути не більше 10 символів" };
+            errors[sizeKey] = { message: t('Розмір має бути не більше 10 символів') };
         }
 
         if (fabricACount.length > MAX_SHORT_FIELD_LENGTH) {
-            errors[aKey] = { message: "A має бути не більше 10 символів" };
+            errors[aKey] = { message: t('A має бути не більше 10 символів') };
         }
 
         if (fabricBCount.length > MAX_SHORT_FIELD_LENGTH) {
-            errors[bKey] = { message: "B має бути не більше 10 символів" };
+            errors[bKey] = { message: t('B має бути не більше 10 символів') };
         }
 
-        if (!form.type) errors[mode === "create" ? "createType" : "editType"] = { message: "Оберіть тип" };
-        if (!form.fabric_type) errors[mode === "create" ? "createFabricType" : "editFabricType"] = { message: "Оберіть тип тканини" };
+        if (!form.type) errors[mode === "create" ? "createType" : "editType"] = { message: t('Оберіть тип') };
+        if (!form.fabric_type) errors[mode === "create" ? "createFabricType" : "editFabricType"] = { message: t('Оберіть тип тканини') };
 
         return errors;
     };
@@ -553,31 +554,31 @@ const ComponentTemplates = () => {
             { key: "id", title: "ID", width: "56px" },
             {
                 key: "name",
-                title: "Назва",
+                title: t('Назва'),
                 width: "210px",
                 render: (_, row) => <LimitedCell value={row.name} />,
             },
             {
                 key: "short_name",
-                title: "Коротка назва",
+                title: t('Коротка назва'),
                 width: "130px",
                 render: (_, row) => <LimitedCell value={row.short_name} />,
             },
             {
                 key: "size",
-                title: "Розмір",
+                title: t('Розмір'),
                 width: "110px",
                 render: (_, row) => <LimitedCell value={row.size} />,
             },
             {
                 key: "type",
-                title: "Тип",
+                title: t('Тип'),
                 width: "170px",
                 render: (_, row) => (row?.type?.name ? row.type.name : "-"),
             },
             {
                 key: "fabric_type",
-                title: "Тип тканини",
+                title: t('Тип тканини'),
                 width: "170px",
                 render: (_, row) => (row?.fabric_type?.type ? row.fabric_type.type : "-"),
             },
@@ -595,7 +596,7 @@ const ComponentTemplates = () => {
             },
             {
                 key: "image",
-                title: "Фото",
+                title: t('Фото'),
                 width: "110px",
                 render: (_, row) => renderPhotoCell(row.image),
             },
@@ -606,10 +607,10 @@ const ComponentTemplates = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => openDeletePopup(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -638,7 +639,7 @@ const ComponentTemplates = () => {
         <div className={styles.wrapper}>
             <ArrBack />
             <SearchFilter
-                title="Шаблони компонентів"
+                title={t('Шаблони компонентів')}
                 onOpenFilter={() => setIsShowFilter(true)}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -649,7 +650,7 @@ const ComponentTemplates = () => {
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати компонент</span>
+                    <span>{t('Додати компонент')}</span>
                 </button>
             </div>
 
@@ -688,14 +689,14 @@ const ComponentTemplates = () => {
             <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
 
                 <CustomSelect
-                    label="Тип"
+                    label={t('Тип')}
                     value={filters.type_id}
                     onChange={handleTypeFilterChange}
                     options={typeOptions}
                 />
 
                 <CustomSelect
-                    label="Тип тканини"
+                    label={t('Тип тканини')}
                     value={filters.fabric_type_id}
                     onChange={handleFabricTypeFilterChange}
                     options={fabricTypeOptions}
@@ -720,13 +721,13 @@ const ComponentTemplates = () => {
 
             {/* CREATE */}
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання компонента" onClose={closeCreatePopup} verticalScroll>
+                <CentralPopup title={t('Додавання компонента')} onClose={closeCreatePopup} verticalScroll>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_NAME_LENGTH,
@@ -741,8 +742,8 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={createErrors}
                             name="createShort"
-                            label={<OptionLimitLabel text="Коротка назва" maxLength={MAX_SHORT_FIELD_LENGTH} />}
-                            placeholder="Коротка назва"
+                            label={<OptionLimitLabel text={t('Коротка назва')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            placeholder={t('Коротка назва')}
                             options={{
                                 value: createForm.short_name,
                                 maxLength: MAX_SHORT_FIELD_LENGTH,
@@ -757,8 +758,8 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={createErrors}
                             name="createSize"
-                            label={<OptionLimitLabel text="Розмір" maxLength={MAX_SHORT_FIELD_LENGTH} />}
-                            placeholder="Розмір"
+                            label={<OptionLimitLabel text={t('Розмір')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            placeholder={t('Розмір')}
                             options={{
                                 value: createForm.size,
                                 maxLength: MAX_SHORT_FIELD_LENGTH,
@@ -773,7 +774,7 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={createErrors}
                             name="createA"
-                            label={<OptionLimitLabel text="Додаткова витрата тканини A" maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            label={<OptionLimitLabel text={t('Додаткова витрата тканини A')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
                             placeholder="A"
                             options={{
                                 value: createForm.fabric_a_count,
@@ -789,7 +790,7 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={createErrors}
                             name="createB"
-                            label={<OptionLimitLabel text="Додаткова витрата тканини B" maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            label={<OptionLimitLabel text={t('Додаткова витрата тканини B')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
                             placeholder="B"
                             options={{
                                 value: createForm.fabric_b_count,
@@ -804,7 +805,7 @@ const ComponentTemplates = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={createForm.type}
                                 onChange={(e) => {
                                     setCreateForm((prev) => ({ ...prev, type: e.target.value }));
@@ -813,7 +814,7 @@ const ComponentTemplates = () => {
                                 fetchPage={fetchComponentTypesPageForSelect}
                                 pageSize={25}
                                 menuMaxHeight={340}
-                                prependOptions={[{ name: "Тип", value: "" }]}
+                                prependOptions={[{ name: t('Тип'), value: "" }]}
                                 prefetchMinItems={30}
                             />
 
@@ -824,7 +825,7 @@ const ComponentTemplates = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип тканини"
+                                label={t('Тип тканини')}
                                 value={createForm.fabric_type}
                                 onChange={(e) => {
                                     setCreateForm((prev) => ({ ...prev, fabric_type: e.target.value }));
@@ -833,7 +834,7 @@ const ComponentTemplates = () => {
                                 fetchPage={fetchFabricTypesPageForSelect}
                                 pageSize={50}
                                 menuMaxHeight={340}
-                                prependOptions={[{ name: "Тип тканини", value: "" }]}
+                                prependOptions={[{ name: t('Тип тканини'), value: "" }]}
                                 prefetchMinItems={30}
                             />
 
@@ -844,7 +845,7 @@ const ComponentTemplates = () => {
 
                         <div>
                             <label className={styles.textareaLabel} style={{ display: "block", marginBottom: 6 }}>
-                                Фото
+                                {t('Фото')}
                             </label>
 
                             {createPreviewUrl ? (
@@ -854,7 +855,7 @@ const ComponentTemplates = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Обране фото</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Обране фото')}</span>
                                 </div>
                             ) : null}
 
@@ -870,7 +871,7 @@ const ComponentTemplates = () => {
 
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -878,13 +879,13 @@ const ComponentTemplates = () => {
 
             {/* EDIT */}
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування компонента" onClose={closeEditPopup} verticalScroll>
+                <CentralPopup title={t('Редагування компонента')} onClose={closeEditPopup} verticalScroll>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_NAME_LENGTH,
@@ -899,8 +900,8 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={editErrors}
                             name="editShort"
-                            label={<OptionLimitLabel text="Коротка назва" maxLength={MAX_SHORT_FIELD_LENGTH} />}
-                            placeholder="Коротка назва"
+                            label={<OptionLimitLabel text={t('Коротка назва')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            placeholder={t('Коротка назва')}
                             options={{
                                 value: editForm.short_name,
                                 maxLength: MAX_SHORT_FIELD_LENGTH,
@@ -915,8 +916,8 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={editErrors}
                             name="editSize"
-                            label={<OptionLimitLabel text="Розмір" maxLength={MAX_SHORT_FIELD_LENGTH} />}
-                            placeholder="Розмір"
+                            label={<OptionLimitLabel text={t('Розмір')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            placeholder={t('Розмір')}
                             options={{
                                 value: editForm.size,
                                 maxLength: MAX_SHORT_FIELD_LENGTH,
@@ -931,7 +932,7 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={editErrors}
                             name="editA"
-                            label={<OptionLimitLabel text="Додаткова витрата тканини A" maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            label={<OptionLimitLabel text={t('Додаткова витрата тканини A')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
                             placeholder="A"
                             options={{
                                 value: editForm.fabric_a_count,
@@ -947,7 +948,7 @@ const ComponentTemplates = () => {
                         <InputBox
                             errors={editErrors}
                             name="editB"
-                            label={<OptionLimitLabel text="Додаткова витрата тканини B" maxLength={MAX_SHORT_FIELD_LENGTH} />}
+                            label={<OptionLimitLabel text={t('Додаткова витрата тканини B')} maxLength={MAX_SHORT_FIELD_LENGTH} />}
                             placeholder="B"
                             options={{
                                 value: editForm.fabric_b_count,
@@ -962,7 +963,7 @@ const ComponentTemplates = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={editForm.type}
                                 onChange={(e) => {
                                     setEditForm((prev) => ({ ...prev, type: e.target.value }));
@@ -971,7 +972,7 @@ const ComponentTemplates = () => {
                                 fetchPage={fetchComponentTypesPageForSelect}
                                 pageSize={25}
                                 menuMaxHeight={340}
-                                prependOptions={[{ name: "Тип", value: "" }]}
+                                prependOptions={[{ name: t('Тип'), value: "" }]}
                                 prefetchMinItems={30}
                             />
 
@@ -982,7 +983,7 @@ const ComponentTemplates = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип тканини"
+                                label={t('Тип тканини')}
                                 value={editForm.fabric_type}
                                 onChange={(e) => {
                                     setEditForm((prev) => ({ ...prev, fabric_type: e.target.value }));
@@ -991,7 +992,7 @@ const ComponentTemplates = () => {
                                 fetchPage={fetchFabricTypesPageForSelect}
                                 pageSize={50}
                                 menuMaxHeight={340}
-                                prependOptions={[{ name: "Тип тканини", value: "" }]}
+                                prependOptions={[{ name: t('Тип тканини'), value: "" }]}
                                 prefetchMinItems={30}
                             />
 
@@ -1002,7 +1003,7 @@ const ComponentTemplates = () => {
 
                         <div>
                             <label className={styles.textareaLabel} style={{ display: "block", marginBottom: 6 }}>
-                                Фото
+                                {t('Фото')}
                             </label>
 
                             {editPreviewUrl ? (
@@ -1012,7 +1013,7 @@ const ComponentTemplates = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Обране фото (ще не збережено)</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Обране фото (ще не збережено)')}</span>
                                 </div>
                             ) : editForm.imageUrl?.trim() ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
@@ -1022,7 +1023,7 @@ const ComponentTemplates = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Поточне фото</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Поточне фото')}</span>
                                 </div>
                             ) : null}
 
@@ -1037,14 +1038,14 @@ const ComponentTemplates = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title="Видалення компонента"
+                    title={t('Видалення компонента')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -1057,7 +1058,7 @@ const ComponentTemplates = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити компонент?
+                            {t('Ви дійсно бажаєте видалити компонент?')}
                         </h3>
 
                         <button
@@ -1067,7 +1068,7 @@ const ComponentTemplates = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -1077,7 +1078,7 @@ const ComponentTemplates = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

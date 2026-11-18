@@ -6,6 +6,7 @@ import {Pagination} from '@mui/material';
 import {useNavigate} from "react-router"; // залишаю як у тебе
 import Preloader from "../Common/Preloader/Preloader.jsx";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../i18n';
 
 const ArrivalList = () => {
     const [arrivalList, setArrivalList] = useState([]);
@@ -26,7 +27,7 @@ const ArrivalList = () => {
             .join(' ')
             .trim();
 
-        return fullName || `Користувач ${receiver.id}`;
+        return fullName || t('Користувач {{id}}', {id: receiver.id});
     };
 
     const fetchArrivals = async (pageToLoad, typeFilter = filterType) => {
@@ -103,16 +104,16 @@ const ArrivalList = () => {
     return (
         <div className={styles.arrivalList}>
             <ArrBack/>
-            <h2>Список надходжень</h2>
+            <h2>{t('Список надходжень')}</h2>
             <div className={styles.arrivalList__wrap}>
 
                 {/* верхній ряд – створення нових надходжень */}
                 <div className={styles.navBtnRow}>
                     <button onClick={navigateFabricArrival} className={`btnLight`}>
-                        <span>+Тканини</span>
+                        <span>{t('+Тканини')}</span>
                     </button>
                     <button onClick={navigateProductArrival} className={`btnLight`}>
-                        <span>+Готова продукція</span>
+                        <span>{t('+Готова продукція')}</span>
                     </button>
                 </div>
 
@@ -126,7 +127,7 @@ const ArrivalList = () => {
                         className={filterType === 'all' ? 'btnDark' : 'btnLight'}
                         onClick={() => handleFilterClick('all')}
                     >
-                        <span>Всі надходження</span>
+                        <span>{t('Всі надходження')}</span>
                     </button>
 
                     <button
@@ -134,7 +135,7 @@ const ArrivalList = () => {
                         className={filterType === 'fabric' ? 'btnDark' : 'btnLight'}
                         onClick={() => handleFilterClick('fabric')}
                     >
-                        <span>Надходження тканин</span>
+                        <span>{t('Надходження тканин')}</span>
                     </button>
 
                     <button
@@ -142,7 +143,7 @@ const ArrivalList = () => {
                         className={filterType === 'product' ? 'btnDark' : 'btnLight'}
                         onClick={() => handleFilterClick('product')}
                     >
-                        <span>Надходження товарів</span>
+                        <span>{t('Надходження товарів')}</span>
                     </button>
                 </div>
 
@@ -160,13 +161,13 @@ const ArrivalList = () => {
                                 <div className={styles.arrivalList__item} key={index}>
                                     <div className={styles.infoBlock}>
                                         <div className={styles.infoCol}>
-                                            <span className={styles.infoTitle}>Найменування</span>
+                                            <span className={styles.infoTitle}>{t('Найменування')}</span>
                                             <p>
-                                                Надходження{" "}
+                                                {t('Надходження')}{" "}
                                                 {type === 'product'
-                                                    ? 'товарів'
+                                                    ? t('товарів')
                                                     : type === 'fabric'
-                                                        ? 'тканин'
+                                                        ? t('тканин')
                                                         : ''}
                                                 {" "}№ {el?.id}
                                             </p>
@@ -178,27 +179,27 @@ const ArrivalList = () => {
                                         </div>
 
                                         <div className={styles.infoCol}>
-                                            <span className={styles.infoTitle}>Хто приймав</span>
+                                            <span className={styles.infoTitle}>{t('Хто приймав')}</span>
                                             <p>{getReceiverFullName(el?.receiver)}</p>
                                         </div>
 
                                         <div className={styles.infoCol}>
-                                            <span className={styles.infoTitle}>Постачальник</span>
+                                            <span className={styles.infoTitle}>{t('Постачальник')}</span>
                                             <p>{el?.vendor?.full_name || '-'}</p>
                                         </div>
 
                                         <div className={styles.infoCol}>
-                                            <span className={styles.infoTitle}>Сума, грн</span>
+                                            <span className={styles.infoTitle}>{t('Сума, грн')}</span>
                                             <p>{el?.uah_amount ?? '-'}</p>
                                         </div>
 
                                         <div className={styles.infoCol}>
-                                            <span className={styles.infoTitle}>Сума, $</span>
+                                            <span className={styles.infoTitle}>{t('Сума, $')}</span>
                                             <p>{el?.usd_amount ?? '-'}</p>
                                         </div>
 
                                         <div className={styles.infoCol}>
-                                            <span className={styles.infoTitle}>Дата надходження</span>
+                                            <span className={styles.infoTitle}>{t('Дата надходження')}</span>
                                             <p>{el?.arrival_date || '-'}</p>
                                         </div>
                                     </div>
@@ -209,14 +210,14 @@ const ArrivalList = () => {
                                             className={'btnLight'}
                                             onClick={() => type && readNavigate(el?.id, type)}
                                         >
-                                            <span>Перегляд</span>
+                                            <span>{t('Перегляд')}</span>
                                         </button>
                                         <button
                                             type="button"
                                             className={'btnDark'}
                                             onClick={() => type && pageNavigate(el?.id, type)}
                                         >
-                                            <span>Редагувати</span>
+                                            <span>{t('Редагувати')}</span>
                                         </button>
                                     </div>
                                 </div>
@@ -224,7 +225,7 @@ const ArrivalList = () => {
                         })
 
                     ) : (
-                        !isLoading && <p>Надходжень поки немає</p>
+                        !isLoading && <p>{t('Надходжень поки немає')}</p>
                     )
                 }
             </div>

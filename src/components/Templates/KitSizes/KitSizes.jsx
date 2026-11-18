@@ -32,6 +32,7 @@ import { useStickyXScroll } from "../../../hooks/useStickyXScroll.jsx";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../../i18n';
 
 const MAX_NAME_LENGTH = 100;
 const MAX_SHORT_NAME_LENGTH = 10;
@@ -230,14 +231,14 @@ const KitSizes = () => {
         const nameKey = mode === "create" ? "createName" : "editName";
         const shortKey = mode === "create" ? "createShort" : "editShort";
 
-        if (!nameTrimmed) errors[nameKey] = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors[nameKey] = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > MAX_NAME_LENGTH) {
-            errors[nameKey] = { message: "Назва має бути не більше 100 символів" };
+            errors[nameKey] = { message: t('Назва має бути не більше 100 символів') };
         }
 
-        if (!shortTrimmed) errors[shortKey] = { message: "Вкажіть коротку назву" };
+        if (!shortTrimmed) errors[shortKey] = { message: t('Вкажіть коротку назву') };
         if (shortTrimmed.length > MAX_SHORT_NAME_LENGTH) {
-            errors[shortKey] = { message: "Коротка назва має бути не більше 10 символів" };
+            errors[shortKey] = { message: t('Коротка назва має бути не більше 10 символів') };
         }
 
         return errors;
@@ -261,7 +262,7 @@ const KitSizes = () => {
             closeCreatePopup();
         } catch (e) {
             console.error("Failed to create kit size:", e);
-            window.alert("Не вдалося створити. Спробуй ще раз.");
+            window.alert(t('Не вдалося створити. Спробуй ще раз.'));
         }
     };
 
@@ -289,7 +290,7 @@ const KitSizes = () => {
             closeEditPopup();
         } catch (e) {
             console.error("Failed to edit kit size:", e);
-            window.alert("Не вдалося зберегти. Спробуй ще раз.");
+            window.alert(t('Не вдалося зберегти. Спробуй ще раз.'));
         }
     };
 
@@ -329,8 +330,8 @@ const KitSizes = () => {
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "90px" },
-            { key: "name", title: "Назва", width: "1.7fr", render: (_, row) => <LimitedCell value={row.name} />, },
-            { key: "short_name", title: "Коротка назва", width: "1fr", render: (_, row) => <LimitedCell value={row.short_name} />, },
+            { key: "name", title: t('Назва'), width: "1.7fr", render: (_, row) => <LimitedCell value={row.name} />, },
+            { key: "short_name", title: t('Коротка назва'), width: "1fr", render: (_, row) => <LimitedCell value={row.short_name} />, },
             {
                 key: "actions",
                 title: "",
@@ -338,10 +339,10 @@ const KitSizes = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => openDeletePopup(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -376,7 +377,7 @@ const KitSizes = () => {
         <div className={styles.wrapper}>
             <ArrBack />
             <SearchFilter
-                title="Розміри комплектів"
+                title={t('Розміри комплектів')}
                 onOpenFilter={() => setIsShowFilter(true)}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -388,7 +389,7 @@ const KitSizes = () => {
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати розмір</span>
+                    <span>{t('Додати розмір')}</span>
                 </button>
             </div>
 
@@ -444,13 +445,13 @@ const KitSizes = () => {
 
             {/* CREATE */}
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання розміру" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання розміру')} onClose={closeCreatePopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_NAME_LENGTH,
@@ -465,8 +466,8 @@ const KitSizes = () => {
                         <InputBox
                             errors={createErrors}
                             name="createShort"
-                            label={<OptionLimitLabel text="Коротка назва" maxLength={MAX_SHORT_NAME_LENGTH} />}
-                            placeholder="Коротка назва"
+                            label={<OptionLimitLabel text={t('Коротка назва')} maxLength={MAX_SHORT_NAME_LENGTH} />}
+                            placeholder={t('Коротка назва')}
                             options={{
                                 value: createForm.short_name,
                                 maxLength: MAX_SHORT_NAME_LENGTH,
@@ -478,7 +479,7 @@ const KitSizes = () => {
                             }}
                         />
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -486,13 +487,13 @@ const KitSizes = () => {
 
             {/* EDIT */}
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування розміру" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування розміру')} onClose={closeEditPopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_NAME_LENGTH,
@@ -507,8 +508,8 @@ const KitSizes = () => {
                         <InputBox
                             errors={editErrors}
                             name="editShort"
-                            label={<OptionLimitLabel text="Коротка назва" maxLength={MAX_SHORT_NAME_LENGTH} />}
-                            placeholder="Коротка назва"
+                            label={<OptionLimitLabel text={t('Коротка назва')} maxLength={MAX_SHORT_NAME_LENGTH} />}
+                            placeholder={t('Коротка назва')}
                             options={{
                                 value: editForm.short_name,
                                 maxLength: MAX_SHORT_NAME_LENGTH,
@@ -521,14 +522,14 @@ const KitSizes = () => {
                         />
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title="Видалення розміру"
+                    title={t('Видалення розміру')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -541,7 +542,7 @@ const KitSizes = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити розмір?
+                            {t('Ви дійсно бажаєте видалити розмір?')}
                         </h3>
 
                         <button
@@ -551,7 +552,7 @@ const KitSizes = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -561,7 +562,7 @@ const KitSizes = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

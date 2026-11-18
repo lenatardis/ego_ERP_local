@@ -10,13 +10,14 @@ import * as Yup from "yup";
 import Preloader from "../../../Common/Preloader/Preloader.jsx";
 import { useNavigate } from "react-router-dom";
 import ArrBack from "../../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../../i18n';
 
 /* Yup: обов'язкові поля name, type */
 const schema = Yup.object({
-    name: Yup.string().trim().max(50, 'До 50 символів').required("Вкажіть назву"),
+    name: Yup.string().trim().max(50, t('До 50 символів')).required(t('Вкажіть назву')),
     type: Yup.number()
         .transform(v => (isNaN(v) ? undefined : v))
-        .integer().positive('Оберіть тип').required('Оберіть категорію')
+        .integer().positive(t('Оберіть тип')).required(t('Оберіть категорію'))
 });
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -64,9 +65,9 @@ const NewProduct = ({
                 const resp = await fetchProductProperties(token);
 
                 if (Array.isArray(resp?.categories)) {
-                    setCategoryOptions(resp.categories.map(t => ({
-                        name: t.name,
-                        value: t.id,
+                    setCategoryOptions(resp.categories.map(tp => ({
+                        name: tp.name,
+                        value: tp.id,
                     })));
                 } else {
                     setCategoryOptions([]);
@@ -133,7 +134,7 @@ const NewProduct = ({
         });
 
         if (rejectedNames.length) {
-            setPhotoError(`Ці файли перевищують 10 МБ: ${rejectedNames.join(', ')}`);
+            setPhotoError(t('Ці файли перевищують 10 МБ: {{rejectedNames}}', {rejectedNames: rejectedNames.join(', ')}));
         }
 
         if (!validFiles.length) {
@@ -237,7 +238,7 @@ const NewProduct = ({
             if (e?.code === 'PRODUCT_ALREADY_EXISTS') {
                 setExistingProductError(true);
             } else {
-                setBannerMsg('Вибачте, здається, щось пішло не так. Повторіть, будь ласка, спробу пізніше.');
+                setBannerMsg(t('Вибачте, здається, щось пішло не так. Повторіть, будь ласка, спробу пізніше.'));
             }
         } finally {
             setIsLoading(false);
@@ -260,14 +261,14 @@ const NewProduct = ({
             )}
 
             <div className={styles.titleBlock}>
-                <h2>{popupMode ? 'Створення нового товару' : 'Створення нового товару'}</h2>
+                <h2>{popupMode ? t('Створення нового товару') : t('Створення нового товару')}</h2>
                 <button
                     type={popupMode ? "button" : "submit"}
                     className={'btnDark'}
                     disabled={isLoading || alreadyExists}
                     onClick={popupMode ? formSubmit : undefined}
                 >
-                    <span>Зберегти</span>
+                    <span>{t('Зберегти')}</span>
                 </button>
             </div>
 
@@ -278,7 +279,7 @@ const NewProduct = ({
                     <InputBox
                         errors={errors}
                         name="name"
-                        placeholder="Ім'я"
+                        placeholder={t('Ім\'я')}
                         type="text"
                         options={{ ...register('name') }}
                     />
@@ -291,7 +292,7 @@ const NewProduct = ({
                                 <>
                                     <WhiteCustomSelect
                                         height="36px"
-                                        label="Оберіть категорію"
+                                        label={t('Оберіть категорію')}
                                         value={field.value}
                                         onChange={(e) => {
                                             field.onChange(e.target.value);
@@ -322,15 +323,15 @@ const NewProduct = ({
                                                 type="button"
                                                 className={styles.removePhotoBtn}
                                                 onClick={() => onRemovePhoto(item.id)}
-                                                aria-label="Видалити фото"
-                                                title="Видалити фото"
+                                                aria-label={t('Видалити фото')}
+                                                title={t('Видалити фото')}
                                             >
                                                 ×
                                             </button>
                                             <img
                                                 src={item.preview}
                                                 className={styles.photo}
-                                                alt="Фото продукту"
+                                                alt={t('Фото продукту')}
                                             />
                                         </div>
                                     ))}
@@ -358,12 +359,12 @@ const NewProduct = ({
                                         onClick={onAddPhotoClick}
                                         disabled={isLoading}
                                     >
-                                        <span>Додати фото</span>
+                                        <span>{t('Додати фото')}</span>
                                     </button>
                                 </div>
 
-                                <p className={styles.uploadHint}>* Можна обрати декілька файлів</p>
-                                <p className={styles.uploadHint}>* Максимум 10 МБ на 1 файл</p>
+                                <p className={styles.uploadHint}>{t('* Можна обрати декілька файлів')}</p>
+                                <p className={styles.uploadHint}>{t('* Максимум 10 МБ на 1 файл')}</p>
                             </div>
 
                             <button
@@ -372,7 +373,7 @@ const NewProduct = ({
                                 onClick={onRemoveAllPhotos}
                                 disabled={!photoPreviews.length}
                             >
-                                <span>Видалити всі фото</span>
+                                <span>{t('Видалити всі фото')}</span>
                             </button>
                         </div>
                     </div>

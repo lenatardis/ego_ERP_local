@@ -30,6 +30,7 @@ import { getAccessToken } from "../../api/authStorage.js";
 import { useAppDispatch } from "../../hooks/redux.jsx";
 import { setIsActivePopup } from "../../store/main-slice.js";
 import CustomLoadSelect from "../Common/CustomLoadSelect/CustomLoadSelect.jsx";
+import { t } from '../../i18n';
 
 /* helpers */
 const mapApiTemplateToRow = (item) => {
@@ -76,9 +77,9 @@ const CreateCustomOptions = () => {
 
 
     const isDeletedOptions = [
-        { name: "Всі", value: "" },
-        { name: "Активні", value: "false" },
-        { name: "Видалені", value: "true" },
+        { name: t('Всі'), value: "" },
+        { name: t('Активні'), value: "false" },
+        { name: t('Видалені'), value: "true" },
     ];
 
 
@@ -100,7 +101,7 @@ const CreateCustomOptions = () => {
         const totalPages = Number(data?.total_pages) || 1;
 
         return {
-            options: list.map((t) => ({ value: t.id, name: t.name ?? "" })),
+            options: list.map((tp) => ({ value: tp.id, name: tp.name ?? "" })),
             totalPages,
         };
     }, []);
@@ -295,8 +296,8 @@ const CreateCustomOptions = () => {
         const nameTrimmed = createForm.name.trim();
         const typeId = createForm.typeId;
 
-        if (!nameTrimmed) errors.createName = { message: "Вкажіть назву" };
-        if (!typeId) errors.createType = { message: "Оберіть тип" };
+        if (!nameTrimmed) errors.createName = { message: t('Вкажіть назву') };
+        if (!typeId) errors.createType = { message: t('Оберіть тип') };
 
         if (Object.keys(errors).length > 0) {
             setCreateErrors(errors);
@@ -413,8 +414,8 @@ const CreateCustomOptions = () => {
         const nameTrimmed = editForm.name.trim();
         const typeId = editForm.typeId;
 
-        if (!nameTrimmed) errors.editName = { message: "Вкажіть назву" };
-        if (!typeId) errors.editType = { message: "Оберіть тип" };
+        if (!nameTrimmed) errors.editName = { message: t('Вкажіть назву') };
+        if (!typeId) errors.editType = { message: t('Оберіть тип') };
 
         if (Object.keys(errors).length > 0) {
             setEditErrors(errors);
@@ -444,7 +445,7 @@ const CreateCustomOptions = () => {
     const handleDelete = async (row) => {
         if (!row?.id) return;
 
-        const ok = window.confirm("Ви дійсно бажаєте видалити опцію компонентів?");
+        const ok = window.confirm(t('Ви дійсно бажаєте видалити опцію компонентів?'));
         if (!ok) return;
 
         try {
@@ -454,7 +455,7 @@ const CreateCustomOptions = () => {
             updateRows((prev) => prev.filter((r) => r.id !== row.id));
         } catch (e) {
             console.error("Failed to delete component option template:", e);
-            window.alert("Не вдалося видалити. Спробуй ще раз.");
+            window.alert(t('Не вдалося видалити. Спробуй ще раз.'));
         }
     };
 
@@ -475,20 +476,20 @@ const CreateCustomOptions = () => {
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "60px" },
-            { key: "name", title: "Назва" },
+            { key: "name", title: t('Назва') },
             {
                 key: "description",
-                title: "Опис",
+                title: t('Опис'),
                 render: (_, row) => (row.description?.trim() ? row.description : "-"),
             },
             {
                 key: "typeName",
-                title: "Тип",
+                title: t('Тип'),
                 render: (_, row) => row.typeName || "-",
             },
             {
                 key: "partsLabel",
-                title: "Частини",
+                title: t('Частини'),
                 render: (_, row) => row.partsLabel || "-",
             },
             {
@@ -498,10 +499,10 @@ const CreateCustomOptions = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => handleDelete(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -525,12 +526,12 @@ const CreateCustomOptions = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 onSearch={handleSearch}
-                title="Опції компонентів"
+                title={t('Опції компонентів')}
             />
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати опцію компонентів</span>
+                    <span>{t('Додати опцію компонентів')}</span>
                 </button>
             </div>
 
@@ -553,17 +554,17 @@ const CreateCustomOptions = () => {
 
             <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <CustomSelect
-                    label="Статус"
+                    label={t('Статус')}
                     value={filters.is_deleted}
                     onChange={handleIsDeletedChange}
                     options={isDeletedOptions}
                 />
                 <CustomLoadSelect
-                    label="Тип"
+                    label={t('Тип')}
                     value={filters.type_id}
                     onChange={handleTypeChange}
                     fetchPage={fetchTypePage}
-                    prependOptions={[{ name: "Всі", value: "" }]} // якщо треба "Всі"
+                    prependOptions={[{ name: t('Всі'), value: "" }]} // якщо треба "Всі"
                 />
             </Filter>
             <PopupCloser isShow={isShowFilter} onClose={onCloseFilter} />
@@ -584,13 +585,13 @@ const CreateCustomOptions = () => {
 
             {/* CREATE */}
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання опції компонентів" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання опції компонентів')} onClose={closeCreatePopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label="Назва"
-                            placeholder="Назва опції"
+                            label={t('Назва')}
+                            placeholder={t('Назва опції')}
                             options={{
                                 value: createForm.name,
                                 onChange: (e) => {
@@ -603,14 +604,14 @@ const CreateCustomOptions = () => {
 
                         <div className={styles.textareaBox}>
                             <label className={styles.textareaLabel} htmlFor="createDescription">
-                                Опис
+                                {t('Опис')}
                             </label>
                             <textarea
                                 id="createDescription"
                                 className={`${styles.textarea} ${
                                     createErrors.createDescription ? styles.textareaError : ""
                                 }`}
-                                placeholder="Опис опції"
+                                placeholder={t('Опис опції')}
                                 value={createForm.description}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -625,7 +626,7 @@ const CreateCustomOptions = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={createForm.typeId}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -641,12 +642,12 @@ const CreateCustomOptions = () => {
                         </div>
 
                         <div>
-                            <p style={{ margin: "0 0 8px 0" }}>Оберіть частини опції:</p>
+                            <p style={{ margin: "0 0 8px 0" }}>{t('Оберіть частини опції:')}</p>
 
-                            {isPartsLoading && <div className={styles.helperText}>Завантаження частин…</div>}
+                            {isPartsLoading && <div className={styles.helperText}>{t('Завантаження частин…')}</div>}
 
                             {!isPartsLoading && optionParts.length === 0 && (
-                                <div className={styles.helperText}>Немає доступних частин</div>
+                                <div className={styles.helperText}>{t('Немає доступних частин')}</div>
                             )}
 
                             {renderSelectedParts(createForm.partIds)}
@@ -679,7 +680,7 @@ const CreateCustomOptions = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -687,13 +688,13 @@ const CreateCustomOptions = () => {
 
             {/* EDIT */}
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування опції компонентів" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування опції компонентів')} onClose={closeEditPopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label="Назва"
-                            placeholder="Назва опції"
+                            label={t('Назва')}
+                            placeholder={t('Назва опції')}
                             options={{
                                 value: editForm.name,
                                 onChange: (e) => {
@@ -706,14 +707,14 @@ const CreateCustomOptions = () => {
 
                         <div className={styles.textareaBox}>
                             <label className={styles.textareaLabel} htmlFor="editDescription">
-                                Опис
+                                {t('Опис')}
                             </label>
                             <textarea
                                 id="editDescription"
                                 className={`${styles.textarea} ${
                                     editErrors.editDescription ? styles.textareaError : ""
                                 }`}
-                                placeholder="Опис опції"
+                                placeholder={t('Опис опції')}
                                 value={editForm.description}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -728,7 +729,7 @@ const CreateCustomOptions = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={editForm.typeId}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -744,12 +745,12 @@ const CreateCustomOptions = () => {
                         </div>
 
                         <div>
-                            <p style={{ margin: "0 0 8px 0" }}>Оберіть частини опції:</p>
+                            <p style={{ margin: "0 0 8px 0" }}>{t('Оберіть частини опції:')}</p>
 
-                            {isPartsLoading && <div className={styles.helperText}>Завантаження частин…</div>}
+                            {isPartsLoading && <div className={styles.helperText}>{t('Завантаження частин…')}</div>}
 
                             {!isPartsLoading && optionParts.length === 0 && (
-                                <div className={styles.helperText}>Немає доступних частин</div>
+                                <div className={styles.helperText}>{t('Немає доступних частин')}</div>
                             )}
 
                             {renderSelectedParts(editForm.partIds)}
@@ -782,7 +783,7 @@ const CreateCustomOptions = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>

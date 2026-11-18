@@ -2,14 +2,15 @@
 import React, { useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styles from "./TabLinks.module.scss";
+import { t } from '../../../i18n';
 
 const OptionsInnerTabs = ({ preventSameRouteNav = true, className = "" }) => {
     const location = useLocation();
 
     const links = useMemo(
         () => [
-            { key: "componentOptions", label: "Опції компонентів", to: "/componentOptions", end: true },
-            { key: "kitOptions", label: "Опції комплектів", to: "/kitOptions" },
+            { key: "componentOptions", label: t('Опції компонентів'), to: "/componentOptions", end: true },
+            { key: "kitOptions", label: t('Опції комплектів'), to: "/kitOptions" },
         ],
         []
     );

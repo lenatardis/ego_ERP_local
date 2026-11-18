@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from '../Order.module.scss';
+import { t } from '../../../i18n';
 
 const Clock = () => {
     const [time, setTime] = useState(new Date());
@@ -15,17 +16,17 @@ const Clock = () => {
         <div className={styles.currentTimeRow}>
             <div>
                 <div className={styles.timeCell}><span>{pad(time.getHours())}</span></div>
-                <p>Годин</p>
+                <p>{t('Годин')}</p>
             </div>
             <span>&#58;</span>
             <div>
                 <div className={styles.timeCell}><span>{pad(time.getMinutes())}</span></div>
-                <p>Хвилин</p>
+                <p>{t('Хвилин')}</p>
             </div>
             <span>&#58;</span>
             <div>
                 <div className={styles.timeCell}><span>{pad(time.getSeconds())}</span></div>
-                <p>Секунд</p>
+                <p>{t('Секунд')}</p>
             </div>
         </div>
     );

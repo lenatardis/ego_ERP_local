@@ -5,6 +5,8 @@ import { DEMO_PRICELISTS, DEMO_SOURCES } from '../data/pricelists';
 import { priceCountFor } from './prices';
 import { toIso } from '../data/vendors';
 import { loadSharedOrders } from '../data/crmShared';
+import i18n, { t } from '../../i18n';
+import { localizeCatalogText } from '../shared/catalog/en';
 
 // Response shapes follow the original API, as consumed by Pricelist.jsx, Sources.jsx and NewPrices.jsx:
 //   GET    /warehouses/prices-lists/       -> { prices_lists, total_count, total_pages, current_page }
@@ -37,7 +39,8 @@ const findActivePricelist = (id) => pricelists().find((p) => p.id === Number(id)
 const findActiveSource = (list, id) => list.find((s) => s.id === Number(id) && !s.deleted_at);
 
 const newestFirst = (a, b) => b.created.localeCompare(a.created) || b.id - a.id;
-const includesText = (value, search) => String(value ?? '').toLowerCase().includes(search);
+// English version: catalog names match in English too ("wholesale" finds Оптовий)
+const includesText = (value, search) => String(localizeCatalogText(String(value ?? '')) + ' ' + String(value ?? '')).toLowerCase().includes(search);
 
 const serializePricelist = (pl) => ({
     id: pl.id,
@@ -105,10 +108,11 @@ const validateSource = (payload) => {
 };
 
 const ordersWord = (n) => {
+    if (i18n.language === 'en') return n === 1 ? 'order' : 'orders';
     const mod10 = n % 10;
     const mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return 'замовленні';
-    return 'замовленнях';
+    if (mod10 === 1 && mod100 !== 11) return t('замовленні');
+    return t('замовленнях');
 };
 
 export const pricelistHandlers = [
@@ -268,8 +272,9 @@ export const pricelistHandlers = [
         if (ordersCount > 0 && !ignoreWarning) {
             return badRequest({
                 error:
-                    `Джерело «${source.name}» вказане в ${ordersCount} ${ordersWord(ordersCount)}.\\n` +
-                    'Ви дійсно хочете його видалити? Існуючі замовлення збережуть джерело.',
+                    t('Джерело «{{name}}» вказане в {{count}} {{orders}}.', {name: source.name, count: ordersCount, orders: ordersWord(ordersCount)}) +
+                    '\\n' +
+                    t('Ви дійсно хочете його видалити? Існуючі замовлення збережуть джерело.'),
             });
         }
 

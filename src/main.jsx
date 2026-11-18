@@ -1,3 +1,6 @@
+// Demo build (2026-11-18): first – the components' module-level t() calls (status maps, filter options,
+// table columns, form schemas) run on import and need the language already set
+import './i18n';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {Provider} from 'react-redux';

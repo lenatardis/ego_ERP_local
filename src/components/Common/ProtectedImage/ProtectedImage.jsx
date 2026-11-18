@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { t } from '../../../i18n';
 
 const ProtectedImage = ({
     src,
@@ -6,7 +7,7 @@ const ProtectedImage = ({
     token,
     className,
     fallbackClassName,
-    fallbackText = "Немає фото",
+    fallbackText = t('Немає фото'),
 }) => {
     const [mode, setMode] = useState("src"); // "src" | "blob" | "fallback"
     const [blobUrl, setBlobUrl] = useState("");
@@ -102,7 +103,7 @@ const ProtectedImage = ({
 
     if (mode === "blob") {
         if (isBlobLoading && !blobUrl) {
-            return <div className={fallbackClassName}>Завантаження...</div>;
+            return <div className={fallbackClassName}>{t('Завантаження...')}</div>;
         }
 
         if (blobUrl) {

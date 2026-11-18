@@ -5,6 +5,7 @@ import { C, col } from './calculatorTemplates';
 import { DEMO_PRODUCTS } from '../data/products';
 import { DEMO_PRICELISTS, PRICE_COUNT_KEYS } from '../data/pricelists';
 import { DEMO_PRICES, DEMO_COST_PRICES, ARRIVAL_COSTS, LATE_PRICE_IDS, ownerKey } from '../data/prices';
+import { localizeCatalogText } from '../shared/catalog/en';
 
 // Response shapes follow the original API, as consumed by NewPrices.jsx:
 //   GET    /warehouses/prices/items/?is_warehouse_item_type|is_kit|is_kit_option|is_kit_component|
@@ -259,7 +260,8 @@ export const priceHandlers = [
         const filtered = OWNERS[owner].rows()
             .map((row) => ({ row, rowPrices: ownerPrices(owner, row.id, activeIds) }))
             .filter(({ row, rowPrices }) => {
-                if (name && !row.name.includes(name)) return false;
+                // English version: the English catalog name matches too (same case rule)
+                if (name && !row.name.includes(name) && !localizeCatalogText(row.name).includes(name)) return false;
                 if (hasPrice !== undefined && (rowPrices.length > 0) !== hasPrice) return false;
                 if (pricesListId != null && !rowPrices.some((p) => p.prices_list_id === pricesListId)) return false;
                 return true;

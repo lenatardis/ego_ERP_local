@@ -1,5 +1,6 @@
 import { getRefreshToken, getAccessToken, setTokens, removeTokens } from './authStorage';
 import { setAuth } from '../store/account-slice';
+import { t } from '../i18n';
 
 // Demo mode: the original backend is unavailable; same-origin paths are answered by the mock backend (src/mocks, MSW)
 const API_BASE_URL = '/admin_panel/api/v1';
@@ -128,21 +129,21 @@ export const loginUser = async (username, password) => {
 
             const passwordErrorMessages = {
                 'This field may not be null.':
-                    'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру',
+                    t('Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру'),
                 'This field may not be blank.':
-                    'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру',
+                    t('Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру'),
             };
 
             if (passwordError === 'Password must be at least 10 characters long with at least one capital letter and one digit') {
                 return {
                     field: 'credentials',
-                    error: 'Логін чи пароль невірні',
+                    error: t('Логін чи пароль невірні'),
                 };
             }
 
             return {
                 field: 'password',
-                error: passwordErrorMessages[passwordError] || passwordError || 'Логін чи пароль невірні',
+                error: passwordErrorMessages[passwordError] || passwordError || t('Логін чи пароль невірні'),
             };
         }
 
@@ -155,8 +156,8 @@ export const loginUser = async (username, password) => {
                 field: 'credentials',
                 error:
                     userError === 'Username or Password is incorrect'
-                        ? 'Логін чи пароль невірні'
-                        : userError || 'Логін чи пароль невірні',
+                        ? t('Логін чи пароль невірні')
+                        : userError || t('Логін чи пароль невірні'),
             };
         }
 
@@ -166,7 +167,7 @@ export const loginUser = async (username, password) => {
 
         return data;
     } catch (e) {
-        return { error: 'Сервер недоступний' };
+        return { error: t('Сервер недоступний') };
     }
 };
 

@@ -21,6 +21,7 @@ import BinIcon from "../../../assets/icons/bin.svg";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../../i18n';
 
 const ITEMS_PER_PAGE = 25;
 const MAX_VENDOR_FULL_NAME_LENGTH = 60;
@@ -73,19 +74,19 @@ const ActionButtons = ({ row, onEdit, onDelete }) => {
       <button
         type="button"
         style={btnStyle}
-        title="Редагувати"
+        title={t('Редагувати')}
         onClick={() => onEdit(row)}
       >
-        <img src={EditIcon} alt="Редагувати" style={iconStyle} />
+        <img src={EditIcon} alt={t('Редагувати')} style={iconStyle} />
       </button>
 
       <button
         type="button"
         style={btnStyle}
-        title="Видалити"
+        title={t('Видалити')}
         onClick={() => onDelete(row)}
       >
-        <img src={BinIcon} alt="Видалити" style={iconStyle} />
+        <img src={BinIcon} alt={t('Видалити')} style={iconStyle} />
       </button>
     </div>
   );
@@ -301,26 +302,26 @@ const VendorManagement = () => {
     const phone = form.phone?.trim() || "";
 
     if (!fullName) {
-      errors[`${mode}FullName`] = { message: "Вкажіть ПІБ постачальника" };
+      errors[`${mode}FullName`] = { message: t('Вкажіть ПІБ постачальника') };
     }
     if (fullName.length > MAX_VENDOR_FULL_NAME_LENGTH) {
-      errors[`${mode}FullName`] = { message: "ПІБ має бути не більше 60 символів" };
+      errors[`${mode}FullName`] = { message: t('ПІБ має бути не більше 60 символів') };
     }
 
     if (!phone) {
-      errors[`${mode}Phone`] = { message: "Вкажіть телефон" };
+      errors[`${mode}Phone`] = { message: t('Вкажіть телефон') };
     }
 
     if (phone.length > MAX_VENDOR_PHONE_LENGTH) {
-      errors[`${mode}Phone`] = { message: "Телефон має бути не більше 20 символів" };
+      errors[`${mode}Phone`] = { message: t('Телефон має бути не більше 20 символів') };
     }
 
     if (email.length > MAX_VENDOR_EMAIL_LENGTH) {
-      errors[`${mode}Email`] = { message: "Пошта має бути не більше 50 символів" };
+      errors[`${mode}Email`] = { message: t('Пошта має бути не більше 50 символів') };
     }
 
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors[`${mode}Email`] = { message: "Вкажіть коректну пошту" };
+      errors[`${mode}Email`] = { message: t('Вкажіть коректну пошту') };
     }
 
     return errors;
@@ -435,25 +436,25 @@ const VendorManagement = () => {
   const columns = useMemo(() => [
     {
       key: "full_name",
-      title: "ПІБ",
+      title: t('ПІБ'),
       width: "1.4fr",
       render: (val) => <LimitedCell value={val} />,
     },
     {
       key: "email",
-      title: "Пошта",
+      title: t('Пошта'),
       width: "1.3fr",
       render: (val) => <LimitedCell value={val} />,
     },
     {
       key: "phone",
-      title: "Телефон",
+      title: t('Телефон'),
       width: "1fr",
       render: (val) => <LimitedCell value={val} />,
     },
     {
       key: "actions",
-      title: "Дії",
+      title: t('Дії'),
       width: "0.8fr",
       render: (_, row) => (
         <ActionButtons
@@ -484,7 +485,7 @@ const VendorManagement = () => {
       <ArrBack />
       <SearchFilter
         onOpenFilter={() => { }}
-        title="Постачальники"
+        title={t('Постачальники')}
         searchValue={filterParams.search}
         setSearchValue={(value) =>
           setFilterParams((prev) => ({ ...prev, search: value }))
@@ -544,15 +545,15 @@ const VendorManagement = () => {
 
       {isCreatePopupOpen && (
         <CentralPopup
-          title="Додавання постачальника"
+          title={t('Додавання постачальника')}
           onClose={closeCreatePopup}
         >
           <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
             <InputBox
               errors={createErrors}
               name="createFullName"
-              label={<OptionLimitLabel text="ПІБ" maxLength={MAX_VENDOR_FULL_NAME_LENGTH} />}
-              placeholder="Введіть ПІБ постачальника"
+              label={<OptionLimitLabel text={t('ПІБ')} maxLength={MAX_VENDOR_FULL_NAME_LENGTH} />}
+              placeholder={t('Введіть ПІБ постачальника')}
               options={{
                 value: createForm.full_name,
                 maxLength: MAX_VENDOR_FULL_NAME_LENGTH,
@@ -567,8 +568,8 @@ const VendorManagement = () => {
             <InputBox
               errors={createErrors}
               name="createEmail"
-              label={<OptionLimitLabel text="Пошта" maxLength={MAX_VENDOR_EMAIL_LENGTH} />}
-              placeholder="Введіть пошту"
+              label={<OptionLimitLabel text={t('Пошта')} maxLength={MAX_VENDOR_EMAIL_LENGTH} />}
+              placeholder={t('Введіть пошту')}
               options={{
                 value: createForm.email,
                 maxLength: MAX_VENDOR_EMAIL_LENGTH,
@@ -583,8 +584,8 @@ const VendorManagement = () => {
             <InputBox
               errors={createErrors}
               name="createPhone"
-              label={<OptionLimitLabel text="Телефон" maxLength={MAX_VENDOR_PHONE_LENGTH} />}
-              placeholder="Введіть телефон"
+              label={<OptionLimitLabel text={t('Телефон')} maxLength={MAX_VENDOR_PHONE_LENGTH} />}
+              placeholder={t('Введіть телефон')}
               options={{
                 value: createForm.phone,
                 maxLength: MAX_VENDOR_PHONE_LENGTH,
@@ -600,7 +601,7 @@ const VendorManagement = () => {
               className="btnDark"
               onClick={handleCreateVendor}
             >
-              <span>Додати</span>
+              <span>{t('Додати')}</span>
             </button>
           </div>
         </CentralPopup>
@@ -608,15 +609,15 @@ const VendorManagement = () => {
 
       {isEditPopupOpen && (
         <CentralPopup
-          title="Редагування постачальника"
+          title={t('Редагування постачальника')}
           onClose={closeEditPopup}
         >
           <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
             <InputBox
               errors={editErrors}
               name="editFullName"
-              label={<OptionLimitLabel text="ПІБ" maxLength={MAX_VENDOR_FULL_NAME_LENGTH} />}
-              placeholder="Введіть ПІБ постачальника"
+              label={<OptionLimitLabel text={t('ПІБ')} maxLength={MAX_VENDOR_FULL_NAME_LENGTH} />}
+              placeholder={t('Введіть ПІБ постачальника')}
               options={{
                 value: editForm.full_name,
                 maxLength: MAX_VENDOR_FULL_NAME_LENGTH,
@@ -631,8 +632,8 @@ const VendorManagement = () => {
             <InputBox
               errors={editErrors}
               name="editEmail"
-              label={<OptionLimitLabel text="Пошта" maxLength={MAX_VENDOR_EMAIL_LENGTH} />}
-              placeholder="Введіть пошту"
+              label={<OptionLimitLabel text={t('Пошта')} maxLength={MAX_VENDOR_EMAIL_LENGTH} />}
+              placeholder={t('Введіть пошту')}
               options={{
                 value: editForm.email,
                 maxLength: MAX_VENDOR_EMAIL_LENGTH,
@@ -647,8 +648,8 @@ const VendorManagement = () => {
             <InputBox
               errors={editErrors}
               name="editPhone"
-              label={<OptionLimitLabel text="Телефон" maxLength={MAX_VENDOR_PHONE_LENGTH} />}
-              placeholder="Введіть телефон"
+              label={<OptionLimitLabel text={t('Телефон')} maxLength={MAX_VENDOR_PHONE_LENGTH} />}
+              placeholder={t('Введіть телефон')}
               options={{
                 value: editForm.phone,
                 maxLength: MAX_VENDOR_PHONE_LENGTH,
@@ -665,7 +666,7 @@ const VendorManagement = () => {
               className="btnDark"
               onClick={handleEditVendor}
             >
-              <span>Редагувати</span>
+              <span>{t('Редагувати')}</span>
             </button>
           </div>
         </CentralPopup>
@@ -673,7 +674,7 @@ const VendorManagement = () => {
 
       {isDeletePopupOpen && (
         <CentralPopup
-          title="Видалення постачальника"
+          title={t('Видалення постачальника')}
           onClose={closeDeletePopup}
         >
           <div
@@ -686,7 +687,7 @@ const VendorManagement = () => {
             }}
           >
             <h3 style={{ paddingBottom: 0 }}>
-              Ви дійсно бажаєте видалити постачальника?
+              {t('Ви дійсно бажаєте видалити постачальника?')}
             </h3>
 
             <button
@@ -695,7 +696,7 @@ const VendorManagement = () => {
               style={{ width: "200px" }}
               onClick={handleDeleteVendor}
             >
-              <span>Видалити</span>
+              <span>{t('Видалити')}</span>
             </button>
 
             <button
@@ -704,7 +705,7 @@ const VendorManagement = () => {
               style={{ width: "200px" }}
               onClick={closeDeletePopup}
             >
-              <span>Скасувати</span>
+              <span>{t('Скасувати')}</span>
             </button>
           </div>
         </CentralPopup>

@@ -6,6 +6,7 @@ import {
     fetchFabricRollsForProduction,
     searchWarehouseFabrics,
 } from "../../../api/ordersApi";
+import { t } from '../../../i18n';
 
 const normalizeFabricsList = (response) => {
     if (Array.isArray(response)) return response;
@@ -30,7 +31,7 @@ const getFabricLabel = (fabric) => {
         fabric?.fabric_code ||
         fabric?.code ||
         fabric?.article ||
-        `Тканина #${fabric?.id}`
+        t('Тканина #{{id}}', {id: fabric?.id})
     );
 };
 
@@ -73,10 +74,10 @@ const getRollLabel = (roll) => {
     const availableLength = getRollAvailableLength(roll);
 
     if (availableLength !== "") {
-        return `Склад "${warehouseName}" / Стелаж "${rackName}" / Комірка № ${cellNumber} / Доступно ${availableLength} метрів`;
+        return t('Склад "{{warehouseName}}" / Стелаж "{{rackName}}" / Комірка № {{cellNumber}} / Доступно {{availableLength}} метрів', {warehouseName, rackName, cellNumber, availableLength});
     }
 
-    return `Склад "${warehouseName}" / Стелаж "${rackName}" / Комірка № ${cellNumber}`;
+    return t('Склад "{{warehouseName}}" / Стелаж "{{rackName}}" / Комірка № {{cellNumber}}', {warehouseName, rackName, cellNumber});
 };
 
 const CutterFabricPopup = ({
@@ -112,14 +113,14 @@ const CutterFabricPopup = ({
         const value = Number(usedLength);
 
         if (!Number.isFinite(value) || value < 1) {
-            return `Не доступна довжина рулона, доступно ${selectedRollAvailableLength}м`;
+            return t('Не доступна довжина рулона, доступно {{selectedRollAvailableLength}}м', {selectedRollAvailableLength});
         }
 
         if (
             selectedRollAvailableLength !== null &&
             value > selectedRollAvailableLength
         ) {
-            return `Не доступна довжина рулона, доступно ${selectedRollAvailableLength}м`;
+            return t('Не доступна довжина рулона, доступно {{selectedRollAvailableLength}}м', {selectedRollAvailableLength});
         }
 
         return "";
@@ -136,7 +137,7 @@ const CutterFabricPopup = ({
 
     const handleSearch = async () => {
         if (!searchValue.trim()) {
-            setErrorText("Введіть код тканини.");
+            setErrorText(t('Введіть код тканини.'));
             return;
         }
 
@@ -158,12 +159,12 @@ const CutterFabricPopup = ({
             setFabrics(normalizedFabrics);
 
             if (!normalizedFabrics.length) {
-                setErrorText("Тканину не знайдено.");
+                setErrorText(t('Тканину не знайдено.'));
             }
         } catch (error) {
             console.log(error);
             setFabrics([]);
-            setErrorText("Не вдалося знайти тканину.");
+            setErrorText(t('Не вдалося знайти тканину.'));
         } finally {
             setIsSearching(false);
         }
@@ -184,14 +185,14 @@ const CutterFabricPopup = ({
             setRolls(normalizedRolls);
 
             if (!normalizedRolls.length) {
-                setErrorText("Для цієї тканини немає рулонів на складі.");
+                setErrorText(t('Для цієї тканини немає рулонів на складі.'));
             } else {
                 setErrorText("");
             }
         } catch (error) {
             console.log(error);
             setRolls([]);
-            setErrorText("Не вдалося завантажити рулони.");
+            setErrorText(t('Не вдалося завантажити рулони.'));
         } finally {
             setIsLoadingRolls(false);
         }
@@ -199,7 +200,7 @@ const CutterFabricPopup = ({
 
     const handleSubmit = async () => {
         if (!selectedRoll?.id || !usedLength) {
-            setErrorText("Оберіть рулон і введіть довжину.");
+            setErrorText(t('Оберіть рулон і введіть довжину.'));
             return;
         }
 
@@ -225,7 +226,7 @@ const CutterFabricPopup = ({
 
         } catch (error) {
             console.log(error);
-            setErrorText("Не вдалося зберегти виконану роботу.");
+            setErrorText(t('Не вдалося зберегти виконану роботу.'));
         } finally {
             setIsSubmitting(false);
         }
@@ -233,7 +234,7 @@ const CutterFabricPopup = ({
 
     return (
         <CentralPopup
-            title={"Внести виконану роботу"}
+            title={t('Внести виконану роботу')}
             onClose={onClose}
             bigPopup
             verticalScroll
@@ -243,7 +244,7 @@ const CutterFabricPopup = ({
                     <input
                         type="text"
                         className={"baseInput"}
-                        placeholder={"Введіть код тканини"}
+                        placeholder={t('Введіть код тканини')}
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                     />
@@ -254,7 +255,7 @@ const CutterFabricPopup = ({
                         onClick={handleSearch}
                         disabled={isSearching}
                     >
-                        <span>{isSearching ? "Пошук..." : "Пошук"}</span>
+                        <span>{isSearching ? t('Пошук...') : t('Пошук')}</span>
                     </button>
                 </div>
 
@@ -262,7 +263,7 @@ const CutterFabricPopup = ({
 
                 {!!fabrics.length && (
                     <div className={styles.block}>
-                        <p className={styles.blockTitle}>Знайдені тканини</p>
+                        <p className={styles.blockTitle}>{t('Знайдені тканини')}</p>
 
                         <div className={styles.list}>
                             {fabrics.map((fabric) => (
@@ -287,13 +288,13 @@ const CutterFabricPopup = ({
 
                 {isLoadingRolls && (
                     <div className={styles.block}>
-                        <p className={styles.empty}>Завантаження рулонів...</p>
+                        <p className={styles.empty}>{t('Завантаження рулонів...')}</p>
                     </div>
                 )}
 
                 {!!rolls.length && (
                     <div className={styles.block}>
-                        <p className={styles.blockTitle}>Рулони на складі</p>
+                        <p className={styles.blockTitle}>{t('Рулони на складі')}</p>
 
                         <div className={styles.list}>
                             {rolls.map((roll) => (
@@ -315,14 +316,14 @@ const CutterFabricPopup = ({
 
                 {!!selectedRoll && (
                     <div className={styles.lengthRow}>
-                        <p className={styles.blockTitle}>Вкажіть довжину, на яку треба покроїти вибраний рулон</p>
+                        <p className={styles.blockTitle}>{t('Вкажіть довжину, на яку треба покроїти вибраний рулон')}</p>
 
                         <input
                             type="number"
                             min="0"
                             step="0.01"
                             className={"baseInput"}
-                            placeholder={"Введіть довжину"}
+                            placeholder={t('Введіть довжину')}
                             value={usedLength}
                             onChange={(e) => setUsedLength(e.target.value)}
                         />
@@ -340,7 +341,7 @@ const CutterFabricPopup = ({
                         onClick={handleSubmit}
                         disabled={!canSubmit || isSubmitting}
                     >
-                        <span>{isSubmitting ? "Збереження..." : "Покроїти"}</span>
+                        <span>{isSubmitting ? t('Збереження...') : t('Покроїти')}</span>
                     </button>
                 </div>
             </div>

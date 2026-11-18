@@ -6,6 +6,8 @@ import { DEMO_FABRICS, DEMO_FABRIC_ROLLS } from '../data/fabrics';
 import { DEMO_PRODUCTS } from '../data/products';
 import { toIso } from '../data/vendors';
 import { syncProduction } from '../data/crmShared';
+import { t } from '../../i18n';
+import { localizeCatalogText } from '../shared/catalog/en';
 
 // Production orders (Замовлення), as consumed by Orders.jsx, Order.jsx, CutterFabricPopup.jsx and
 // WarehouseItemPopup.jsx through src/api/ordersApi.js:
@@ -61,7 +63,7 @@ const workplace = (id) => {
 
 const findVariant = (variantId) => {
     for (const product of products()) {
-        const variant = product.types.find((t) => t.id === Number(variantId));
+        const variant = product.types.find((tp) => tp.id === Number(variantId));
         if (variant) return { product, variant };
     }
     return null;
@@ -155,18 +157,18 @@ const addHistory = (order, text) => {
 const finishBlocker = (order, role) => {
     const notDone = (field) => (order.kit?.component ?? []).filter((c) => !c[field]).map((c) => c.name);
     if (role === 'cutter') {
-        return order.costs.length ? null : 'Спочатку покроїть тканину: натисніть «Вибір тканини» та внесіть довжину крою.';
+        return order.costs.length ? null : t('Спочатку покроїть тканину: натисніть «Вибір тканини» та внесіть довжину крою.');
     }
     if (role === 'sewer') {
         const missing = notDone('is_sewn');
-        return missing.length ? `Спочатку позначте всі компоненти як пошиті та натисніть «Внести виконану роботу». Не пошито: ${missing.join(', ')}.` : null;
+        return missing.length ? t('Спочатку позначте всі компоненти як пошиті та натисніть «Внести виконану роботу». Не пошито: {{missing}}.', {missing: missing.join(', ')}) : null;
     }
     if (order.warehouse_item) {
-        if (!order.warehouse_item.cell) return 'Спочатку оберіть товар на складі: натисніть «Вибір товару».';
-        return order.warehouse_item.is_packed ? null : 'Спочатку позначте товар як спакований та натисніть «Внести виконану роботу».';
+        if (!order.warehouse_item.cell) return t('Спочатку оберіть товар на складі: натисніть «Вибір товару».');
+        return order.warehouse_item.is_packed ? null : t('Спочатку позначте товар як спакований та натисніть «Внести виконану роботу».');
     }
     const missing = notDone('is_packed');
-    return missing.length ? `Спочатку позначте всі компоненти як спаковані та натисніть «Внести виконану роботу». Не спаковано: ${missing.join(', ')}.` : null;
+    return missing.length ? t('Спочатку позначте всі компоненти як спаковані та натисніть «Внести виконану роботу». Не спаковано: {{missing}}.', {missing: missing.join(', ')}) : null;
 };
 
 /** "Завершити роботу": the order goes to the next stage's queue and is handed over to its worker. */
@@ -200,7 +202,7 @@ const matchesSearch = (order, search) => {
     const found = order.warehouse_item ? findVariant(order.warehouse_item.id) : null;
     return [order.id, order.order_id, order.kit?.name, found?.product.name, order.comment]
         .filter(isSet)
-        .some((v) => String(v).toLowerCase().includes(search));
+        .some((v) => `${v} ${localizeCatalogText(String(v))}`.toLowerCase().includes(search));
 };
 
 const pageUrl = (request, page) => {
@@ -255,7 +257,7 @@ export const manufacturingHandlers = [
 
         if (isSet(payload.status)) {
             if (payload.status !== STAGES[role].finish) {
-                return badRequest('status', 'Недопустима зміна статусу для поточного етапу.');
+                return badRequest('status', t('Недопустима зміна статусу для поточного етапу.'));
             }
             const blocker = finishBlocker(order, role);
             if (blocker) return badRequest('status', blocker);
@@ -263,7 +265,7 @@ export const manufacturingHandlers = [
             // the CRM sees the item's production status, and the order once all its items are ready
             syncProduction(order);
         } else if (Array.isArray(payload.component)) {
-            if (!order.kit) return badRequest('component', 'Замовлення не містить комплекту.');
+            if (!order.kit) return badRequest('component', t('Замовлення не містить комплекту.'));
             const field = role === 'sewer' ? 'is_sewn' : role === 'packer' ? 'is_packed' : null;
             if (!field) return forbidden();
 
@@ -280,16 +282,16 @@ export const manufacturingHandlers = [
         } else if (payload.warehouse_item) {
             const item = order.warehouse_item;
             if (!item || role !== 'packer' || Number(payload.warehouse_item.id) !== item.id) {
-                return badRequest('warehouse_item', 'Товар не належить до цього замовлення.');
+                return badRequest('warehouse_item', t('Товар не належить до цього замовлення.'));
             }
 
             if (payload.warehouse_item.unit != null) {
-                if (item.cell) return badRequest('warehouse_item', 'Товар вже взято зі складу.');
+                if (item.cell) return badRequest('warehouse_item', t('Товар вже взято зі складу.'));
 
                 const found = findVariant(item.id);
                 const unit = found?.variant.units.find((u) => u.id === Number(payload.warehouse_item.unit));
                 if (!unit || unit.cell.id !== Number(payload.warehouse_item.cell) || unit.current_quantity < 1) {
-                    return badRequest('warehouse_item', 'У вибраній комірці немає цього товару.');
+                    return badRequest('warehouse_item', t('У вибраній комірці немає цього товару.'));
                 }
 
                 unit.current_quantity -= 1;
@@ -302,7 +304,7 @@ export const manufacturingHandlers = [
                 item.cell = structuredClone(unit.cell);
                 item.unit_id = unit.id;
             } else if (typeof payload.warehouse_item.is_packed === 'boolean') {
-                if (!item.cell) return badRequest('warehouse_item', 'Спочатку оберіть товар на складі.');
+                if (!item.cell) return badRequest('warehouse_item', t('Спочатку оберіть товар на складі.'));
                 if (payload.warehouse_item.is_packed && !item.is_packed) {
                     addHistory(order, HISTORY.itemPacked(findVariant(item.id)?.product.name ?? ''));
                 }
@@ -331,7 +333,7 @@ export const manufacturingHandlers = [
     http.post(`${API}/production/costs/`, withAuth(async ({ request }) => {
         const payload = await request.json();
         const order = orders().find((o) => o.id === Number(payload.manufacturing));
-        if (!order) return badRequest('manufacturing', 'Замовлення не знайдено.');
+        if (!order) return badRequest('manufacturing', t('Замовлення не знайдено.'));
 
         const user = getRequestUser(request);
         if (!order.kit || !isStageWorker(order, user, roleOf(user)) || roleOf(user) !== 'cutter') return forbidden();
@@ -339,12 +341,12 @@ export const manufacturingHandlers = [
         const rollsByFabric = fabricRolls();
         const fabricId = Object.keys(rollsByFabric)
             .find((id) => rollsByFabric[id].some((r) => r.id === Number(payload.fabric_roll)));
-        if (!fabricId) return badRequest('fabric_roll', 'Рулон не знайдено.');
+        if (!fabricId) return badRequest('fabric_roll', t('Рулон не знайдено.'));
 
         const roll = rollsByFabric[fabricId].find((r) => r.id === Number(payload.fabric_roll));
         const usedLength = Number(payload.used_length);
         if (!Number.isFinite(usedLength) || usedLength <= 0 || usedLength > roll.current_length) {
-            return badRequest('used_length', `Не доступна довжина рулона, доступно ${roll.current_length}м`);
+            return badRequest('used_length', t('Не доступна довжина рулона, доступно {{current_length}}м', {current_length: roll.current_length}));
         }
 
         // a cut roll becomes an opened one; a fully used roll leaves the warehouse

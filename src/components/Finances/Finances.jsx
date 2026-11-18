@@ -7,60 +7,61 @@ import PopupCloser from "../Common/PopupCloser/PopupCloser";
 import CustomSelect from "../Common/CustomSelect/CustomSelect";
 import {useNavigate} from "react-router";
 import ArrBack from "../Common/ArrBack/ArrBack";
+import { t } from '../../i18n';
 
 const columns = [
-    { key: "date", title: "Дата", width: '110px' },
-    { key: "sum", title: "Сума", width: '110px' },
+    { key: "date", title: t('Дата'), width: '110px' },
+    { key: "sum", title: t('Сума'), width: '110px' },
     {
         key: "view",
-        title: "Вид",
+        title: t('Вид'),
         width: '130px',
         render: (value) => (
-            <div style={{ color: value === "Надходження" ? "#47C143" : "#F15B5B" }}>
+            <div style={{ color: value === t("Надходження") ? "#47C143" : "#F15B5B" }}>
                 {value}
             </div>
         )
     },
-    { key: "type", title: "Тип", width: '130px' },
-    { key: "category", title: "Категорія", width: '110px' },
-    { key: "group", title: "Група", width: '110px' },
-    { key: "comment", title: "Коментар", width: '240px' },
-    { key: "else", title: "Інше", width: '150px' },
-    { key: "file", title: "Файл", width: '130px' },
+    { key: "type", title: t('Тип'), width: '130px' },
+    { key: "category", title: t('Категорія'), width: '110px' },
+    { key: "group", title: t('Група'), width: '110px' },
+    { key: "comment", title: t('Коментар'), width: '240px' },
+    { key: "else", title: t('Інше'), width: '150px' },
+    { key: "file", title: t('Файл'), width: '130px' },
 ];
 const data = [
     {
         date: "08.05.2025",
-        sum: "2850 грн",
-        view: "Надходження",
-        type: 'Фінансова',
-        category: 'Текстиль',
-        group: 'Група',
-        comment: 'Lorem Ipsum - це текст-"риба", що використовується в друкарстві та дизайні. Lorem Ipsum є, фактично, стандартною "рибою" аж з XVI сторіччя, коли невідомий друкар взяв шрифтову гранку та склав на ній підбірку зразків шрифтів. "Риба" не тільки успішно пережила п\'ять століть',
+        sum: t('2850 грн'),
+        view: t('Надходження'),
+        type: t('Фінансова'),
+        category: t('Текстиль'),
+        group: t('Група'),
+        comment: t('Lorem Ipsum - це текст-"риба", що використовується в друкарстві та дизайні. Lorem Ipsum є, фактично, стандартною "рибою" аж з XVI сторіччя, коли невідомий друкар взяв шрифтову гранку та склав на ній підбірку зразків шрифтів. "Риба" не тільки успішно пережила п\'ять століть'),
         else: 'Lorem Ipsun dollar',
         file: 'img9800.jpg',
     },
     {
         date: "08.05.2025",
-        sum: "2850 грн",
-        view: "Витрата",
-        type: 'Фінансова',
-        category: 'Текстиль',
-        group: 'Група',
-        comment: 'Lorem Ipsum - це текст-"риба"',
+        sum: t('2850 грн'),
+        view: t('Витрата'),
+        type: t('Фінансова'),
+        category: t('Текстиль'),
+        group: t('Група'),
+        comment: t('Lorem Ipsum - це текст-"риба"'),
         else: 'Lorem Ipsun dollar',
         file: 'img9800.jpg',
     },
 ];
 
 const view = [
-    {name: 'Фінансова', value: 'Financial'},
-    {name: 'Інвестиційна', value: 'Investment'},
-    {name: 'Операційна', value: 'Operating'},
+    {name: t('Фінансова'), value: 'Financial'},
+    {name: t('Інвестиційна'), value: 'Investment'},
+    {name: t('Операційна'), value: 'Operating'},
 ]
 const type = [
-    {name: 'Витрата', value: 'Cost'},
-    {name: 'Надходження', value: 'Incoming'},
+    {name: t('Витрата'), value: 'Cost'},
+    {name: t('Надходження'), value: 'Incoming'},
 ]
 
 const Finances = () => {
@@ -86,21 +87,21 @@ const Finances = () => {
     return (
         <div className={styles.finances}>
             <ArrBack/>
-            <SearchFilter onOpenFilter={onOpenFilter} title={'Фінанси'} isAdd onAdd={onAdd} />
+            <SearchFilter onOpenFilter={onOpenFilter} title={t('Фінанси')} isAdd onAdd={onAdd} />
             <div className={styles.sum}>
-                <span>Сума заробітку з продаж за день</span>
-                <p>82 450 грн</p>
+                <span>{t('Сума заробітку з продаж за день')}</span>
+                <p>{t('82 450 грн')}</p>
             </div>
             <TableOld columns={columns} data={data} />
             <Filter isShow={isShowFilter} onClose={onClose}>
                 <CustomSelect
-                    label="Вид надходження"
+                    label={t('Вид надходження')}
                     value={filters.view}
                     onChange={handleFilterChange('view')}
                     options={view}
                 />
                 <CustomSelect
-                    label="Тип операції"
+                    label={t('Тип операції')}
                     value={filters.type}
                     onChange={handleFilterChange('type')}
                     options={type}

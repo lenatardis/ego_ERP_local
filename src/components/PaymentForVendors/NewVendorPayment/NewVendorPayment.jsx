@@ -18,17 +18,18 @@ import {
 } from "../../../api/tablesApi.js";
 import { useNavigate, useParams } from "react-router";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../i18n';
 
 const paymentSourceOptions = [
-  { value: "BANK", name: "Банк" },
-  { value: "CASH", name: "Готівка" },
-  { value: "OTHER", name: "Інше" },
+  { value: "BANK", name: t('Банк') },
+  { value: "CASH", name: t('Готівка') },
+  { value: "OTHER", name: t('Інше') },
 ];
 
 const paymentStatusOptions = [
-  { value: "UNPAID", name: "Не оплачено" },
-  { value: "PAID", name: "Оплачено" },
-  { value: "WAIT_FOR_PAY", name: "Очікує оплати" },
+  { value: "UNPAID", name: t('Не оплачено') },
+  { value: "PAID", name: t('Оплачено') },
+  { value: "WAIT_FOR_PAY", name: t('Очікує оплати') },
 ];
 
 const parseDecimal = (value) => {
@@ -56,8 +57,8 @@ const toMoneyString = (value) => {
 const formatArrivalOption = (arrival) => {
   if (!arrival) return "";
 
-  const idPart = arrival.id != null ? `Надходження ${arrival.id}` : "Надходження";
-  const datePart = arrival.arrival_date ? ` від ${arrival.arrival_date}` : "";
+  const idPart = arrival.id != null ? t('Надходження {{id}}', {id: arrival.id}) : t('Надходження');
+  const datePart = arrival.arrival_date ? ` ${t('від {{arrival_date}}', {arrival_date: arrival.arrival_date})}` : "";
 
   return `${idPart}${datePart}`;
 };
@@ -83,10 +84,10 @@ const getValidationSchema = (mode) =>
   Yup.object({
     paymentSource: Yup.string()
       .nullable()
-      .required("Оберіть джерело платежу"),
+      .required(t('Оберіть джерело платежу')),
     operationDate: Yup.string()
       .nullable()
-      .required("Оберіть дату операції"),
+      .required(t('Оберіть дату операції')),
     payerAccount: Yup.string().nullable(),
     receiverAccount: Yup.string().nullable(),
     payerName: Yup.string().nullable(),
@@ -95,8 +96,8 @@ const getValidationSchema = (mode) =>
         ? Yup.number()
           .transform((v) => (isNaN(v) ? undefined : v))
           .integer()
-          .positive("Оберіть постачальника")
-          .required("Оберіть постачальника")
+          .positive(t('Оберіть постачальника'))
+          .required(t('Оберіть постачальника'))
         : Yup.mixed().nullable(),
     documentFile: Yup.mixed().nullable(),
     arrival:
@@ -104,18 +105,18 @@ const getValidationSchema = (mode) =>
         ? Yup.number()
           .transform((v) => (isNaN(v) ? undefined : v))
           .integer()
-          .positive("Оберіть надходження")
-          .required("Оберіть надходження")
+          .positive(t('Оберіть надходження'))
+          .required(t('Оберіть надходження'))
         : Yup.mixed().nullable(),
     uahAmount: Yup.string()
       .nullable()
-      .required("Введіть суму в грн"),
+      .required(t('Введіть суму в грн')),
     usdAmount: Yup.string()
       .nullable()
-      .required("Введіть суму в $"),
+      .required(t('Введіть суму в $')),
     dollarRate: Yup.mixed().test(
       "valid-rate",
-      "Курс має бути > 0",
+      t('Курс має бути > 0'),
       (value) => {
         if (value === undefined || value === null || String(value).trim() === "") {
           return true;
@@ -124,7 +125,7 @@ const getValidationSchema = (mode) =>
         return Number.isFinite(n) && n > 0;
       }
     ),
-    comment: Yup.string().nullable().max(500, "До 500 символів"),
+    comment: Yup.string().nullable().max(500, t('До 500 символів')),
   });
 
 const NewVendorPayment = () => {
@@ -261,7 +262,7 @@ const NewVendorPayment = () => {
         }
       } catch (error) {
         console.error("Failed to load vendor payment form data:", error);
-        setBannerMsg("Не вдалося завантажити дані платежу.");
+        setBannerMsg(t('Не вдалося завантажити дані платежу.'));
       } finally {
         setIsLoading(false);
       }
@@ -283,7 +284,7 @@ const NewVendorPayment = () => {
     () =>
       arrivals.map((arrival) => ({
         value: arrival.id,
-        name: formatArrivalOption(arrival) || `Надходження ${arrival.id}`,
+        name: formatArrivalOption(arrival) || t('Надходження {{id}}', {id: arrival.id}),
       })),
     [arrivals]
   );
@@ -372,14 +373,14 @@ const NewVendorPayment = () => {
         : await createVendorPayment(token, payload);
 
       if (!response?.id) {
-        setBannerMsg("Неочікувана відповідь від сервера.");
+        setBannerMsg(t('Неочікувана відповідь від сервера.'));
         return;
       }
 
       navigate("/payment-for-vendors");
     } catch (error) {
       console.error("Failed to save vendor payment:", error);
-      setBannerMsg("Не вдалося зберегти платіж постачальнику.");
+      setBannerMsg(t('Не вдалося зберегти платіж постачальнику.'));
     } finally {
       setIsLoading(false);
     }
@@ -391,16 +392,16 @@ const NewVendorPayment = () => {
       <div className={styles.titleBlock}>
         <h2>
           {mode === "read"
-            ? "Перегляд платежу постачальнику"
+            ? t('Перегляд платежу постачальнику')
             : mode === "edit"
-              ? "Редагування платежу постачальнику"
-              : "Надходження-витрати (рахунки)"}
+              ? t('Редагування платежу постачальнику')
+              : t('Надходження-витрати (рахунки)')}
         </h2>
 
         {!isReadonly && (
           <div className={styles.form__action}>
             <button className={"btnDark"} type="submit" form="new-vendor-payment-form">
-              <span>Зберегти</span>
+              <span>{t('Зберегти')}</span>
             </button>
           </div>
         )}
@@ -415,10 +416,10 @@ const NewVendorPayment = () => {
         onKeyDownCapture={stopEnterSubmit}
       >
         <div className={`${styles.form} ${styles.upperForm}`}>
-          <h3>Ручне внесення взаєморозрахунку з постачальником:</h3>
+          <h3>{t('Ручне внесення взаєморозрахунку з постачальником:')}</h3>
 
           <div className={styles.titleWrap}>
-            <h4>Загальна інформація про надходження</h4>
+            <h4>{t('Загальна інформація про надходження')}</h4>
             <CurrencyRateInfo
               buyRate={currentUsdRate}
               saleRate={currentUsdSaleRate}
@@ -427,14 +428,14 @@ const NewVendorPayment = () => {
 
           <div className={styles.form__content}>
             <div className={`${styles.column} ${styles.select}`}>
-              <div className={styles.fieldLabel}>Джерело платежу</div>
+              <div className={styles.fieldLabel}>{t('Джерело платежу')}</div>
               <Controller
                 name="paymentSource"
                 control={control}
                 render={({ field, fieldState }) => (
                   <>
                     <NewCustomSelect
-                      label="Джерело платежу"
+                      label={t('Джерело платежу')}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       options={paymentSourceOptions}
@@ -450,7 +451,7 @@ const NewVendorPayment = () => {
                 )}
               />
 
-              <div className={styles.fieldLabel}>Дата операції</div>
+              <div className={styles.fieldLabel}>{t('Дата операції')}</div>
               <div className={styles.dateWrapper}>
                 <input
                   id="operationDate"
@@ -460,50 +461,50 @@ const NewVendorPayment = () => {
                   {...register("operationDate")}
                   disabled={isReadonly}
                 />
-                <span className={styles.datePlaceholder}>Дата операції</span>
+                <span className={styles.datePlaceholder}>{t('Дата операції')}</span>
               </div>
               {errors.operationDate && (
                 <p className={styles.errorText}>{errors.operationDate.message}</p>
               )}
 
-              <div className={styles.fieldLabel}>З якої каси / Рахунок IBAN платника</div>
+              <div className={styles.fieldLabel}>{t('З якої каси / Рахунок IBAN платника')}</div>
               <InputBox
                 errors={errors}
                 name="payerAccount"
-                placeholder="З якої каси / Рахунок IBAN платника"
+                placeholder={t('З якої каси / Рахунок IBAN платника')}
                 type="text"
                 disabled={isReadonly}
                 options={{ ...register("payerAccount"), readOnly: isReadonly, disabled: isReadonly }}
               />
 
-              <div className={styles.fieldLabel}>Рахунок отримувача</div>
+              <div className={styles.fieldLabel}>{t('Рахунок отримувача')}</div>
               <InputBox
                 errors={errors}
                 name="receiverAccount"
-                placeholder="Рахунок отримувача"
+                placeholder={t('Рахунок отримувача')}
                 type="text"
                 disabled={isReadonly}
                 options={{ ...register("receiverAccount"), readOnly: isReadonly, disabled: isReadonly }}
               />
 
-              <div className={styles.fieldLabel}>Хто платив</div>
+              <div className={styles.fieldLabel}>{t('Хто платив')}</div>
               <InputBox
                 errors={errors}
                 name="payerName"
-                placeholder="Хто платив"
+                placeholder={t('Хто платив')}
                 type="text"
                 disabled={isReadonly}
                 options={{ ...register("payerName"), readOnly: isReadonly, disabled: isReadonly }}
               />
 
-              <div className={styles.fieldLabel}>Постачальник</div>
+              <div className={styles.fieldLabel}>{t('Постачальник')}</div>
               <Controller
                 name="vendor"
                 control={control}
                 render={({ field, fieldState }) => (
                   <>
                     <NewCustomSelect
-                      label="Постачальник"
+                      label={t('Постачальник')}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       options={vendorOptions}
@@ -520,14 +521,14 @@ const NewVendorPayment = () => {
               />
               {mode !== "create" && (
                 <>
-                  <div className={styles.fieldLabel}>Статус</div>
+                  <div className={styles.fieldLabel}>{t('Статус')}</div>
                   <Controller
                     name="status"
                     control={control}
                     render={({ field, fieldState }) => (
                       <>
                         <NewCustomSelect
-                          label="Статус"
+                          label={t('Статус')}
                           value={field.value}
                           onChange={(e) => field.onChange(e.target.value)}
                           options={paymentStatusOptions}
@@ -547,15 +548,15 @@ const NewVendorPayment = () => {
             </div>
 
             <div className={styles.column}>
-              <div className={styles.fieldLabel}>Накладна / документ</div>
+              <div className={styles.fieldLabel}>{t('Накладна / документ')}</div>
 
               {existingDocument && (
                 <div style={{ marginBottom: "8px", fontSize: "12px" }}>
                   <div style={{ marginBottom: "4px", color: "#6B6780" }}>
-                    Збережений файл:
+                    {t('Збережений файл:')}
                   </div>
                   <a href={existingDocument} target="_blank" rel="noopener noreferrer">
-                    Відкрити збережений файл
+                    {t('Відкрити збережений файл')}
                   </a>
                 </div>
               )}
@@ -563,7 +564,7 @@ const NewVendorPayment = () => {
               {!isReadonly && (
                 <div style={{ marginTop: existingDocument ? "10px" : 0 }}>
                   <div style={{ marginBottom: "4px", fontSize: "12px", color: "#6B6780" }}>
-                    {existingDocument ? "Обрати новий файл:" : "Обрати файл:"}
+                    {existingDocument ? t('Обрати новий файл:') : t('Обрати файл:')}
                   </div>
 
                   <input
@@ -583,11 +584,11 @@ const NewVendorPayment = () => {
                 <InputBox
                   errors={{}}
                   name="documentFileReadonly"
-                  placeholder="Накладна / документ"
+                  placeholder={t('Накладна / документ')}
                   type="text"
                   disabled
                   options={{
-                    value: "Документ відсутній",
+                    value: t('Документ відсутній'),
                     readOnly: true,
                     disabled: true,
                   }}
@@ -598,14 +599,14 @@ const NewVendorPayment = () => {
                 <p className={styles.errorText}>{errors.documentFile.message}</p>
               )}
 
-              <div className={styles.fieldLabel}>Надходження</div>
+              <div className={styles.fieldLabel}>{t('Надходження')}</div>
               <Controller
                 name="arrival"
                 control={control}
                 render={({ field, fieldState }) => (
                   <>
                     <NewCustomSelect
-                      label="Надходження"
+                      label={t('Надходження')}
                       value={field.value}
                       onChange={(e) => field.onChange(e.target.value)}
                       options={arrivalOptions}
@@ -621,11 +622,11 @@ const NewVendorPayment = () => {
                 )}
               />
 
-             <div className={styles.fieldLabel}>Сума, $</div>
+             <div className={styles.fieldLabel}>{t('Сума, $')}</div>
               <InputBox
                 errors={errors}
                 name="usdAmount"
-                placeholder="Сума, $"
+                placeholder={t('Сума, $')}
                 type="text"
                 disabled={isReadonly}
                 options={{
@@ -673,11 +674,11 @@ const NewVendorPayment = () => {
                 }}
               />
 
-              <div className={styles.fieldLabel}>Сума, грн</div>
+              <div className={styles.fieldLabel}>{t('Сума, грн')}</div>
               <InputBox
                 errors={errors}
                 name="uahAmount"
-                placeholder="Сума, грн"
+                placeholder={t('Сума, грн')}
                 type="text"
                 disabled={isReadonly}
                 options={{
@@ -706,11 +707,11 @@ const NewVendorPayment = () => {
               />
 
 
-              <div className={styles.fieldLabel}>Курс до долара</div>
+              <div className={styles.fieldLabel}>{t('Курс до долара')}</div>
               <InputBox
                 errors={errors}
                 name="dollarRate"
-                placeholder="Курс до долара"
+                placeholder={t('Курс до долара')}
                 type="text"
                 disabled={isReadonly}
                 options={{
@@ -750,10 +751,10 @@ const NewVendorPayment = () => {
                 }}
               />
 
-              <div className={styles.fieldLabel}>Коментар</div>
+              <div className={styles.fieldLabel}>{t('Коментар')}</div>
               <textarea
                 className={`comment ${errors.comment ? styles.error : ""}`}
-                placeholder="Коментар"
+                placeholder={t('Коментар')}
                 {...register("comment")}
                 maxLength="500"
                 readOnly={isReadonly}

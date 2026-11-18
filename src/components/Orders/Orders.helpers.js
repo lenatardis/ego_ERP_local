@@ -1,27 +1,28 @@
+import { t } from '../../i18n';
 export const MAIN_TABS = [
-    { value: "my", label: "Мої активні замовлення" },
-    { value: "all", label: "Всі доступні замовлення" },
-    { value: "shipment_ready", label: "Всі замовлення готові до відправки" },
-    { value: "delivered", label: "Всі доставлені замовлення" },
+    { value: "my", label: t('Мої активні замовлення') },
+    { value: "all", label: t('Всі доступні замовлення') },
+    { value: "shipment_ready", label: t('Всі замовлення готові до відправки') },
+    { value: "delivered", label: t('Всі доставлені замовлення') },
 ];
 
 export const ORDER_TYPE_TABS = [
-    { value: "kit", label: "Комплекти" },
-    { value: "warehouse_item", label: "Товари зі складу" },
+    { value: "kit", label: t('Комплекти') },
+    { value: "warehouse_item", label: t('Товари зі складу') },
 ];
 
 export const STATUS_OPTIONS = [
-    { value: "", name: "Всі" },
-    { value: "NEW", name: "Нове" },
-    { value: "IN_PROGRESS", name: "В роботі" },
-    { value: "AWAITING_CUTTING", name: "Очікує крійки" },
-    { value: "ON_CUT", name: "На крійці" },
-    { value: "AWAITING_SEWING", name: "Очікує пошиття" },
-    { value: "ON_SEWING", name: "На пошитті" },
-    { value: "AWAITING_PACKAGING", name: "Очікує пакування" },
-    { value: "IS_PACKED", name: "Запаковано" },
-    { value: "SHIPMENT_READY", name: "Готово до відправки" },
-    { value: "COMPLETED", name: "Завершено" },
+    { value: "", name: t('Всі') },
+    { value: "NEW", name: t('Нове') },
+    { value: "IN_PROGRESS", name: t('В роботі') },
+    { value: "AWAITING_CUTTING", name: t('Очікує крійки') },
+    { value: "ON_CUT", name: t('На крійці') },
+    { value: "AWAITING_SEWING", name: t('Очікує пошиття') },
+    { value: "ON_SEWING", name: t('На пошитті') },
+    { value: "AWAITING_PACKAGING", name: t('Очікує пакування') },
+    { value: "IS_PACKED", name: t('Запаковано') },
+    { value: "SHIPMENT_READY", name: t('Готово до відправки') },
+    { value: "COMPLETED", name: t('Завершено') },
 ];
 
 export const getStoredAccessToken = () => {
@@ -298,14 +299,14 @@ export const getDefaultAvailableStatus = ({ isCutter, isSewer, isPacker }) => {
 export const getColumnTitles = ({ activeTab, activeOrderType }) => {
     if (activeOrderType === "warehouse_item") {
         return {
-            thirdColumnTitle: "Назва товару",
-            fourthColumnTitle: "Розмір",
+            thirdColumnTitle: t('Назва товару'),
+            fourthColumnTitle: t('Розмір'),
         };
     }
 
     return {
         thirdColumnTitle:
-            activeTab === "my" ? "Назва" : "Розмір комплекту",
-        fourthColumnTitle: "Комплектація",
+            activeTab === "my" ? t('Назва') : t('Розмір комплекту'),
+        fourthColumnTitle: t('Комплектація'),
     };
 };

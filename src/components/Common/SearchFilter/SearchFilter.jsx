@@ -3,6 +3,7 @@ import styles from './SearchFilter.module.scss';
 import Tabs from "../Tabs/Tabs";
 import { useLocation } from "react-router";
 import Search from "./Search.jsx";
+import { t } from '../../../i18n';
 
 const SearchFilter = ({
     title,
@@ -64,7 +65,7 @@ const SearchFilter = ({
                             className={location.pathname === '/storage' ? 'btnDark' : 'btnLight'}
                             onClick={onFabricNavigate}
                         >
-                            <span>Тканини</span>
+                            <span>{t('Тканини')}</span>
                         </button>
 
                         <button
@@ -72,7 +73,7 @@ const SearchFilter = ({
                             className={location.pathname === '/storage-product' ? 'btnDark' : 'btnLight'}
                             onClick={onProductNavigate}
                         >
-                            <span>Готова продукція</span>
+                            <span>{t('Готова продукція')}</span>
                         </button>
                     </>
                 )}
@@ -83,7 +84,7 @@ const SearchFilter = ({
                         onClick={onOpenFilter}
                         className="btnLight"
                     >
-                        <span className={styles.filter}>Фільтр</span>
+                        <span className={styles.filter}>{t('Фільтр')}</span>
                     </button>
                 )}
 
@@ -93,7 +94,7 @@ const SearchFilter = ({
                         onClick={onAdd}
                         className="btnLight"
                     >
-                        <span>Додати +</span>
+                        <span>{t('Додати +')}</span>
                     </button>
                 )}
 
@@ -104,7 +105,7 @@ const SearchFilter = ({
                             onClick={onNewFabricArrivalNavigate}
                             className="btnLight"
                         >
-                            <span>+Тканини</span>
+                            <span>{t('+Тканини')}</span>
                         </button>
 
                         <button
@@ -112,7 +113,7 @@ const SearchFilter = ({
                             onClick={onNewProductArrivalNavigate}
                             className="btnLight"
                         >
-                            <span>+Готова продукція</span>
+                            <span>{t('+Готова продукція')}</span>
                         </button>
                     </>
                 )}
@@ -124,7 +125,7 @@ const SearchFilter = ({
                             onClick={onVendorBalanceNavigate}
                             className="btnLight"
                         >
-                            <span>Баланс</span>
+                            <span>{t('Баланс')}</span>
                         </button>
 
                         <button
@@ -132,7 +133,7 @@ const SearchFilter = ({
                             onClick={onNewVendorPaymentNavigate}
                             className="btnLight"
                         >
-                            <span>Додати +</span>
+                            <span>{t('Додати +')}</span>
                         </button>
                     </>
                 )}

@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormControl, Select, MenuItem, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { t } from '../../../i18n';
 
 const StyledFormControl = styled(FormControl)(() => ({
     width: "100%",
@@ -270,7 +271,7 @@ const CustomLoadSelect = ({
                     <StyledMenuItem disabled value="__loading__">
             <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <CircularProgress size={16} />
-              Завантаження…
+              {t('Завантаження…')}
             </span>
                     </StyledMenuItem>
                 )}

@@ -5,6 +5,7 @@ import {
     fetchWarehouseItemLocations,
     updateOrder,
 } from "../../../api/ordersApi";
+import { t } from '../../../i18n';
 
 const normalizeWarehouseItemUnits = (response) => {
     if (Array.isArray(response)) {
@@ -39,7 +40,7 @@ const getLocationLabel = (unit) => {
     const currentQuantity =
         unit?.current_quantity ?? unit?.quantity ?? "–";
 
-    return `Склад "${warehouseName}" / Стелаж "${rackName}" / Комірка № ${cellNumber} / Залишок ${currentQuantity}`;
+    return t('Склад "{{warehouseName}}" / Стелаж "{{rackName}}" / Комірка № {{cellNumber}} / Залишок {{currentQuantity}}', {warehouseName, rackName, cellNumber, currentQuantity});
 };
 
 const WarehouseItemPopup = ({
@@ -58,7 +59,7 @@ const WarehouseItemPopup = ({
     useEffect(() => {
         const loadLocations = async () => {
             if (!accessToken || !warehouseItemId) {
-                setErrorText("Не вистачає даних для завантаження розташувань.");
+                setErrorText(t('Не вистачає даних для завантаження розташувань.'));
                 setIsLoading(false);
                 return;
             }
@@ -76,12 +77,12 @@ const WarehouseItemPopup = ({
                 setLocations(normalizedLocations);
 
                 if (!normalizedLocations.length) {
-                    setErrorText("Немає доступних розташувань товару.");
+                    setErrorText(t('Немає доступних розташувань товару.'));
                 }
             } catch (error) {
                 console.error(error);
                 setLocations([]);
-                setErrorText("Не вдалося завантажити розташування товару.");
+                setErrorText(t('Не вдалося завантажити розташування товару.'));
             } finally {
                 setIsLoading(false);
             }
@@ -97,12 +98,12 @@ const WarehouseItemPopup = ({
 
     const handleSelectLocation = async (location) => {
         if (!accessToken || !orderId || !warehouseItemId) {
-            setErrorText("Не вистачає даних для збереження.");
+            setErrorText(t('Не вистачає даних для збереження.'));
             return;
         }
 
         if (!location?.id || !location?.cell?.id) {
-            setErrorText("Некоректне розташування товару.");
+            setErrorText(t('Некоректне розташування товару.'));
             return;
         }
 
@@ -125,7 +126,7 @@ const WarehouseItemPopup = ({
             onClose();
         } catch (error) {
             console.error(error);
-            setErrorText("Не вдалося зберегти вибір товару.");
+            setErrorText(t('Не вдалося зберегти вибір товару.'));
         } finally {
             setIsSubmitting(false);
         }
@@ -133,7 +134,7 @@ const WarehouseItemPopup = ({
 
     return (
         <CentralPopup
-            title={"Вибір товару"}
+            title={t('Вибір товару')}
             onClose={onClose}
             bigPopup
             verticalScroll
@@ -143,11 +144,11 @@ const WarehouseItemPopup = ({
 
                 {isLoading ? (
                     <div className={styles.block}>
-                        <p className={styles.empty}>Завантаження розташувань...</p>
+                        <p className={styles.empty}>{t('Завантаження розташувань...')}</p>
                     </div>
                 ) : locations.length ? (
                     <div className={styles.block}>
-                        <p className={styles.blockTitle}>Розташування товару на складі</p>
+                        <p className={styles.blockTitle}>{t('Розташування товару на складі')}</p>
 
                         <div className={styles.list}>
                             {locations.map((location) => (

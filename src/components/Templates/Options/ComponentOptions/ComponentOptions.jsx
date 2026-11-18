@@ -36,6 +36,7 @@ import TabsLinks from "../../TabLinks/TabLinks.jsx";
 import OptionsInnerTabs from "../../TabLinks/OptionInnerTabs.jsx";
 import {useStickyXScroll} from "../../../../hooks/useStickyXScroll.jsx";
 import ArrBack from "../../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../../i18n';
 
 
 /* helpers */
@@ -139,7 +140,7 @@ const ComponentOptions = () => {
         const totalPages = Number(data?.total_pages) || 1;
 
         return {
-            options: list.map((t) => ({value: t.id, name: t.name ?? ""})),
+            options: list.map((tp) => ({value: tp.id, name: tp.name ?? ""})),
             totalPages,
         };
     }, []);
@@ -158,7 +159,7 @@ const ComponentOptions = () => {
             const list = Array.isArray(data?.component_types) ? data.component_types : [];
             const total = Number(data?.total_pages) || 1;
 
-            setFilterTypes(list.map((t) => ({id: t.id, name: t.name ?? ""})));
+            setFilterTypes(list.map((tp) => ({id: tp.id, name: tp.name ?? ""})));
             setFilterTypesTotalPages(total);
         } catch (e) {
             console.error("Failed to load filter types:", e);
@@ -448,15 +449,15 @@ const ComponentOptions = () => {
         const nameTrimmed = createForm.name.trim();
         const typeId = createForm.typeId;
 
-        if (!nameTrimmed) errors.createName = {message: "Вкажіть назву"};
+        if (!nameTrimmed) errors.createName = {message: t('Вкажіть назву')};
         if (nameTrimmed.length > MAX_OPTION_TEXT_LENGTH) {
-            errors.createName = { message: "Назва має бути не більше 100 символів" };
+            errors.createName = { message: t('Назва має бути не більше 100 символів') };
         }
 
         if ((createForm.description ?? "").length > MAX_OPTION_TEXT_LENGTH) {
-            errors.createDescription = { message: "Опис має бути не більше 100 символів" };
+            errors.createDescription = { message: t('Опис має бути не більше 100 символів') };
         }
-        if (!typeId) errors.createType = { message: "Оберіть тип" };
+        if (!typeId) errors.createType = { message: t('Оберіть тип') };
 
         if (Object.keys(errors).length > 0) {
             setCreateErrors(errors);
@@ -574,15 +575,15 @@ const ComponentOptions = () => {
         const nameTrimmed = editForm.name.trim();
         const typeId = editForm.typeId;
 
-        if (!nameTrimmed) errors.editName = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors.editName = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > MAX_OPTION_TEXT_LENGTH) {
-            errors.editName = { message: "Назва має бути не більше 100 символів" };
+            errors.editName = { message: t('Назва має бути не більше 100 символів') };
         }
 
         if ((editForm.description ?? "").length > MAX_OPTION_TEXT_LENGTH) {
-            errors.editDescription = { message: "Опис має бути не більше 100 символів" };
+            errors.editDescription = { message: t('Опис має бути не більше 100 символів') };
         }
-        if (!typeId) errors.editType = { message: "Оберіть тип" };
+        if (!typeId) errors.editType = { message: t('Оберіть тип') };
 
         if (Object.keys(errors).length > 0) {
             setEditErrors(errors);
@@ -658,20 +659,20 @@ const ComponentOptions = () => {
     const columns = useMemo(
         () => [
             {key: "id", title: "ID", width: "60px"},
-            {key: "name", title: "Назва",  render: (_, row) => <LimitedCell value={row.name} />},
+            {key: "name", title: t('Назва'),  render: (_, row) => <LimitedCell value={row.name} />},
             {
                 key: "description",
-                title: "Опис",
+                title: t('Опис'),
                render: (_, row) => <LimitedCell value={row.description} lineClamp={4} />,
             },
             {
                 key: "typeName",
-                title: "Тип",
+                title: t('Тип'),
                 render: (_, row) => row.typeName || "-",
             },
             {
                 key: "partsLabel",
-                title: "Частини",
+                title: t('Частини'),
                 render: (_, row) => <LimitedCell value={row.partsLabel} lineClamp={8} />,
             },
             {
@@ -681,10 +682,10 @@ const ComponentOptions = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => openDeletePopup(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -749,7 +750,7 @@ const ComponentOptions = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 onSearch={handleSearch}
-                title="Опції компонентів"
+                title={t('Опції компонентів')}
             />
 
             <TabsLinks/>
@@ -758,7 +759,7 @@ const ComponentOptions = () => {
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати опцію компонентів</span>
+                    <span>{t('Додати опцію компонентів')}</span>
                 </button>
             </div>
 
@@ -797,25 +798,25 @@ const ComponentOptions = () => {
 
                 {/* TYPES чекбокси */}
                 <div style={{marginTop: 12}}>
-                    <p style={{margin: "0 0 8px 0"}}>Типи:</p>
+                    <p style={{margin: "0 0 8px 0"}}>{t('Типи:')}</p>
 
-                    {isFilterTypesLoading && <div className={styles.helperText}>Завантаження…</div>}
+                    {isFilterTypesLoading && <div className={styles.helperText}>{t('Завантаження…')}</div>}
                     {!isFilterTypesLoading && filterTypes.length === 0 && (
-                        <div className={styles.helperText}>Немає типів</div>
+                        <div className={styles.helperText}>{t('Немає типів')}</div>
                     )}
 
                     <div
                         ref={filterTypesScrollRef}
                         className={styles.filterBlock}
                     >
-                        {filterTypes.map((t) => (
-                            <div key={t.id} style={{marginBottom: 10}}>
+                        {filterTypes.map((tp) => (
+                            <div key={tp.id} style={{marginBottom: 10}}>
                                 <CustomCheckbox
-                                    name={t.name}
-                                    value={t.id}
-                                    isChecked={filters.type_ids.includes(t.id)}
+                                    name={tp.name}
+                                    value={tp.id}
+                                    isChecked={filters.type_ids.includes(tp.id)}
                                     isLoading={isFilterTypesLoading}
-                                    onChange={(checked) => toggleFilterTypeId(t.id, checked)}
+                                    onChange={(checked) => toggleFilterTypeId(tp.id, checked)}
                                     label
                                     darkText
                                 />
@@ -840,11 +841,11 @@ const ComponentOptions = () => {
 
                 {/* PARTS чекбокси */}
                 <div style={{marginTop: 16}}>
-                    <p style={{margin: "0 0 8px 0"}}>Частини:</p>
+                    <p style={{margin: "0 0 8px 0"}}>{t('Частини:')}</p>
 
-                    {isFilterPartsLoading && <div className={styles.helperText}>Завантаження…</div>}
+                    {isFilterPartsLoading && <div className={styles.helperText}>{t('Завантаження…')}</div>}
                     {!isFilterPartsLoading && filterParts.length === 0 && (
-                        <div className={styles.helperText}>Немає частин</div>
+                        <div className={styles.helperText}>{t('Немає частин')}</div>
                     )}
 
                     <div
@@ -900,13 +901,13 @@ const ComponentOptions = () => {
 
             {/* CREATE */}
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання опції компонентів" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання опції компонентів')} onClose={closeCreatePopup}>
                     <div style={{display: "flex", flexDirection: "column", rowGap: "16px"}}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва опції"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва опції')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_OPTION_TEXT_LENGTH,
@@ -920,13 +921,13 @@ const ComponentOptions = () => {
 
                         <div className={styles.textareaBox}>
                             <label className={styles.textareaLabel} htmlFor="createDescription">
-                                <OptionLimitLabel text="Опис" />
+                                <OptionLimitLabel text={t('Опис')} />
                             </label>
                             <textarea
                                 id="createDescription"
                                 className={`${styles.textarea} ${createErrors.createDescription ? styles.textareaError : ""
                                     }`}
-                                placeholder="Опис опції"
+                                placeholder={t('Опис опції')}
                                 value={createForm.description}
                                 maxLength={MAX_OPTION_TEXT_LENGTH}
                                 onChange={(e) => {
@@ -942,7 +943,7 @@ const ComponentOptions = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={createForm.typeId}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -958,12 +959,12 @@ const ComponentOptions = () => {
                         </div>
 
                         <div>
-                            <p style={{margin: "0 0 8px 0"}}>Оберіть частини опції:</p>
+                            <p style={{margin: "0 0 8px 0"}}>{t('Оберіть частини опції:')}</p>
 
-                            {isPartsLoading && <div className={styles.helperText}>Завантаження частин…</div>}
+                            {isPartsLoading && <div className={styles.helperText}>{t('Завантаження частин…')}</div>}
 
                             {!isPartsLoading && optionParts.length === 0 && (
-                                <div className={styles.helperText}>Немає доступних частин</div>
+                                <div className={styles.helperText}>{t('Немає доступних частин')}</div>
                             )}
 
                             {renderSelectedParts(createForm.partIds)}
@@ -995,13 +996,13 @@ const ComponentOptions = () => {
 
                                 {isPartsLoading && (
                                     <div style={{padding: 8, fontSize: 12, color: "#666"}}>
-                                        Завантаження частин…
+                                        {t('Завантаження частин…')}
                                     </div>
                                 )}
 
                                 {!isPartsLoading && optionParts.length === 0 && (
                                     <div style={{padding: 8, fontSize: 12, color: "#666"}}>
-                                        Немає доступних частин
+                                        {t('Немає доступних частин')}
                                     </div>
                                 )}
                             </div>
@@ -1024,7 +1025,7 @@ const ComponentOptions = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -1032,13 +1033,13 @@ const ComponentOptions = () => {
 
             {/* EDIT */}
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування опції компонентів" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування опції компонентів')} onClose={closeEditPopup}>
                     <div style={{display: "flex", flexDirection: "column", rowGap: "16px"}}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва опції"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва опції')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_OPTION_TEXT_LENGTH,
@@ -1052,13 +1053,13 @@ const ComponentOptions = () => {
 
                         <div className={styles.textareaBox}>
                             <label className={styles.textareaLabel} htmlFor="editDescription">
-                                <OptionLimitLabel text="Опис" />
+                                <OptionLimitLabel text={t('Опис')} />
                             </label>
                             <textarea
                                 id="editDescription"
                                 className={`${styles.textarea} ${editErrors.editDescription ? styles.textareaError : ""
                                     }`}
-                                placeholder="Опис опції"
+                                placeholder={t('Опис опції')}
                                 value={editForm.description}
                                 maxLength={MAX_OPTION_TEXT_LENGTH}
                                 onChange={(e) => {
@@ -1074,7 +1075,7 @@ const ComponentOptions = () => {
 
                         <div>
                             <CustomLoadSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={editForm.typeId}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -1090,12 +1091,12 @@ const ComponentOptions = () => {
                         </div>
 
                         <div>
-                            <p style={{margin: "0 0 8px 0"}}>Оберіть частини опції:</p>
+                            <p style={{margin: "0 0 8px 0"}}>{t('Оберіть частини опції:')}</p>
 
-                            {isPartsLoading && <div className={styles.helperText}>Завантаження частин…</div>}
+                            {isPartsLoading && <div className={styles.helperText}>{t('Завантаження частин…')}</div>}
 
                             {!isPartsLoading && optionParts.length === 0 && (
-                                <div className={styles.helperText}>Немає доступних частин</div>
+                                <div className={styles.helperText}>{t('Немає доступних частин')}</div>
                             )}
 
                             {renderSelectedParts(editForm.partIds)}
@@ -1126,13 +1127,13 @@ const ComponentOptions = () => {
 
                                 {isPartsLoading && (
                                     <div style={{padding: 8, fontSize: 12, color: "#666"}}>
-                                        Завантаження частин…
+                                        {t('Завантаження частин…')}
                                     </div>
                                 )}
 
                                 {!isPartsLoading && optionParts.length === 0 && (
                                     <div style={{padding: 8, fontSize: 12, color: "#666"}}>
-                                        Немає доступних частин
+                                        {t('Немає доступних частин')}
                                     </div>
                                 )}
                             </div>
@@ -1154,14 +1155,14 @@ const ComponentOptions = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title={"Видалення опції компонентів"}
+                    title={t('Видалення опції компонентів')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -1174,7 +1175,7 @@ const ComponentOptions = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити опцію компонентів?
+                            {t('Ви дійсно бажаєте видалити опцію компонентів?')}
                         </h3>
 
                         <button
@@ -1184,7 +1185,7 @@ const ComponentOptions = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -1194,7 +1195,7 @@ const ComponentOptions = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

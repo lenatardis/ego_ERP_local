@@ -6,7 +6,8 @@
 // Names are translated phrase by phrase, longest phrase first, so composed names work too:
 // 'Satin Двоспальний 5x7' -> 'Satin Double 5x7', 'satЄ 5×7' -> 'satE 5×7'. A phrase matches only as a whole
 // word (not inside a longer Cyrillic word); text with no known phrase (people, addresses, comments, names
-// added in the ERP) is returned unchanged.
+// added in the ERP) is returned unchanged. Every English name is used once (the ERP maps names sent back in
+// English to the stored Ukrainian ones – its src/mocks/localize.js).
 
 export const CATALOG_EN = {
     // fabric types (warehouse) and product types (calculator)
@@ -23,7 +24,7 @@ export const CATALOG_EN = {
     'Полікотон': 'Polycotton',
 
     // fabric tags
-    'дитяче': 'kids',
+    'дитяче': 'children\'s',
     'транспортна тематика': 'transport theme',
     'дитячий Тачка Маквін': 'kids, Lightning McQueen',
     'різнокольоровий': 'multicoloured',
@@ -110,9 +111,9 @@ export const CATALOG_EN = {
     'Простирадло': 'Sheet',
     'Підковдра': 'Duvet cover',
     'Нав': 'PC',
-    'Прос': 'Sh',
-    'Пст': 'Sh',
-    'Прт': 'Sh',
+    'Прос': 'SH',
+    'Пст': 'SHT',
+    'Прт': 'SHR',
     'Ков': 'DC',
     'Собачка': 'Zip puller',
     'Накладка': 'Topper',

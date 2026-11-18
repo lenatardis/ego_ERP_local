@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import LinkIcon from "../../../assets/icons/link.svg";
 import CopyIcon from "../../../assets/icons/copy.svg";
 import styles from "./LinkRenderer.module.scss";
+import { t } from '../../../i18n';
 
 const LinkRenderer = ({ value, copy = false, className = "" }) => {
   if (!value) return "";
@@ -27,7 +28,7 @@ const LinkRenderer = ({ value, copy = false, className = "" }) => {
     return (
       <button
         type="button"
-        title="Скопіювати"
+        title={t('Скопіювати')}
         className={`${styles.copyBtn} ${className}`.trim()}
         onClick={handleCopy}
       >

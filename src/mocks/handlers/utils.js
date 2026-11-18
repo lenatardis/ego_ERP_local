@@ -1,5 +1,6 @@
 import { HttpResponse, delay } from 'msw';
 import { findDemoUserById, parseDemoToken } from '../data/demoUsers';
+import { delocalizeRequest, localizeResponse } from '../localize';
 
 // Same paths the API layer uses (src/api/*Api.js API_BASE_URL); the token refresh endpoint
 // lived outside /admin_panel in the original backend.
@@ -27,13 +28,14 @@ export const notFound = () => HttpResponse.json({ detail: 'Not found.' }, { stat
 export const withAuth = (resolver) => async (info) => {
     await delay(LATENCY_MS);
     if (!getRequestUser(info.request)) return unauthorized();
-    return resolver(info);
+    // demo build: answers in the visitor's language (src/mocks/localize.js)
+    return localizeResponse(await resolver({ ...info, request: await delocalizeRequest(info.request) }));
 };
 
 /** Adds latency only (for public endpoints such as login / token refresh). */
 export const withLatency = (resolver) => async (info) => {
     await delay(LATENCY_MS);
-    return resolver(info);
+    return localizeResponse(await resolver({ ...info, request: await delocalizeRequest(info.request) }));
 };
 
 export const isSet = (v) => v !== undefined && v !== null && String(v).trim() !== '';

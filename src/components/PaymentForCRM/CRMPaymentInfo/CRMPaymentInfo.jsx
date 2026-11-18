@@ -7,32 +7,33 @@ import { getAccessToken } from "../../../api/authStorage.js";
 import { getSpecificCRMPayment } from "../../../api/tablesApi.js";
 import LinkIcon from "../../../assets/icons/link.svg";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../i18n';
 
 const TYPE_MAP = {
-    ONLINE: "Онлайн",
+    ONLINE: t('Онлайн'),
     IBAN: "IBAN",
-    TAX: "Накладений платіж",
+    TAX: t('Накладений платіж'),
 };
 
 const METHOD_MAP = {
-    FULL: "Повна оплата",
-    PREPAYMENT: "Передплата",
-    POSTPAID: "Післяплата",
+    FULL: t('Повна оплата'),
+    PREPAYMENT: t('Передплата'),
+    POSTPAID: t('Післяплата'),
 };
 
 const STATUS_MAP = {
-    PAY_WAIT: "Очікує оплати",
-    PAID: "Оплачено",
-    NOT_PAID: "Не оплачено",
-    REFUND: "Повернення",
-    IN_PROG: "В обробці",
-    IN_PROC: "В обробці",
+    PAY_WAIT: t('Очікує оплати'),
+    PAID: t('Оплачено'),
+    NOT_PAID: t('Не оплачено'),
+    REFUND: t('Повернення'),
+    IN_PROG: t('В обробці'),
+    IN_PROC: t('В обробці'),
 };
 
 const APPROVED_MAP = {
-    IN_PROC: "На розгляді",
-    APPROVED: "Підтверджено",
-    DECLINED: "Відхилено",
+    IN_PROC: t('На розгляді'),
+    APPROVED: t('Підтверджено'),
+    DECLINED: t('Відхилено'),
 };
 
 const PROVIDER_TYPE_MAP = {
@@ -41,7 +42,7 @@ const PROVIDER_TYPE_MAP = {
 
 const formatValue = (value) => {
     if (value === null || value === undefined || value === "") return "";
-    if (typeof value === "boolean") return value ? "Так" : "Ні";
+    if (typeof value === "boolean") return value ? t('Так') : t('Ні');
     return String(value);
 };
 
@@ -108,7 +109,7 @@ const CRMPaymentInfo = () => {
                 const response = await getSpecificCRMPayment(token, id);
 
                 if (!response?.id) {
-                    setBannerMsg("Не вдалося завантажити інформацію про CRM платіж.");
+                    setBannerMsg(t('Не вдалося завантажити інформацію про CRM платіж.'));
                     setPayment(null);
                     return;
                 }
@@ -116,7 +117,7 @@ const CRMPaymentInfo = () => {
                 setPayment(response);
             } catch (error) {
                 console.error("Failed to load CRM payment info:", error);
-                setBannerMsg("Не вдалося завантажити інформацію про CRM платіж.");
+                setBannerMsg(t('Не вдалося завантажити інформацію про CRM платіж.'));
                 setPayment(null);
             } finally {
                 setIsLoading(false);
@@ -135,13 +136,13 @@ const CRMPaymentInfo = () => {
         <div className={`${styles.incomingFabric} ${styles.paymentDetailPage}`}>
             <ArrBack/>
             <div className={styles.titleBlock}>
-                <h2>Перегляд CRM платежу</h2>
+                <h2>{t('Перегляд CRM платежу')}</h2>
             </div>
 
             {bannerMsg && <div className={styles.bannerError}>{bannerMsg}</div>}
 
             <div className={`${styles.form} ${styles.upperForm}`}>
-                <h3>Інформація про CRM платіж</h3>
+                <h3>{t('Інформація про CRM платіж')}</h3>
 
                 <div className={styles.form__content}>
                     <div className={styles.column}>
@@ -158,7 +159,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Поточний статус</div>
+                        <div className={styles.fieldLabel}>{t('Поточний статус')}</div>
                         <InputBox
                             errors={{}}
                             name="status"
@@ -171,7 +172,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Тип оплати</div>
+                        <div className={styles.fieldLabel}>{t('Тип оплати')}</div>
                         <InputBox
                             errors={{}}
                             name="type"
@@ -184,7 +185,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Метод оплати</div>
+                        <div className={styles.fieldLabel}>{t('Метод оплати')}</div>
                         <InputBox
                             errors={{}}
                             name="method"
@@ -197,7 +198,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Орієнтовна дата сплати</div>
+                        <div className={styles.fieldLabel}>{t('Орієнтовна дата сплати')}</div>
                         <InputBox
                             errors={{}}
                             name="prepayment_datetime"
@@ -210,7 +211,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Фактична дата сплати</div>
+                        <div className={styles.fieldLabel}>{t('Фактична дата сплати')}</div>
                         <InputBox
                             errors={{}}
                             name="paid_datetime"
@@ -225,7 +226,7 @@ const CRMPaymentInfo = () => {
                     </div>
 
                     <div className={styles.column}>
-                        <div className={styles.fieldLabel}>Сума</div>
+                        <div className={styles.fieldLabel}>{t('Сума')}</div>
                         <InputBox
                             errors={{}}
                             name="prepayment_amount"
@@ -238,7 +239,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>ID CRM замовлення</div>
+                        <div className={styles.fieldLabel}>{t('ID CRM замовлення')}</div>
                         <InputBox
                             errors={{}}
                             name="order"
@@ -251,7 +252,7 @@ const CRMPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Чек</div>
+                        <div className={styles.fieldLabel}>{t('Чек')}</div>
                         {hasReceiptLink ? (
                             <div className={`${styles.paymentDetailPage__linkBox} ${styles.paymentDetailPage__linkBoxMd}`}>
                                 <a
@@ -298,7 +299,7 @@ const CRMPaymentInfo = () => {
                             />
                         )}
 
-                        <div className={styles.fieldLabel}>Підтвердження бухгалтером</div>
+                        <div className={styles.fieldLabel}>{t('Підтвердження бухгалтером')}</div>
                         <div
                             className={`${styles.paymentDetailPage__linkBox} ${styles.paymentDetailPage__linkBoxMd} ${getApprovalClassName(payment?.customer_receipt_approved)}`}
                         >
@@ -307,14 +308,14 @@ const CRMPaymentInfo = () => {
                         </div>
 
                         <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__sectionTitle}`}>
-                            Онлайн платіж
+                            {t('Онлайн платіж')}
                         </div>
 
                         <div className={styles.paymentDetailPage__providerBlock}>
                             <div className={styles.paymentDetailPage__providerGrid}>
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Банк
+                                        {t('Банк')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -333,7 +334,7 @@ const CRMPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Інвойс
+                                        {t('Інвойс')}
                                     </div>
                                     {payment?.provider_payment?.order_id && payment?.provider_payment?.invoice_url ? (
                                         <div className={`${styles.paymentDetailPage__linkBox} ${styles.paymentDetailPage__linkBoxMd}`}>

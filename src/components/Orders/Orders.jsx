@@ -20,6 +20,7 @@ import {
     getColumnTitles,
 } from "./Orders.helpers";
 import ArrBack from "../Common/ArrBack/ArrBack";
+import { t } from '../../i18n';
 
 const Orders = () => {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Orders = () => {
     // Production workers start on their own active orders; others (e.g. admin) have no "my" orders.
     const [activeTab, setActiveTab] = useState(() => {
         const userGroups = Array.isArray(groups) ? groups : [];
-        const isProductionWorker = ["Закрійник", "Швачка", "Швея", "Пакувальник"]
+        const isProductionWorker = [t('Закрійник'), t('Швачка'), t('Швея'), t('Пакувальник')]
             .some((group) => userGroups.includes(group));
 
         return location.state?.activeTab === "my" || isProductionWorker ? "my" : "all";
@@ -112,7 +113,7 @@ const Orders = () => {
     useEffect(() => {
         const loadOrders = async () => {
             if (!token) {
-                setErrorText("Не знайдено access token.");
+                setErrorText(t('Не знайдено access token.'));
                 setOrdersResponse({
                     results: [],
                     count: 0,
@@ -123,7 +124,7 @@ const Orders = () => {
             }
 
             if (activeTab === "my" && !currentUserId) {
-                setErrorText("Не вдалося визначити ID поточного користувача.");
+                setErrorText(t('Не вдалося визначити ID поточного користувача.'));
                 setOrdersResponse({
                     results: [],
                     count: 0,
@@ -184,7 +185,7 @@ const Orders = () => {
                 setOrdersResponse(normalizeOrdersResponse(response));
             } catch (error) {
                 console.error("Orders load error:", error);
-                setErrorText("Не вдалося завантажити замовлення.");
+                setErrorText(t('Не вдалося завантажити замовлення.'));
                 setOrdersResponse({
                     results: [],
                     count: 0,
@@ -271,7 +272,7 @@ const Orders = () => {
         <div className={styles.orders}>
             <ArrBack />
             <SearchFilter
-                title="Замовлення"
+                title={t('Замовлення')}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
                 onSearch={handleSearch}
@@ -320,33 +321,33 @@ const Orders = () => {
                 <div className={`${styles.headerRow} ${tableGridClass}`}>
                     {isMyWarehouseTable ? (
                         <>
-                            <div>Дата отримання</div>
-                            <div>Фото</div>
-                            <div>Назва</div>
-                            <div>Категорія</div>
-                            <div>Колір</div>
-                            <div>Розмір</div>
-                            <div>Коментар</div>
+                            <div>{t('Дата отримання')}</div>
+                            <div>{t('Фото')}</div>
+                            <div>{t('Назва')}</div>
+                            <div>{t('Категорія')}</div>
+                            <div>{t('Колір')}</div>
+                            <div>{t('Розмір')}</div>
+                            <div>{t('Коментар')}</div>
                         </>
                     ) : (
                         <>
-                            <div>Дата отримання</div>
-                            <div>Фото</div>
+                            <div>{t('Дата отримання')}</div>
+                            <div>{t('Фото')}</div>
                             <div>{thirdColumnTitle}</div>
                             <div>{fourthColumnTitle}</div>
-                            <div>Опції</div>
+                            <div>{t('Опції')}</div>
                             {showBarcodeColumn && <div>Barcode</div>}
-                            <div>Коментар</div>
+                            <div>{t('Коментар')}</div>
                         </>
                     )}
                 </div>
 
                 {isLoading ? (
-                    <div className={styles.stateBlock}>Завантаження...</div>
+                    <div className={styles.stateBlock}>{t('Завантаження...')}</div>
                 ) : errorText ? (
                     <div className={styles.stateBlock}>{errorText}</div>
                 ) : rows.length === 0 ? (
-                    <div className={styles.stateBlock}>Немає замовлень</div>
+                    <div className={styles.stateBlock}>{t('Немає замовлень')}</div>
                 ) : (
                     <div className={styles.rows}>
                         {rows.map((row) => {
@@ -363,18 +364,18 @@ const Orders = () => {
                                         onClick={() => handleOpenOrder(row)}
                                         title={
                                             disabled
-                                                ? "Можна відкривати лише свої замовлення"
+                                                ? t('Можна відкривати лише свої замовлення')
                                                 : ""
                                         }
                                     >
-                                        <div className={styles.cell} data-label="Дата отримання">
+                                        <div className={styles.cell} data-label={t('Дата отримання')}>
                                             {row.receivedDate}
                                         </div>
 
                                         <div className={styles.cell}>
                                             <ProtectedImage
                                                 src={row.imageUrl}
-                                                alt="Замовлення"
+                                                alt={t('Замовлення')}
                                                 token={token}
                                                 className={styles.photo}
                                                 fallbackClassName={
@@ -383,23 +384,23 @@ const Orders = () => {
                                             />
                                         </div>
 
-                                        <div className={styles.cell} data-label="Назва">
+                                        <div className={styles.cell} data-label={t('Назва')}>
                                             {row.nameValue || "–"}
                                         </div>
 
-                                        <div className={styles.cell} data-label="Категорія">
+                                        <div className={styles.cell} data-label={t('Категорія')}>
                                             {row.categoryValue || "–"}
                                         </div>
 
-                                        <div className={styles.cell} data-label="Колір">
+                                        <div className={styles.cell} data-label={t('Колір')}>
                                             {row.colorValue || "–"}
                                         </div>
 
-                                        <div className={styles.cell} data-label="Розмір">
+                                        <div className={styles.cell} data-label={t('Розмір')}>
                                             {row.setSize || "–"}
                                         </div>
 
-                                        <div className={styles.cell} data-label="Коментар">
+                                        <div className={styles.cell} data-label={t('Коментар')}>
                                             <div className={styles.comment}>
                                                 {row.directCommentValue}
                                             </div>
@@ -430,18 +431,18 @@ const Orders = () => {
                                     onClick={() => handleOpenOrder(row)}
                                     title={
                                         disabled
-                                            ? "Можна відкривати лише свої замовлення"
+                                            ? t('Можна відкривати лише свої замовлення')
                                             : ""
                                     }
                                 >
-                                    <div className={styles.cell} data-label="Дата отримання">
+                                    <div className={styles.cell} data-label={t('Дата отримання')}>
                                         {row.receivedDate}
                                     </div>
 
                                     <div className={styles.cell}>
                                         <ProtectedImage
                                             src={row.imageUrl}
-                                            alt="Замовлення"
+                                            alt={t('Замовлення')}
                                             token={token}
                                             className={styles.photo}
                                             fallbackClassName={
@@ -458,7 +459,7 @@ const Orders = () => {
                                         {fourthColumnValue || "–"}
                                     </div>
 
-                                    <div className={styles.cell} data-label="Опції">
+                                    <div className={styles.cell} data-label={t('Опції')}>
                                         {optionsValue}
                                     </div>
 
@@ -492,7 +493,7 @@ const Orders = () => {
                                         </div>
                                     )}
 
-                                    <div className={styles.cell} data-label="Коментар">
+                                    <div className={styles.cell} data-label={t('Коментар')}>
                                         <div className={styles.comment}>
                                             {row.comment}
                                         </div>

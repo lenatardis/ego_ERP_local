@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUnsavedCtx } from './UnsavedChangesContext';
+import { t } from '../i18n';
 
 /**
  * ⚙️ Поведінка:
@@ -17,13 +18,13 @@ const HARD_LEAVE_ON_LINK = false;
 /** Нативний confirm з двома кнопками. Повертає true → «піти без збереження», false → «скасувати». */
 function askUserConfirm(count) {
     return window.confirm(
-        `Ви внесли зміни у ${count} запис(ах).\n` +
-        `Якщо ви перейдете на іншу сторінку без збереження, вони будуть втрачені.`
+        t('Ви внесли зміни у {{count}} запис(ах).\n', {count}) +
+        t('Якщо ви перейдете на іншу сторінку без збереження, вони будуть втрачені.')
     );
 }
 
 /* ── простий блокуючий оверлей (щоб було видно, що відбувається навігація) ── */
-function showBlockingOverlay(text = 'Переходимо…') {
+function showBlockingOverlay(text = t('Переходимо…')) {
     const id = '__unsaved_guard_overlay__';
     if (document.getElementById(id)) return () => {};
     const el = document.createElement('div');
@@ -70,7 +71,8 @@ export function useUnsavedChangesGuard() {
     /** 1) Захист від закриття/перезавантаження (нативний системний діалог) */
     useEffect(() => {
         if (!shouldBlock) return;
-        const onBeforeUnload = (e) => { e.preventDefault(); e.returnValue = ''; };
+        // demo build: a language switch reloads the page after its own confirmation (src/i18n/index.js)
+        const onBeforeUnload = (e) => { if (window.__egoLanguageReload) return; e.preventDefault(); e.returnValue = ''; };
         window.addEventListener('beforeunload', onBeforeUnload);
         return () => window.removeEventListener('beforeunload', onBeforeUnload);
     }, [shouldBlock]);
@@ -112,7 +114,7 @@ export function useUnsavedChangesGuard() {
             }
 
             guardDisabledRef.current = true;
-            const hide = showBlockingOverlay('Переходимо…');
+            const hide = showBlockingOverlay(t('Переходимо…'));
             try {
                 setDirtyCount(0);
                 if (HARD_LEAVE_ON_LINK) {
@@ -160,7 +162,7 @@ export function useUnsavedChangesGuard() {
                 }
 
                 guardDisabledRef.current = true;
-                const hide = showBlockingOverlay('Переходимо…');
+                const hide = showBlockingOverlay(t('Переходимо…'));
                 try {
                     setDirtyCount(0);
                     sentinelAddedRef.current = false;

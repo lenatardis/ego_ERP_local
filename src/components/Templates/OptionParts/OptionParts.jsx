@@ -31,11 +31,12 @@ import { setIsActivePopup } from "../../../store/main-slice.js";
 
 import { useStickyXScroll } from "../../../hooks/useStickyXScroll.jsx";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../i18n';
 
 /* helpers */
-const typeLabel = (t) => {
-    if (t === "component") return "Компонент";
-    if (t === "kit") return "Комплект";
+const typeLabel = (tp) => {
+    if (tp === "component") return t('Компонент');
+    if (tp === "kit") return t('Комплект');
     return "–";
 };
 
@@ -105,16 +106,16 @@ const OptionParts = () => {
     });
 
     const typeOptions = [
-        { name: "Усі типи", value: "" },
-        { name: "Компонент", value: "component" },
-        { name: "Комплект", value: "kit" },
+        { name: t('Усі типи'), value: "" },
+        { name: t('Компонент'), value: "component" },
+        { name: t('Комплект'), value: "kit" },
     ];
 
     const formTypeOptions = useMemo(
         () => [
-            { name: "Оберіть тип", value: "" },
-            { name: "Компонент", value: "component" },
-            { name: "Комплект", value: "kit" },
+            { name: t('Оберіть тип'), value: "" },
+            { name: t('Компонент'), value: "component" },
+            { name: t('Комплект'), value: "kit" },
         ],
         []
     );
@@ -262,11 +263,11 @@ const OptionParts = () => {
         const nameTrimmed = createForm.name.trim();
         const typeValue = createForm.type;
 
-        if (!nameTrimmed) errors.createName = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors.createName = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > OPTION_PART_NAME_MAX_LENGTH) {
-            errors.createName = { message: "Назва має бути не більше 100 символів" };
+            errors.createName = { message: t('Назва має бути не більше 100 символів') };
 }
-        if (!typeValue) errors.createType = { message: "Оберіть тип" };
+        if (!typeValue) errors.createType = { message: t('Оберіть тип') };
 
         if (Object.keys(errors).length > 0) {
             setCreateErrors(errors);
@@ -287,7 +288,7 @@ const OptionParts = () => {
             fetchData(filterParams);
         } catch (e) {
             console.error("Failed to create option part:", e);
-            window.alert("Не вдалося створити частину опції. Спробуй ще раз.");
+            window.alert(t('Не вдалося створити частину опції. Спробуй ще раз.'));
         }
     }, [createForm, updateRows, closeCreatePopup, fetchData, filterParams]);
 
@@ -342,11 +343,11 @@ const OptionParts = () => {
         const nameTrimmed = editForm.name.trim();
         const nextType = editForm.type;
 
-        if (!nameTrimmed) errors.editName = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors.editName = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > OPTION_PART_NAME_MAX_LENGTH) {
-            errors.editName = { message: "Назва має бути не більше 100 символів" };
+            errors.editName = { message: t('Назва має бути не більше 100 символів') };
         }
-        if (!nextType) errors.editType = { message: "Оберіть тип" };
+        if (!nextType) errors.editType = { message: t('Оберіть тип') };
 
         if (Object.keys(errors).length > 0) {
             setEditErrors(errors);
@@ -413,7 +414,7 @@ const OptionParts = () => {
             fetchData(filterParams);
         } catch (e) {
             console.error("Failed to save option part:", e);
-            window.alert("Не вдалося зберегти зміни. Спробуй ще раз.");
+            window.alert(t('Не вдалося зберегти зміни. Спробуй ще раз.'));
 
             // якщо delete пройшов, а create впав – краще оновити список, щоб не було “половинчастого” стану
             fetchData(filterParams);
@@ -476,10 +477,10 @@ const OptionParts = () => {
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "60px" },
-            { key: "name", title: "Назва", render: (_, row) => <LimitedCell value={row.name} /> },
+            { key: "name", title: t('Назва'), render: (_, row) => <LimitedCell value={row.name} /> },
             {
                 key: "type",
-                title: "Тип",
+                title: t('Тип'),
                 width: "180px",
                 render: (_, row) => typeLabel(row.type),
             },
@@ -490,10 +491,10 @@ const OptionParts = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => openDeletePopup(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -532,7 +533,7 @@ const OptionParts = () => {
         <div className={styles.wrapper}>
             <ArrBack/>
             <SearchFilter
-                title="Частини опцій"
+                title={t('Частини опцій')}
                 onOpenFilter={() => setIsShowFilter(true)}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -543,7 +544,7 @@ const OptionParts = () => {
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати частину опції</span>
+                    <span>{t('Додати частину опції')}</span>
                 </button>
             </div>
 
@@ -580,7 +581,7 @@ const OptionParts = () => {
 
             <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <CustomSelect
-                    label="Тип"
+                    label={t('Тип')}
                     value={filters.type}
                     onChange={handleTypeChange}
                     options={typeOptions}
@@ -603,13 +604,13 @@ const OptionParts = () => {
             {isLoading && <Preloader />}
 
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання частини опції" onClose={closeCreatePopup}>
+                <CentralPopup title={t('Додавання частини опції')} onClose={closeCreatePopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: createForm.name,
                                 maxLength: OPTION_PART_NAME_MAX_LENGTH,
@@ -623,7 +624,7 @@ const OptionParts = () => {
 
                         <div>
                             <CustomSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={createForm.type}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -638,20 +639,20 @@ const OptionParts = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
 
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування частини опції" onClose={closeEditPopup}>
+                <CentralPopup title={t('Редагування частини опції')} onClose={closeEditPopup}>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: "16px" }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: editForm.name,
                                 maxLength: OPTION_PART_NAME_MAX_LENGTH,
@@ -665,7 +666,7 @@ const OptionParts = () => {
 
                         <div>
                             <CustomSelect
-                                label="Тип"
+                                label={t('Тип')}
                                 value={editForm.type}
                                 onChange={(e) => {
                                     const value = e.target.value;
@@ -680,14 +681,14 @@ const OptionParts = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title={"Видалення частини опції"}
+                    title={t('Видалення частини опції')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -700,7 +701,7 @@ const OptionParts = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити частину опції?
+                            {t('Ви дійсно бажаєте видалити частину опції?')}
                         </h3>
 
                         <button
@@ -710,7 +711,7 @@ const OptionParts = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -720,7 +721,7 @@ const OptionParts = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

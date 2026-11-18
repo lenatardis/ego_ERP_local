@@ -1,4 +1,5 @@
 import {refreshAccessToken} from './authApi';
+import { t } from '../i18n';
 
 // Demo mode: the original backend is unavailable; same-origin paths are answered by the mock backend (src/mocks, MSW)
 const API_BASE_URL = '/admin_panel/api/v1';
@@ -1227,7 +1228,7 @@ export const deleteSource = async (token, id, options = {}) => {
                 data = null;
             }
 
-            const error = new Error(data?.error || "Не вдалося видалити джерело");
+            const error = new Error(data?.error || t('Не вдалося видалити джерело'));
             error.status = 400;
             error.data = data;
             throw error;

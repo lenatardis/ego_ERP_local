@@ -39,6 +39,7 @@ import CustomLoadSelect from "../../Common/CustomLoadSelect/CustomLoadSelect.jsx
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
 import OptionLimitLabel from "../../Common/OptionLimitLabel/OptionLimitLabel.jsx";
 import LimitedCell from "../../Common/LimitedCell/LimitedCell.jsx";
+import { t } from '../../../i18n';
 
 /* helpers */
 
@@ -442,26 +443,26 @@ const KitTemplates = () => {
 
         const pref = mode === "create" ? "create" : "edit";
 
-        if (!nameTrimmed) errors[`${pref}Name`] = { message: "Вкажіть назву" };
+        if (!nameTrimmed) errors[`${pref}Name`] = { message: t('Вкажіть назву') };
         if (nameTrimmed.length > MAX_NAME_LENGTH) {
-            errors[`${pref}Name`] = { message: "Назва має бути не більше 100 символів" };
+            errors[`${pref}Name`] = { message: t('Назва має бути не більше 100 символів') };
         }
 
-        if (!shortTrimmed) errors[`${pref}Short`] = { message: "Вкажіть коротку назву" };
+        if (!shortTrimmed) errors[`${pref}Short`] = { message: t('Вкажіть коротку назву') };
         if (shortTrimmed.length > MAX_SHORT_NAME_LENGTH) {
-            errors[`${pref}Short`] = { message: "Коротка назва має бути не більше 10 символів" };
+            errors[`${pref}Short`] = { message: t('Коротка назва має бути не більше 10 символів') };
         }
 
         if (additionalFabricTrimmed.length > MAX_ADDITIONAL_FABRIC_LENGTH) {
-            errors[`${pref}AddPrice`] = { message: "Додаткова витрата має бути не більше 10 символів" };
+            errors[`${pref}AddPrice`] = { message: t('Додаткова витрата має бути не більше 10 символів') };
         }
 
         if (!String(form.template ?? "").trim()) {
-            errors[`${pref}Template`] = { message: "Оберіть розмір комплекту" };
+            errors[`${pref}Template`] = { message: t('Оберіть розмір комплекту') };
         }
 
         if (!String(form.fabric_type ?? "").trim()) {
-            errors[`${pref}FabricType`] = { message: "Оберіть тип тканини" };
+            errors[`${pref}FabricType`] = { message: t('Оберіть тип тканини') };
         }
 
         return errors;
@@ -494,7 +495,7 @@ const KitTemplates = () => {
             closeCreatePopup();
         } catch (e) {
             console.error("Failed to create kit template:", e);
-            window.alert("Не вдалося створити. Спробуй ще раз.");
+            window.alert(t('Не вдалося створити. Спробуй ще раз.'));
         }
     }, [createForm, qtyDraftCreate, validateForm, kitSizeMap, fabricTypeMap, updateRows, closeCreatePopup]);
 
@@ -530,7 +531,7 @@ const KitTemplates = () => {
             closeEditPopup();
         } catch (e) {
             console.error("Failed to edit kit template:", e);
-            window.alert("Не вдалося зберегти. Спробуй ще раз.");
+            window.alert(t('Не вдалося зберегти. Спробуй ще раз.'));
         }
     }, [editingRowId, editForm, qtyDraftEdit, validateForm, kitSizeMap, fabricTypeMap, updateRows, closeEditPopup]);
 
@@ -725,28 +726,28 @@ const KitTemplates = () => {
     const columns = useMemo(
         () => [
             { key: "id", title: "ID", width: "60px" },
-            { key: "name", title: "Назва", width: "minmax(200px, 1fr)", render: (_, row) => <LimitedCell value={row.name} /> },
-            { key: "short_name", title: "Коротка назва", width: "minmax(160px, 1fr)", render: (_, row) => <LimitedCell value={row.short_name} /> },
+            { key: "name", title: t('Назва'), width: "minmax(200px, 1fr)", render: (_, row) => <LimitedCell value={row.name} /> },
+            { key: "short_name", title: t('Коротка назва'), width: "minmax(160px, 1fr)", render: (_, row) => <LimitedCell value={row.short_name} /> },
             {
                 key: "image",
-                title: "Фото",
+                title: t('Фото'),
                 width: "110px",
                 render: (_, row) => renderPhotoCell(row?.image),
             },
             {
                 key: "additional_fabric_consumption_price",
-                title: "Дод. витрата",
+                title: t('Дод. витрата'),
                 width: "140px",
                 render: (_, row) => <LimitedCell value={row.additional_fabric_consumption_price} />,
             },
             {
                 key: "template_name",
-                title: "Розмір",
+                title: t('Розмір'),
                 width: "160px",
                 render: (_, row) => <LimitedCell value={row.template_name} />,
             },
-            { key: "fabric_type_name", title: "Тип тканини", width: "160px" },
-            { key: "components_count", title: "Компоненти", width: "80px" },
+            { key: "fabric_type_name", title: t('Тип тканини'), width: "160px" },
+            { key: "components_count", title: t('Компоненти'), width: "80px" },
             {
                 key: "actions",
                 title: "",
@@ -754,10 +755,10 @@ const KitTemplates = () => {
                 render: (_, row) => (
                     <div className={styles.actionsCell}>
                         <button type="button" className="btnDark" onClick={() => openEditPopup(row)}>
-                            <span>Редагувати</span>
+                            <span>{t('Редагувати')}</span>
                         </button>
                         <button type="button" className="btnDark" onClick={() => openDeletePopup(row)}>
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
                     </div>
                 ),
@@ -779,7 +780,7 @@ const KitTemplates = () => {
     // Select loaders
     // -------------------
     const fabricTypeOptions = useMemo(() => {
-        const opts = [{ name: "Оберіть тип тканини", value: "" }];
+        const opts = [{ name: t('Оберіть тип тканини'), value: "" }];
         for (const [id, name] of fabricTypeMap.entries()) {
             opts.push({ name: String(name), value: String(id) });
         }
@@ -824,7 +825,7 @@ const KitTemplates = () => {
         <div className={styles.wrapper}>
             <ArrBack />
             <SearchFilter
-                title="Комплекти"
+                title={t('Комплекти')}
                 onOpenFilter={() => setIsShowFilter(true)}
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -836,7 +837,7 @@ const KitTemplates = () => {
 
             <div className={styles.topActions}>
                 <button type="button" className="btnDark" onClick={openCreatePopup}>
-                    <span>Додати комплект</span>
+                    <span>{t('Додати комплект')}</span>
                 </button>
             </div>
 
@@ -892,13 +893,13 @@ const KitTemplates = () => {
 
             {/* CREATE */}
             {isCreatePopupOpen && (
-                <CentralPopup title="Додавання комплекту" onClose={closeCreatePopup} verticalScroll>
+                <CentralPopup title={t('Додавання комплекту')} onClose={closeCreatePopup} verticalScroll>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: 16 }}>
                         <InputBox
                             errors={createErrors}
                             name="createName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: createForm.name,
                                 maxLength: MAX_NAME_LENGTH,
@@ -913,8 +914,8 @@ const KitTemplates = () => {
                         <InputBox
                             errors={createErrors}
                             name="createShort"
-                            label={<OptionLimitLabel text="Коротка назва" maxLength={MAX_SHORT_NAME_LENGTH} />}
-                            placeholder="Коротка назва"
+                            label={<OptionLimitLabel text={t('Коротка назва')} maxLength={MAX_SHORT_NAME_LENGTH} />}
+                            placeholder={t('Коротка назва')}
                             options={{
                                 value: createForm.short_name,
                                 maxLength: MAX_SHORT_NAME_LENGTH,
@@ -929,7 +930,7 @@ const KitTemplates = () => {
                         <InputBox
                             errors={createErrors}
                             name="createAddPrice"
-                            label={<OptionLimitLabel text="Додаткова ціна витрати тканини" maxLength={MAX_ADDITIONAL_FABRIC_LENGTH} />}
+                            label={<OptionLimitLabel text={t('Додаткова ціна витрати тканини')} maxLength={MAX_ADDITIONAL_FABRIC_LENGTH} />}
                             placeholder="0"
                             type="number"
                             options={{
@@ -948,11 +949,11 @@ const KitTemplates = () => {
 
                         <div>
                             <div style={{ marginBottom: 8, fontSize: 12, color: "#666" }}>
-                                Розмір комплекту
+                                {t('Розмір комплекту')}
                             </div>
 
                             <CustomLoadSelect
-                                label="Оберіть розмір"
+                                label={t('Оберіть розмір')}
                                 value={createForm.template}
                                 onChange={(e) => {
                                     setCreateForm((prev) => ({ ...prev, template: e.target.value }));
@@ -962,7 +963,7 @@ const KitTemplates = () => {
                                 pageSize={25}
                                 menuMaxHeight={340}
                                 prefetchMinItems={30}
-                                prependOptions={[{ name: "Оберіть розмір", value: "" }]}
+                                prependOptions={[{ name: t('Оберіть розмір'), value: "" }]}
                             />
 
                             {createErrors.createTemplate && (
@@ -972,11 +973,11 @@ const KitTemplates = () => {
 
                         <div>
                             <div style={{ marginBottom: 8, fontSize: 12, color: "#666" }}>
-                                Тип тканини
+                                {t('Тип тканини')}
                             </div>
 
                             <CustomLoadSelect
-                                label="Тип тканини"
+                                label={t('Тип тканини')}
                                 value={createForm.fabric_type}
                                 onChange={(e) => {
                                     setCreateForm((prev) => ({ ...prev, fabric_type: e.target.value }));
@@ -986,7 +987,7 @@ const KitTemplates = () => {
                                 pageSize={50}
                                 menuMaxHeight={340}
                                 prefetchMinItems={30}
-                                prependOptions={[{ name: "Тип тканини", value: "" }]}
+                                prependOptions={[{ name: t('Тип тканини'), value: "" }]}
                             />
 
 
@@ -998,7 +999,7 @@ const KitTemplates = () => {
                         {/* component_size */}
                         <div>
                             <div style={{ marginBottom: 6, fontSize: 12, color: "#666" }}>
-                                Компоненти
+                                {t('Компоненти')}
                             </div>
 
                             {(() => {
@@ -1006,7 +1007,7 @@ const KitTemplates = () => {
 
                                 return (
                                     <div style={{ fontStyle: "italic", fontSize: 12, marginBottom: 8, color: "#666" }}>
-                                        Вибрано: {s.totalQty} шт.
+                                        {t('Вибрано:')} {s.totalQty} {t('шт.')}
                                         {s.uniqueCount > 0 ? ` – ${s.shown.join(", ")}${s.hasMore ? "…" : ""}` : ""}
                                     </div>
                                 );
@@ -1055,7 +1056,7 @@ const KitTemplates = () => {
                                             </div>
 
                                             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                                <span style={{ fontSize: 12, color: "#666" }}>К-ть</span>
+                                                <span style={{ fontSize: 12, color: "#666" }}>{t('К-ть')}</span>
 
                                                 <input
                                                     type="text"
@@ -1081,7 +1082,7 @@ const KitTemplates = () => {
                                 })}
 
                                 {ctLoading &&
-                                    <div style={{ padding: 8, fontSize: 12, color: "#666" }}>Завантаження…</div>}
+                                    <div style={{ padding: 8, fontSize: 12, color: "#666" }}>{t('Завантаження…')}</div>}
                             </div>
 
                             {ctTotalPages > 1 && (
@@ -1102,7 +1103,7 @@ const KitTemplates = () => {
                         {/* image */}
                         <div>
                             <label style={{ display: "block", marginBottom: 6, fontSize: 12, color: "#666" }}>
-                                Фото
+                                {t('Фото')}
                             </label>
 
                             {createPreviewUrl ? (
@@ -1112,7 +1113,7 @@ const KitTemplates = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Обране фото</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Обране фото')}</span>
                                 </div>
                             ) : null}
                             <input
@@ -1126,7 +1127,7 @@ const KitTemplates = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleCreateSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
@@ -1134,13 +1135,13 @@ const KitTemplates = () => {
 
             {/* EDIT */}
             {isEditPopupOpen && (
-                <CentralPopup title="Редагування комплекту" onClose={closeEditPopup} verticalScroll>
+                <CentralPopup title={t('Редагування комплекту')} onClose={closeEditPopup} verticalScroll>
                     <div style={{ display: "flex", flexDirection: "column", rowGap: 16 }}>
                         <InputBox
                             errors={editErrors}
                             name="editName"
-                            label={<OptionLimitLabel text="Назва" />}
-                            placeholder="Назва"
+                            label={<OptionLimitLabel text={t('Назва')} />}
+                            placeholder={t('Назва')}
                             options={{
                                 value: editForm.name,
                                 maxLength: MAX_NAME_LENGTH,
@@ -1155,8 +1156,8 @@ const KitTemplates = () => {
                         <InputBox
                             errors={editErrors}
                             name="editShort"
-                            label={<OptionLimitLabel text="Коротка назва" maxLength={MAX_SHORT_NAME_LENGTH} />}
-                            placeholder="Коротка назва"
+                            label={<OptionLimitLabel text={t('Коротка назва')} maxLength={MAX_SHORT_NAME_LENGTH} />}
+                            placeholder={t('Коротка назва')}
                             options={{
                                 value: editForm.short_name,
                                 maxLength: MAX_SHORT_NAME_LENGTH,
@@ -1171,7 +1172,7 @@ const KitTemplates = () => {
                         <InputBox
                             errors={editErrors}
                             name="editAddPrice"
-                            label={<OptionLimitLabel text="Додаткова ціна витрати тканини" maxLength={MAX_ADDITIONAL_FABRIC_LENGTH} />}
+                            label={<OptionLimitLabel text={t('Додаткова ціна витрати тканини')} maxLength={MAX_ADDITIONAL_FABRIC_LENGTH} />}
                             placeholder="0"
                             type="number"
                             options={{
@@ -1190,11 +1191,11 @@ const KitTemplates = () => {
 
                         <div>
                             <div style={{ marginBottom: 8, fontSize: 12, color: "#666" }}>
-                                Розмір комплекту
+                                {t('Розмір комплекту')}
                             </div>
 
                             <CustomLoadSelect
-                                label="Оберіть розмір"
+                                label={t('Оберіть розмір')}
                                 value={editForm.template}
                                 onChange={(e) => {
                                     setEditForm((prev) => ({ ...prev, template: e.target.value }));
@@ -1204,7 +1205,7 @@ const KitTemplates = () => {
                                 pageSize={25}
                                 menuMaxHeight={340}
                                 prefetchMinItems={30}
-                                prependOptions={[{ name: "Оберіть розмір", value: "" }]}
+                                prependOptions={[{ name: t('Оберіть розмір'), value: "" }]}
                             />
 
                             {editErrors.editTemplate && (
@@ -1214,11 +1215,11 @@ const KitTemplates = () => {
 
                         <div>
                             <div style={{ marginBottom: 8, fontSize: 12, color: "#666" }}>
-                                Тип тканини
+                                {t('Тип тканини')}
                             </div>
 
                             <CustomLoadSelect
-                                label="Тип тканини"
+                                label={t('Тип тканини')}
                                 value={editForm.fabric_type}
                                 onChange={(e) => {
                                     setEditForm((prev) => ({ ...prev, fabric_type: e.target.value }));
@@ -1228,7 +1229,7 @@ const KitTemplates = () => {
                                 pageSize={50}
                                 menuMaxHeight={340}
                                 prefetchMinItems={30}
-                                prependOptions={[{ name: "Тип тканини", value: "" }]}
+                                prependOptions={[{ name: t('Тип тканини'), value: "" }]}
                             />
 
                             {editErrors.editFabricType && (
@@ -1239,7 +1240,7 @@ const KitTemplates = () => {
                         {/* component_size */}
                         <div>
                             <div style={{ marginBottom: 6, fontSize: 12, color: "#666" }}>
-                                Компоненти
+                                {t('Компоненти')}
                             </div>
 
                             {(() => {
@@ -1247,7 +1248,7 @@ const KitTemplates = () => {
 
                                 return (
                                     <div style={{ fontStyle: "italic", fontSize: 12, marginBottom: 8, color: "#666" }}>
-                                        Вибрано: {s.totalQty} шт.
+                                        {t('Вибрано:')} {s.totalQty} {t('шт.')}
                                         {s.uniqueCount > 0 ? ` – ${s.shown.join(", ")}${s.hasMore ? "…" : ""}` : ""}
                                     </div>
                                 );
@@ -1295,7 +1296,7 @@ const KitTemplates = () => {
                                             </div>
 
                                             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                                <span style={{ fontSize: 12, color: "#666" }}>К-ть</span>
+                                                <span style={{ fontSize: 12, color: "#666" }}>{t('К-ть')}</span>
 
                                                 <input
                                                     type="text"
@@ -1323,7 +1324,7 @@ const KitTemplates = () => {
 
 
                                 {ctLoading &&
-                                    <div style={{ padding: 8, fontSize: 12, color: "#666" }}>Завантаження…</div>}
+                                    <div style={{ padding: 8, fontSize: 12, color: "#666" }}>{t('Завантаження…')}</div>}
                             </div>
 
                             {ctTotalPages > 1 && (
@@ -1344,7 +1345,7 @@ const KitTemplates = () => {
                         {/* image */}
                         <div>
                             <label style={{ display: "block", marginBottom: 6, fontSize: 12, color: "#666" }}>
-                                Фото
+                                {t('Фото')}
                             </label>
 
                             {editPreviewUrl ? (
@@ -1354,7 +1355,7 @@ const KitTemplates = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Обране фото (ще не збережено)</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Обране фото (ще не збережено)')}</span>
                                 </div>
                             ) : editForm.imageUrl?.trim() ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
@@ -1364,7 +1365,7 @@ const KitTemplates = () => {
                                         alt=""
                                         style={{ width: 70, height: 70, objectFit: "cover", borderRadius: 8 }}
                                     />
-                                    <span style={{ fontStyle: "italic" }}>Поточне фото</span>
+                                    <span style={{ fontStyle: "italic" }}>{t('Поточне фото')}</span>
                                 </div>
                             ) : null}
                             <input
@@ -1378,14 +1379,14 @@ const KitTemplates = () => {
                         </div>
 
                         <button type="button" className="btnDark" onClick={handleEditSave}>
-                            <span>Зберегти</span>
+                            <span>{t('Зберегти')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {isDeletePopupOpen && (
                 <CentralPopup
-                    title="Видалення комплекту"
+                    title={t('Видалення комплекту')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -1398,7 +1399,7 @@ const KitTemplates = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити комплект?
+                            {t('Ви дійсно бажаєте видалити комплект?')}
                         </h3>
 
                         <button
@@ -1408,7 +1409,7 @@ const KitTemplates = () => {
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
                         >
-                            <span>{isDeleting ? "Видалення..." : "Видалити"}</span>
+                            <span>{isDeleting ? t('Видалення...') : t('Видалити')}</span>
                         </button>
 
                         <button
@@ -1418,7 +1419,7 @@ const KitTemplates = () => {
                             onClick={closeDeletePopup}
                             disabled={isDeleting}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

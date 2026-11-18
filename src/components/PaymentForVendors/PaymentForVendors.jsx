@@ -23,33 +23,34 @@ import EditIcon from "../../assets/icons/editIcon.svg";
 import BinIcon from "../../assets/icons/bin.svg";
 import LinkRenderer from "../Common/LinkRenderer/LinkRenderer";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../i18n';
 
 const ITEMS_PER_PAGE = 25;
 
 const SOURCE_MAP = {
-    BANK: "Банк",
-    CASH: "Готівка",
-    OTHER: "Інше",
+    BANK: t('Банк'),
+    CASH: t('Готівка'),
+    OTHER: t('Інше'),
 };
 
 const STATUS_MAP = {
-    UNPAID: "Не оплачено",
-    PAID: "Оплачено",
-    WAIT_FOR_PAY: "Очікує оплати",
+    UNPAID: t('Не оплачено'),
+    PAID: t('Оплачено'),
+    WAIT_FOR_PAY: t('Очікує оплати'),
 };
 
 const sourceOptions = [
-    { value: "", name: "Усі" },
-    { value: "BANK", name: "Банк" },
-    { value: "CASH", name: "Готівка" },
-    { value: "OTHER", name: "Інше" },
+    { value: "", name: t('Усі') },
+    { value: "BANK", name: t('Банк') },
+    { value: "CASH", name: t('Готівка') },
+    { value: "OTHER", name: t('Інше') },
 ];
 
 const statusOptions = [
-    { value: "", name: "Усі" },
-    { value: "UNPAID", name: "Не оплачено" },
-    { value: "PAID", name: "Оплачено" },
-    { value: "WAIT_FOR_PAY", name: "Очікує оплати" },
+    { value: "", name: t('Усі') },
+    { value: "UNPAID", name: t('Не оплачено') },
+    { value: "PAID", name: t('Оплачено') },
+    { value: "WAIT_FOR_PAY", name: t('Очікує оплати') },
 ];
 
 const MAX_AMOUNT = 1000000;
@@ -173,29 +174,29 @@ const ActionButtons = ({ row, onView, onEdit, onDelete }) => {
             <button
                 type="button"
                 style={btnStyle}
-                title="Переглянути"
+                title={t('Переглянути')}
                 onClick={() => onView(row)}
             >
-                <img src={DocumentIcon} alt="Переглянути" style={iconStyle} />
+                <img src={DocumentIcon} alt={t('Переглянути')} style={iconStyle} />
             </button>
 
             <button
                 type="button"
                 style={btnStyle}
-                title="Редагувати"
+                title={t('Редагувати')}
                 onClick={() => onEdit(row)}
             >
-                <img src={EditIcon} alt="Редагувати" style={iconStyle} />
+                <img src={EditIcon} alt={t('Редагувати')} style={iconStyle} />
             </button>
 
             {row?.status !== "PAID" && (
                 <button
                     type="button"
                     style={btnStyle}
-                    title="Видалити"
+                    title={t('Видалити')}
                     onClick={() => onDelete(row)}
                 >
-                    <img src={BinIcon} alt="Видалити" style={iconStyle} />
+                    <img src={BinIcon} alt={t('Видалити')} style={iconStyle} />
                 </button>
             )}
         </div>
@@ -391,13 +392,13 @@ const PaymentForVendors = () => {
     const columns = useMemo(() => [
         {
             key: "source",
-            title: "Джерело",
+            title: t('Джерело'),
             width: "0.8fr",
             render: (val) => SOURCE_MAP[val] || val || "",
         },
         {
             key: "operation_date",
-            title: "Дата",
+            title: t('Дата'),
             width: "0.9fr",
             render: (val) => formatDate(val),
         },
@@ -405,11 +406,11 @@ const PaymentForVendors = () => {
             key: "payer_account",
             title: (
                 <>
-                    З якої каси /
+                    {t('З якої каси /')}
                     <br />
-                    Рахунок IBAN
+                    {t('Рахунок IBAN')}
                     <br />
-                    платника
+                    {t('платника')}
                 </>
             ),
             width: "1.2fr",
@@ -419,9 +420,9 @@ const PaymentForVendors = () => {
             key: "recipient_account",
             title: (
                 <>
-                    Рахунок
+                    {t('Рахунок')}
                     <br />
-                    отримувача
+                    {t('отримувача')}
                 </>
             ),
             width: "1fr",
@@ -429,13 +430,13 @@ const PaymentForVendors = () => {
         },
         {
             key: "payer",
-            title: "Хто платив",
+            title: t('Хто платив'),
             width: "0.9fr",
             render: (val) => val || "",
         },
         {
             key: "vendor",
-            title: "Постачальник",
+            title: t('Постачальник'),
             width: "1fr",
             render: (val) => val || "",
         },
@@ -443,9 +444,9 @@ const PaymentForVendors = () => {
             key: "document",
             title: (
                 <>
-                    Накладна /
+                    {t('Накладна /')}
                     <br />
-                    документ
+                    {t('документ')}
                 </>
             ),
             width: "0.95fr",
@@ -458,9 +459,9 @@ const PaymentForVendors = () => {
             key: "uah_amount",
             title: (
                 <>
-                    Сума,
+                    {t('Сума,')}
                     <br />
-                    грн
+                    {t('грн')}
                 </>
             ),
             width: "0.8fr",
@@ -470,7 +471,7 @@ const PaymentForVendors = () => {
             key: "usd_amount",
             title: (
                 <>
-                    Сума,
+                    {t('Сума,')}
                     <br />
                     $
                 </>
@@ -482,9 +483,9 @@ const PaymentForVendors = () => {
             key: "exchange_rate",
             title: (
                 <>
-                    Курс до
+                    {t('Курс до')}
                     <br />
-                    долара
+                    {t('долара')}
                 </>
             ),
             width: "0.75fr",
@@ -492,19 +493,19 @@ const PaymentForVendors = () => {
         },
         {
             key: "comment",
-            title: "Коментар",
+            title: t('Коментар'),
             width: "2fr",
             render: (val) => val || "",
         },
         {
             key: "status",
-            title: "Статус",
+            title: t('Статус'),
             width: "0.9fr",
             render: (val) => <StatusBadge value={val} />,
         },
         {
             key: "actions",
-            title: "Дії",
+            title: t('Дії'),
             width: "0.9fr",
             render: (val, row) => (
                 <ActionButtons
@@ -564,7 +565,7 @@ const PaymentForVendors = () => {
             <ArrBack/>
             <SearchFilter
                 onOpenFilter={onOpenFilter}
-                title={"Взаєморозрахунок з постачальниками"}
+                title={t('Взаєморозрахунок з постачальниками')}
                 searchValue={filterParams.search}
                 setSearchValue={(value) =>
                     setFilterParams((prev) => ({ ...prev, search: value }))
@@ -613,7 +614,7 @@ const PaymentForVendors = () => {
 
             <Filter isShow={isShowFilter} onClose={onCloseFilter} deleteFilters={resetAllFilters}>
                 <NewCustomSelect
-                    label="Джерело"
+                    label={t('Джерело')}
                     value={filterParams.source}
                     onChange={(e) => {
                         const next = { ...filterParams, source: e.target.value };
@@ -623,7 +624,7 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="Дата"
+                    label={t('Дата')}
                     name="operation_date"
                     type="date"
                     errors={{}}
@@ -637,9 +638,9 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="Постачальник"
+                    label={t('Постачальник')}
                     name="vendor"
-                    placeholder="Введіть постачальника"
+                    placeholder={t('Введіть постачальника')}
                     errors={{}}
                     options={{
                         value: filterParams.vendor,
@@ -653,7 +654,7 @@ const PaymentForVendors = () => {
                 <div>
                     <div style={{ marginBottom: 8 }}>
                         <p style={{ fontSize: 12, color: "#ffffff", marginBottom: 10 }}>
-                            Мінімальна і максимальна сума, грн
+                            {t('Мінімальна і максимальна сума, грн')}
                         </p>
                     </div>
 
@@ -751,7 +752,7 @@ const PaymentForVendors = () => {
                 <div>
                     <div style={{ marginBottom: 8 }}>
                         <p style={{ fontSize: 12, color: "#ffffff", marginBottom: 10 }}>
-                            Мінімальна і максимальна сума, $
+                            {t('Мінімальна і максимальна сума, $')}
                         </p>
                     </div>
 
@@ -847,9 +848,9 @@ const PaymentForVendors = () => {
                 </div>
 
                 <InputBox
-                    label="Курс до долара"
+                    label={t('Курс до долара')}
                     name="exchange_rate"
-                    placeholder="Введіть курс"
+                    placeholder={t('Введіть курс')}
                     errors={{}}
                     options={{
                         value: filterParams.exchange_rate,
@@ -861,9 +862,9 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="Накладна / Документ"
+                    label={t('Накладна / Документ')}
                     name="document_num"
-                    placeholder="Введіть номер документа"
+                    placeholder={t('Введіть номер документа')}
                     errors={{}}
                     options={{
                         value: filterParams.document_num,
@@ -875,9 +876,9 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="З якої каси / Рахунок IBAN платника"
+                    label={t('З якої каси / Рахунок IBAN платника')}
                     name="payer_account"
-                    placeholder="Введіть рахунок платника"
+                    placeholder={t('Введіть рахунок платника')}
                     errors={{}}
                     options={{
                         value: filterParams.payer_account,
@@ -889,9 +890,9 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="Рахунок отримувача"
+                    label={t('Рахунок отримувача')}
                     name="recipient_account"
-                    placeholder="Введіть рахунок отримувача"
+                    placeholder={t('Введіть рахунок отримувача')}
                     errors={{}}
                     options={{
                         value: filterParams.recipient_account,
@@ -906,9 +907,9 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="Хто платив"
+                    label={t('Хто платив')}
                     name="payer"
-                    placeholder="Введіть ПІБ / назву"
+                    placeholder={t('Введіть ПІБ / назву')}
                     errors={{}}
                     options={{
                         value: filterParams.payer,
@@ -920,9 +921,9 @@ const PaymentForVendors = () => {
                 />
 
                 <InputBox
-                    label="Надходження тканини"
+                    label={t('Надходження тканини')}
                     name="fabric_arrival"
-                    placeholder="Введіть ID або дату"
+                    placeholder={t('Введіть ID або дату')}
                     errors={{}}
                     options={{
                         value: filterParams.fabric_arrival,
@@ -934,7 +935,7 @@ const PaymentForVendors = () => {
                 />
 
                 <NewCustomSelect
-                    label="Статус"
+                    label={t('Статус')}
                     value={filterParams.status}
                     onChange={(e) => {
                         const next = { ...filterParams, status: e.target.value };
@@ -960,7 +961,7 @@ const PaymentForVendors = () => {
 
             {showDeletePopup && (
                 <CentralPopup
-                    title={"Видалення платежу постачальнику"}
+                    title={t('Видалення платежу постачальнику')}
                     onClose={closeDeletePopup}
                 >
                     <div
@@ -973,7 +974,7 @@ const PaymentForVendors = () => {
                         }}
                     >
                         <h3 style={{ paddingBottom: 0 }}>
-                            Ви дійсно бажаєте видалити платіж?
+                            {t('Ви дійсно бажаєте видалити платіж?')}
                         </h3>
 
                         <button
@@ -982,7 +983,7 @@ const PaymentForVendors = () => {
                             style={{ width: "200px" }}
                             onClick={handleConfirmDelete}
                         >
-                            <span>Видалити</span>
+                            <span>{t('Видалити')}</span>
                         </button>
 
                         <button
@@ -991,7 +992,7 @@ const PaymentForVendors = () => {
                             style={{ width: "200px" }}
                             onClick={closeDeletePopup}
                         >
-                            <span>Скасувати</span>
+                            <span>{t('Скасувати')}</span>
                         </button>
                     </div>
                 </CentralPopup>

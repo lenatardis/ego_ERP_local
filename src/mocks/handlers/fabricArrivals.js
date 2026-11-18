@@ -10,6 +10,7 @@ import { DEMO_PRODUCTS, PRODUCT_COLORS, PRODUCT_SIZES } from '../data/products';
 import { findDemoUserById } from '../data/demoUsers';
 import { findWarehouseCell, rollCellRef, unitCellRef } from '../data/warehouse';
 import { cellCapacity, liveOccupancy } from './warehouse';
+import { t } from '../../i18n';
 
 // Response shapes follow the original API, as consumed by ArrivalList.jsx, IncomingArrivalFabric.jsx,
 // IncomingArrivalProduct.jsx (+ EditableFabricTable / EditableProductTable) and NewVendorPayment.jsx.
@@ -224,11 +225,11 @@ const toPositiveInt = (value, field, message) => {
 
 const toPrice = (value, field) => {
     const n = Number(value ?? 0);
-    if (!Number.isFinite(n) || n < 0) fail(field, 'Ціна не може бути від\'ємною.');
+    if (!Number.isFinite(n) || n < 0) fail(field, t('Ціна не може бути від\'ємною.'));
     return toMoney(n);
 };
 
-const requireCell = (id, field) => findWarehouseCell(id) || fail(field, 'Комірку не знайдено.');
+const requireCell = (id, field) => findWarehouseCell(id) || fail(field, t('Комірку не знайдено.'));
 
 const DATE_RE = /^\d{2}\.\d{2}\.\d{4}$/;
 
@@ -238,22 +239,22 @@ const applyHeader = (arrival, body, isCreate) => {
 
     if (has('vendor')) {
         const vendor = vendors().find((v) => v.id === Number(body.vendor) && !v.deleted_at);
-        if (!vendor) fail('vendor', 'Постачальника не знайдено.');
+        if (!vendor) fail('vendor', t('Постачальника не знайдено.'));
         arrival.vendor_id = vendor.id;
     }
     if (has('receiver')) {
-        if (!findDemoUserById(body.receiver)) fail('receiver', 'Користувача не знайдено.');
+        if (!findDemoUserById(body.receiver)) fail('receiver', t('Користувача не знайдено.'));
         arrival.receiver_id = Number(body.receiver);
     }
     if (has('arrival_date')) {
-        if (!DATE_RE.test(String(body.arrival_date ?? ''))) fail('arrival_date', 'Дата має бути у форматі DD.MM.YYYY.');
+        if (!DATE_RE.test(String(body.arrival_date ?? ''))) fail('arrival_date', t('Дата має бути у форматі DD.MM.YYYY.'));
         arrival.arrival_date = body.arrival_date;
     }
     if (has('document_num')) arrival.document_num = String(body.document_num ?? '').trim();
     ['uah_amount', 'usd_amount', 'exchange_rate'].forEach((key) => {
         if (!has(key)) return;
         const n = Number(body[key]);
-        if (!Number.isFinite(n) || n < 0) fail(key, 'Некоректне значення.');
+        if (!Number.isFinite(n) || n < 0) fail(key, t('Некоректне значення.'));
         arrival[key] = money(n);
     });
     ['total_estimate', 'comment'].forEach((key) => {
@@ -294,13 +295,13 @@ const syncFabricLines = (arrival, rows) => {
     const lines = rows.map((row, index) => {
         const field = `fabric_rolls[${index}]`;
         const item = row?.item || {};
-        const fabric = fabrics().find((f) => f.id === Number(item.fabric)) || fail(field, 'Тканину не знайдено.');
-        const quantity = toPositiveInt(row.quantity, field, 'Кількість рулонів має бути цілим числом ≥ 1.');
+        const fabric = fabrics().find((f) => f.id === Number(item.fabric)) || fail(field, t('Тканину не знайдено.'));
+        const quantity = toPositiveInt(row.quantity, field, t('Кількість рулонів має бути цілим числом ≥ 1.'));
         const cell = requireCell(item.cell, field);
         const customLength = Number(item.initial_custom_length);
         const hasCustom = isSet(item.initial_custom_length) && customLength > 0;
         const standardLength = hasCustom ? null : standardLengthOf(Number(item.initial_length));
-        if (!hasCustom && !standardLength) fail(field, 'Вкажіть довжину рулону.');
+        if (!hasCustom && !standardLength) fail(field, t('Вкажіть довжину рулону.'));
         const length = hasCustom ? customLength : standardLength;
 
         const rowIds = (row.ids || []).map(Number);
@@ -317,15 +318,15 @@ const syncFabricLines = (arrival, rows) => {
         const usedRolls = ids.filter((id) => findRoll(id)?.roll.status !== 'NEW').length;
         const savedLength = saved && (saved.initial_custom_length ?? standardLengthOf(saved.initial_length));
         if (usedRolls && savedLength !== length) {
-            fail(field, `У рядку ${index + 1} (тканина ${fabric.name}) довжину рулону не можна змінити з ${savedLength} м на ${length} м: `
-                + `${usedRolls} з ${ids.length} рулонів цієї позиції вже розкрито або використано у виробництві (розкрій), `
-                + `і їхній залишок рахувався від довжини ${savedLength} м. Поверніть довжину ${savedLength} м.`);
+            fail(field, `${t('У рядку {{index}} (тканина {{name}}) довжину рулону не можна змінити з {{savedLength}} м на {{length}} м:', {index: index + 1, name: fabric.name, savedLength, length})} `
+                + `${t('{{usedRolls}} з {{ids}} рулонів цієї позиції вже розкрито або використано у виробництві (розкрій),', {usedRolls, ids: ids.length})} `
+                + t('і їхній залишок рахувався від довжини {{savedLength}} м. Поверніть довжину {{savedLength2}} м.', {savedLength, savedLength2: savedLength}));
         }
         // fewer rolls: only unopened rolls can leave storage again
         if (quantity < usedRolls) {
-            fail(field, `У рядку ${index + 1} (тканина ${fabric.name}) кількість рулонів не можна зменшити до ${quantity}: `
-                + `${usedRolls} з ${ids.length} рулонів цієї позиції вже розкрито або використано у виробництві (розкрій), `
-                + `а прибрати з накладної можна лише нерозкриті рулони. Мінімально можлива кількість – ${usedRolls}.`);
+            fail(field, `${t('У рядку {{index}} (тканина {{name}}) кількість рулонів не можна зменшити до {{quantity}}:', {index: index + 1, name: fabric.name, quantity})} `
+                + `${t('{{usedRolls}} з {{ids}} рулонів цієї позиції вже розкрито або використано у виробництві (розкрій),', {usedRolls, ids: ids.length})} `
+                + t('а прибрати з накладної можна лише нерозкриті рулони. Мінімально можлива кількість – {{usedRolls}}.', {usedRolls}));
         }
         while (ids.length > quantity) {
             const removable = [...ids].reverse()
@@ -420,10 +421,10 @@ const syncProductLines = (arrival, rows) => {
 
     const lines = rows.map((row, index) => {
         const field = `warehouse_item_units[${index}]`;
-        const product = products().find((p) => p.id === Number(row?.template)) || fail(field, 'Товар не знайдено.');
-        const color = PRODUCT_COLORS.find((c) => c.id === Number(row.color)) || fail(field, 'Колір не знайдено.');
-        const size = PRODUCT_SIZES.find((s) => s.id === Number(row.size)) || fail(field, 'Розмір не знайдено.');
-        const quantity = toPositiveInt(row.initial_quantity, field, 'Кількість має бути цілим числом ≥ 1.');
+        const product = products().find((p) => p.id === Number(row?.template)) || fail(field, t('Товар не знайдено.'));
+        const color = PRODUCT_COLORS.find((c) => c.id === Number(row.color)) || fail(field, t('Колір не знайдено.'));
+        const size = PRODUCT_SIZES.find((s) => s.id === Number(row.size)) || fail(field, t('Розмір не знайдено.'));
+        const quantity = toPositiveInt(row.initial_quantity, field, t('Кількість має бути цілим числом ≥ 1.'));
         const cell = requireCell(row.cell, field);
 
         const saved = row.unit_id != null
@@ -439,9 +440,9 @@ const syncProductLines = (arrival, rows) => {
             const taken = saved.quantity - (previous?.unit.current_quantity ?? 0);
             inStorage = quantity - taken;
             if (inStorage < 0) {
-                fail(field, `Позиція ${product.name} (${color.name}, ${size.width}x${size.length}): кількість не можна зменшити до ${quantity}, `
-                    + `бо ${taken} од. з цієї накладної вже взято зі складу для замовлень (пакування). `
-                    + `Мінімально можлива кількість – ${taken}.`);
+                fail(field, `${t('Позиція {{name}} ({{name2}}, {{width}}x{{size}}): кількість не можна зменшити до {{quantity}},', {name: product.name, name2: color.name, width: size.width, size: size.length, quantity})} `
+                    + `${t('бо {{taken}} од. з цієї накладної вже взято зі складу для замовлень (пакування).', {taken})} `
+                    + t('Мінімально можлива кількість – {{taken}}.', {taken}));
             }
             if (previous) {
                 previous.type.units.splice(previous.index, 1);
@@ -449,7 +450,7 @@ const syncProductLines = (arrival, rows) => {
             }
         }
 
-        let type = product.types.find((t) => t.color.id === color.id && t.size.id === size.id);
+        let type = product.types.find((tp) => tp.color.id === color.id && tp.size.id === size.id);
         if (!type) {
             type = { id: nextTypeId(), color, size, quantity: 0, units: [] };
             product.types.push(type);
@@ -517,8 +518,8 @@ const saveWithStorage = (change) => {
             after[cellId] > (before[cellId] ?? 0) && after[cellId] > cellCapacity(Number(cellId)));
         if (overfilled) {
             const cell = findWarehouseCell(overfilled);
-            fail('cell', `Перевищено місткість комірки: склад ${cell.rack.warehouse.name} / стелаж ${cell.rack.name} / комірка ${cell.number} `
-                + `(місткість ${cellCapacity(cell.id)}, разом з цією накладною ${after[overfilled]}).`);
+            fail('cell', `${t('Перевищено місткість комірки: склад {{warehouse}} / стелаж {{rack}} / комірка {{cell}}', { warehouse: cell.rack.warehouse.name, rack: cell.rack.name, cell: cell.number })} `
+                + t('(місткість {{capacity}}, разом з цією накладною {{total}}).', { capacity: cellCapacity(cell.id), total: after[overfilled] }));
         }
     } catch (error) {
         Object.entries(live).forEach(([name, collection]) => restoreInPlace(collection, backup[name]));
@@ -590,7 +591,7 @@ export const fabricArrivalHandlers = [
 
         const error = saveWithStorage(() => {
             applyHeader(arrival, body, true);
-            if (!fabricRows.length && !productRows.length) fail('fabric_rolls', 'Додайте хоча б одну позицію.');
+            if (!fabricRows.length && !productRows.length) fail('fabric_rolls', t('Додайте хоча б одну позицію.'));
             syncFabricLines(arrival, fabricRows);
             syncProductLines(arrival, productRows);
             arrivals().push(arrival);
@@ -617,7 +618,7 @@ export const fabricArrivalHandlers = [
                 syncFabricLines(arrival, body.fabric_rolls);
             }
             if (Array.isArray(body.warehouse_item_units)) syncProductLines(arrival, body.warehouse_item_units);
-            if (!arrival.fabric_lines.length && !arrival.product_lines.length) fail('fabric_rolls', 'Додайте хоча б одну позицію.');
+            if (!arrival.fabric_lines.length && !arrival.product_lines.length) fail('fabric_rolls', t('Додайте хоча б одну позицію.'));
         });
         if (error) return error;
 

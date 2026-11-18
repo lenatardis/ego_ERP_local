@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import styles from './SearchFilter.module.scss';
+import { t } from '../../../i18n';
 
 const Search = ({searchValue, setSearchValue, onSearch}) => {
     const timeout = useRef(null);
@@ -18,7 +19,7 @@ const Search = ({searchValue, setSearchValue, onSearch}) => {
     }, [searchValue]);
     return (
         <div className={styles.searchWrap}>
-            <input type="search" placeholder={'Пошук'} value={searchValue || ''}
+            <input type="search" placeholder={t('Пошук')} value={searchValue || ''}
                    onChange={(e) => setSearchValue(e.target.value)}/>
         </div>
     )

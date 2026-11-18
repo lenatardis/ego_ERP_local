@@ -31,29 +31,30 @@ import NewCustomSelect from "../Common/NewCustomSelect/NewCustomSelect.jsx";
 import LinkRenderer from "../Common/LinkRenderer/LinkRenderer";
 import ExpandableTableFixedHeader from "../Common/ExpandableTable/ExpandableTableFixedHeader.jsx";
 import ArrBack from "../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../i18n';
 
 //utils
 
 const MONEY_TYPE_MAP = {
-    NON_CASH: "Безготівка",
-    CASH: "Готівка",
+    NON_CASH: t('Безготівка'),
+    CASH: t('Готівка'),
 };
 const BILL_TYPE_MAP = {
-    ONLINE: "Онлай",
+    ONLINE: t('Онлай'),
     IBAN: "P/P (IBAN)",
-    TAX: "Накладений платіж",
+    TAX: t('Накладений платіж'),
 };
 const BILL_METHOD_MAP = {
-    FULL: "Повна оплата",
-    PREPAYMENT: "Передплата",
-    POSTPAID: "Післяплата",
+    FULL: t('Повна оплата'),
+    PREPAYMENT: t('Передплата'),
+    POSTPAID: t('Післяплата'),
 };
 const BILL_STATUS_MAP = {
-    PAYMENT_WAIT: "Очікує оплати",
-    PAY_WAIT: "Очікує оплати",
-    PAID: "Оплачено",
-    NOT_PAID: "Не оплачено",
-    REFUND: "Повернуто",
+    PAYMENT_WAIT: t('Очікує оплати'),
+    PAY_WAIT: t('Очікує оплати'),
+    PAID: t('Оплачено'),
+    NOT_PAID: t('Не оплачено'),
+    REFUND: t('Повернуто'),
 };
 
 const tMoneyType = (v) => (v ? MONEY_TYPE_MAP[v] ?? v : "");
@@ -61,7 +62,7 @@ const tBillType = (v) => (v ? BILL_TYPE_MAP[v] ?? v : "");
 const tBillMethod = (v) => (v ? BILL_METHOD_MAP[v] ?? v : "");
 const tBillStatus = (v) => (v ? BILL_STATUS_MAP[v] ?? v : "");
 
-const formatMoney = (n) => (n ?? n === 0 ? `${Number(n).toLocaleString("uk-UA")} грн` : "");
+const formatMoney = (n) => (n ?? n === 0 ? t('{{UA}} грн', {UA: Number(n).toLocaleString("uk-UA")}) : "");
 const formatPercent0 = (n) => (n || n === 0 ? `${Number(n).toFixed(0)}%` : "–");
 
 const uniqueBy = (arr, keyFn) => {
@@ -112,7 +113,7 @@ const sanitizeCoincidence = (raw) => {
 const columns = [
     {
         key: "datetime",
-        title: "Дата",
+        title: t('Дата'),
         render: (val) => {
             if (!val) return "";
 
@@ -125,35 +126,35 @@ const columns = [
             return s;
         }
     },
-    { key: "id", title: <>ID<br />платежу</> },
+    { key: "id", title: <>ID<br />{t('платежу')}</> },
     {
         key: "order_url",
-        title: "Рахунок",
+        title: t('Рахунок'),
         render: (val) => <LinkRenderer value={val} copy />,
     },
-    { key: "account", title: "Отримувач" },
+    { key: "account", title: t('Отримувач') },
     {
         key: "amount",
-        title: "Сума",
+        title: t('Сума'),
         render: (val) => ((val ?? "") !== "" ? Number(val).toLocaleString("uk-UA") : ""),
     },
-    { key: "currency", title: "Валюта" },
-    { key: "manager", title: "Менеджер" },
-    { key: "counterparty", title: "Контрагент" },
-    { key: "assignment", title: "Призначення" },
+    { key: "currency", title: t('Валюта') },
+    { key: "manager", title: t('Менеджер') },
+    { key: "counterparty", title: t('Контрагент') },
+    { key: "assignment", title: t('Призначення') },
     {
         key: "money_type",
-        title: "Тип",
+        title: t('Тип'),
         render: (val) => tMoneyType(val),
     },
     {
         key: "receipt_url",
-        title: "Чек",
+        title: t('Чек'),
         render: (val) => <LinkRenderer value={val} />,
     },
     {
         key: "comment",
-        title: "Коментар",
+        title: t('Коментар'),
         cellClassName: styles.commentCell,
     }
 ];
@@ -334,7 +335,7 @@ const PaymentForOrders = () => {
                 });
             } catch (e) {
                 console.error("Error fetching bill coincidence:", e);
-                setTabError("Вибачте, не вдалося завантажити можливі співпадіння.");
+                setTabError(t('Вибачте, не вдалося завантажити можливі співпадіння.'));
                 setTabData({ results: [], similarity_ranges: null, count: 0, significance_coefficients: null });
             } finally {
                 setTabLoading(false);
@@ -384,7 +385,7 @@ const PaymentForOrders = () => {
         fetchAccounts(next);
     };
 
-    const [accountOptions, setAccountOptions] = useState([{ name: 'Усі рахунки', value: '' }]);
+    const [accountOptions, setAccountOptions] = useState([{ name: t('Усі рахунки'), value: '' }]);
 
     useEffect(() => {
         const loadAccountOptions = async () => {
@@ -392,7 +393,7 @@ const PaymentForOrders = () => {
                 const token = getAccessToken();
                 const resp = await fetchAccountOptions(token);
                 const list = Array.isArray(resp?.results) ? resp.results : (Array.isArray(resp) ? resp : []);
-                const opts = [{ name: 'Усі рахунки', value: '' }].concat(
+                const opts = [{ name: t('Усі рахунки'), value: '' }].concat(
                     list.map(item => ({
                         value: String(item.id),
                         name: item.account ?? '',
@@ -401,7 +402,7 @@ const PaymentForOrders = () => {
                 setAccountOptions(opts);
             } catch (e) {
                 console.error('Error fetching accounts options:', e);
-                setAccountOptions([{ name: 'Усі рахунки', value: '' }]);
+                setAccountOptions([{ name: t('Усі рахунки'), value: '' }]);
             }
         };
         loadAccountOptions();
@@ -443,7 +444,7 @@ const PaymentForOrders = () => {
             <ArrBack/>
             <SearchFilter
                 onOpenFilter={onOpenFilter}
-                title={"Оплата замовлень"}
+                title={t('Оплата замовлень')}
                 searchValue={filterParams.search}
                 setSearchValue={(value) =>
                     setFilterParams((prev) => ({ ...prev, search: value }))
@@ -497,9 +498,9 @@ const PaymentForOrders = () => {
 
             <Filter isShow={isShowFilter} onClose={onClose} deleteFilters={resetAllFilters}>
                 <InputBox
-                    label="Призначення"
+                    label={t('Призначення')}
                     name="assignment"
-                    placeholder="Введіть призначення"
+                    placeholder={t('Введіть призначення')}
                     errors={{}}
                     options={{
                         value: filterParams.assignment,
@@ -511,7 +512,7 @@ const PaymentForOrders = () => {
                     }} />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <CustomCheckbox
-                        name="Лише прив'язані"
+                        name={t('Лише прив\'язані')}
                         value="true"
                         isChecked={filterParams.is_linked === true}
                         isLoading={isLoading}
@@ -519,7 +520,7 @@ const PaymentForOrders = () => {
                         label
                     />
                     <CustomCheckbox
-                        name="Лише не прив'язані"
+                        name={t('Лише не прив\'язані')}
                         value="false"
                         isChecked={filterParams.is_linked === false}
                         isLoading={isLoading}
@@ -529,9 +530,9 @@ const PaymentForOrders = () => {
                 </div>
                 <InputBox
                     name="counterparty"
-                    label="Контрагент"
+                    label={t('Контрагент')}
                     errors={{}}
-                    placeholder="Введіть назву контрагента"
+                    placeholder={t('Введіть назву контрагента')}
                     options={{
                         value: filterParams.counterparty || '',
                         onChange: (e) => {
@@ -544,10 +545,10 @@ const PaymentForOrders = () => {
                 />
                 <InputBox
                     name="amount"
-                    label="Сума"
+                    label={t('Сума')}
                     errors={{}}
                     type="text"
-                    placeholder="Сума"
+                    placeholder={t('Сума')}
                     options={{
                         value: filterParams.amount ?? '',
                         onChange: (e) => {
@@ -566,7 +567,7 @@ const PaymentForOrders = () => {
                     }}
                 />
                 <CustomSelect
-                    label="Тип грошей"
+                    label={t('Тип грошей')}
                     value={filterParams.money_type ?? ''}
                     onChange={(e) => {
                         const val = e.target.value; // 'NON_CASH' | 'CASH' | ''
@@ -577,7 +578,7 @@ const PaymentForOrders = () => {
                     options={Object.entries(MONEY_TYPE_MAP).map(([value, name]) => ({ value, name }))}
                 />
                 <NewCustomSelect
-                    label="Рахунок"
+                    label={t('Рахунок')}
                     value={filterParams.account ?? ''}
                     onChange={(e) => {
                         const val = e.target.value;
@@ -589,7 +590,7 @@ const PaymentForOrders = () => {
                 />
                 <InputBox
                     name="date_from"
-                    label="Дата від"
+                    label={t('Дата від')}
                     errors={{}}
                     type="date"
                     placeholder=""
@@ -605,7 +606,7 @@ const PaymentForOrders = () => {
 
                 <InputBox
                     name="date_to"
-                    label="Дата до"
+                    label={t('Дата до')}
                     errors={{}}
                     type="date"
                     placeholder=""
@@ -637,19 +638,19 @@ const PaymentForOrders = () => {
 
 
             {showSidePopup && (
-                <CentralPopup title={"Видалення замовлення"} onClose={closeSidePopup}>
+                <CentralPopup title={t('Видалення замовлення')} onClose={closeSidePopup}>
                     <div><span>delete</span></div>
                 </CentralPopup>
             )}
 
             {isLinkPopup && (
-                <CentralPopup title={"Прив’язка платежу"} onClose={closeLinkPopup} bigPopup>
+                <CentralPopup title={t('Прив’язка платежу')} onClose={closeLinkPopup} bigPopup>
                     {tabLoading && <Preloader />}
 
                     {!tabLoading && tabError && <div style={{ color: "#F17C7C" }}>{tabError}</div>}
 
                     {!tabLoading && !tabError && tabData.results.length === 0 && (
-                        <div>Немає можливих співпадінь рахунків</div>
+                        <div>{t('Немає можливих співпадінь рахунків')}</div>
                     )}
 
                     {!tabLoading && !tabError && tabData.results.length > 0 && (
@@ -665,16 +666,16 @@ const PaymentForOrders = () => {
                                             role="button"
                                         >
                                             <div className={styles.paymentTab__title}>
-                                                <h4>Замовлення №{item.order_id}</h4>
+                                                <h4>{t('Замовлення №')}{item.order_id}</h4>
                                             </div>
                                             {item.customer && (<div className={styles.paymentTab__info}>
                                                 <p className={styles.paymentTab__price}>{item.customer}</p>
                                             </div>)}
                                             <div className={styles.paymentTab__info}>
-                                                <p>Оплачені: {item.paid_count}</p>
+                                                <p>{t('Оплачені:')} {item.paid_count}</p>
                                             </div>
                                             <div className={styles.paymentTab__info}>
-                                                <p>Неоплачені: {item.unpaid_count}</p>
+                                                <p>{t('Неоплачені:')} {item.unpaid_count}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -696,12 +697,12 @@ const PaymentForOrders = () => {
                                         return (
                                             <div key={billKey} className={styles.paymentAccount__item}>
                                                 <div>
-                                                    <h5>Рахунок №{bill.id}</h5>
+                                                    <h5>{t('Рахунок №')}{bill.id}</h5>
                                                     <p className={styles.paymentAccount__price}>{formatMoney(amount)}</p>
                                                     <p className={styles.paymentAccount__date}>{typeLine || "–"} {bill.prepayment_datetime || "–"}</p>
                                                     <div>
                                                         <p className={styles.paymentAccount__date}>
-                                                            <span>Співпадіння: {formatPercent0(bill.similarity)}</span>
+                                                            <span>{t('Співпадіння:')} {formatPercent0(bill.similarity)}</span>
                                                             <Tooltip
                                                                 arrow
                                                                 placement="top"
@@ -711,29 +712,29 @@ const PaymentForOrders = () => {
                                                                         <div style={{ display: 'grid', gap: 4 }}>
                                                                             <div>
                                                                                 <strong>{formatSignificance(tabData.significance_coefficients.name_significance)}</strong>
-                                                                                {" "}– значущість ПІБ контрагента
+                                                                                {" "}{t('– значущість ПІБ контрагента')}
                                                                             </div>
                                                                             <div>
                                                                                 <strong>{formatSignificance(tabData.significance_coefficients.date_significance)}</strong>
-                                                                                {" "}– значущість дати транзакції
+                                                                                {" "}{t('– значущість дати транзакції')}
                                                                             </div>
                                                                             <div>
                                                                                 <strong>{formatSignificance(tabData.significance_coefficients.amount_significance)}</strong>
-                                                                                {" "}– значущість суми
+                                                                                {" "}{t('– значущість суми')}
                                                                             </div>
                                                                         </div>
-                                                                    ) : "Дані про значущість недоступні"
+                                                                    ) : t('Дані про значущість недоступні')
                                                                 }
                                                             >
                                                                 <img src={InfoIcon} className={styles.infoIcon}
-                                                                    alt="Інфо" />
+                                                                    alt={t('Інфо')} />
                                                             </Tooltip>
                                                         </p>
-                                                        <p className={styles.clarification}>*Співпадіння визначається за
-                                                            діапазоном дати
-                                                            транзакції {tabData.similarity_ranges?.transaction_date_range} год
-                                                            та діапазоном
-                                                            суми {tabData.similarity_ranges?.amount_range}</p>
+                                                        <p className={styles.clarification}>{t('*Співпадіння визначається за')}
+                                                            {t('діапазоном дати')}
+                                                            {t('транзакції')} {tabData.similarity_ranges?.transaction_date_range} {t('год')}
+                                                            {t('та діапазоном')}
+                                                            {t('суми')} {tabData.similarity_ranges?.amount_range}</p>
                                                     </div>
                                                 </div>
                                                 <div className={styles.btnRow}>
@@ -745,7 +746,7 @@ const PaymentForOrders = () => {
                                                             rel="noreferrer"
                                                             onClick={(e) => e.stopPropagation()}
                                                         >
-                                                            <span>Чек</span>
+                                                            <span>{t('Чек')}</span>
                                                         </a>
                                                     ) : (
                                                         <button
@@ -753,7 +754,7 @@ const PaymentForOrders = () => {
                                                             disabled
                                                             onClick={(e) => e.stopPropagation()}
                                                         >
-                                                            <span>Чек</span>
+                                                            <span>{t('Чек')}</span>
                                                         </button>
                                                     )}
                                                     <button
@@ -764,7 +765,7 @@ const PaymentForOrders = () => {
                                                             linkToBill(bill.id);
                                                         }}
                                                     >
-                                                        <span>Підв'язати</span>
+                                                        <span>{t('Підв\'язати')}</span>
                                                     </button>
                                                 </div>
                                             </div>

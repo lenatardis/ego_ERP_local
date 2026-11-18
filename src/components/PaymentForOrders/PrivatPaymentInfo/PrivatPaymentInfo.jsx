@@ -6,54 +6,55 @@ import { useParams } from "react-router";
 import { getAccessToken } from "../../../api/authStorage.js";
 import { getPrivatAccountById } from "../../../api/tablesApi.js";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../i18n';
 
 const OPERATION_MAP = {
-    EXPENDITURE: "Витрата",
-    TRANSFER: "Переказ",
-    INCOME: "Надходження",
+    EXPENDITURE: t('Витрата'),
+    TRANSFER: t('Переказ'),
+    INCOME: t('Надходження'),
 };
 
 const MONEY_TYPE_MAP = {
-    NON_CASH: "Безготівковий",
-    CASH: "Готівковий",
+    NON_CASH: t('Безготівковий'),
+    CASH: t('Готівковий'),
 };
 
 const CURRENCY_MAP = {
-    UAH: "Гривня",
-    USD: "Долар США",
-    EUR: "Євро",
+    UAH: t('Гривня'),
+    USD: t('Долар США'),
+    EUR: t('Євро'),
 };
 
 const PAYMENT_BILL_TYPE_MAP = {
-    ONLINE: "Онлайн",
+    ONLINE: t('Онлайн'),
     IBAN: "IBAN",
-    TAX: "Накладений платіж",
+    TAX: t('Накладений платіж'),
 };
 
 const PAYMENT_BILL_METHOD_MAP = {
-    FULL: "Повна оплата",
-    PREPAYMENT: "Передплата",
-    POSTPAID: "Післяплата",
+    FULL: t('Повна оплата'),
+    PREPAYMENT: t('Передплата'),
+    POSTPAID: t('Післяплата'),
 };
 
 const PAYMENT_BILL_STATUS_MAP = {
-    PAY_WAIT: "Очікує оплати",
-    PAID: "Оплачено",
-    NOT_PAID: "Не оплачено",
-    REFUND: "Повернення",
-    IN_PROG: "В обробці",
-    IN_PROC: "В обробці",
+    PAY_WAIT: t('Очікує оплати'),
+    PAID: t('Оплачено'),
+    NOT_PAID: t('Не оплачено'),
+    REFUND: t('Повернення'),
+    IN_PROG: t('В обробці'),
+    IN_PROC: t('В обробці'),
 };
 
 const formatValue = (value) => {
     if (value === null || value === undefined || value === "") return "";
-    if (typeof value === "boolean") return value ? "Так" : "Ні";
+    if (typeof value === "boolean") return value ? t('Так') : t('Ні');
     return String(value);
 };
 
 const formatBoolean = (value) => {
-    if (value === true) return "Так";
-    if (value === false) return "Ні";
+    if (value === true) return t('Так');
+    if (value === false) return t('Ні');
     return "";
 };
 
@@ -97,7 +98,7 @@ const PrivatPaymentInfo = () => {
                 const response = await getPrivatAccountById(token, id);
 
                 if (!response?.id) {
-                    setBannerMsg("Не вдалося завантажити інформацію про платіж.");
+                    setBannerMsg(t('Не вдалося завантажити інформацію про платіж.'));
                     setPayment(null);
                     return;
                 }
@@ -105,7 +106,7 @@ const PrivatPaymentInfo = () => {
                 setPayment(response);
             } catch (error) {
                 console.error("Failed to load privat payment info:", error);
-                setBannerMsg("Не вдалося завантажити інформацію про платіж.");
+                setBannerMsg(t('Не вдалося завантажити інформацію про платіж.'));
                 setPayment(null);
             } finally {
                 setIsLoading(false);
@@ -121,13 +122,13 @@ const PrivatPaymentInfo = () => {
         <div className={`${styles.incomingFabric} ${styles.paymentDetailPage}`}>
             <ArrBack/>
             <div className={styles.titleBlock}>
-                <h2>Перегляд платежу</h2>
+                <h2>{t('Перегляд платежу')}</h2>
             </div>
 
             {bannerMsg && <div className={styles.bannerError}>{bannerMsg}</div>}
 
             <div className={`${styles.form} ${styles.upperForm}`}>
-                <h3>Інформація про платіж</h3>
+                <h3>{t('Інформація про платіж')}</h3>
 
                 <div className={styles.form__content}>
                     <div className={styles.column}>
@@ -144,7 +145,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Тип операції</div>
+                        <div className={styles.fieldLabel}>{t('Тип операції')}</div>
                         <InputBox
                             errors={{}}
                             name="operation"
@@ -157,7 +158,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Метод операції</div>
+                        <div className={styles.fieldLabel}>{t('Метод операції')}</div>
                         <InputBox
                             errors={{}}
                             name="money_type"
@@ -170,7 +171,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>ID транзакції</div>
+                        <div className={styles.fieldLabel}>{t('ID транзакції')}</div>
                         <InputBox
                             errors={{}}
                             name="transaction_id"
@@ -183,7 +184,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>ID квитанції</div>
+                        <div className={styles.fieldLabel}>{t('ID квитанції')}</div>
                         <InputBox
                             errors={{}}
                             name="num_doc"
@@ -209,7 +210,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Сума</div>
+                        <div className={styles.fieldLabel}>{t('Сума')}</div>
                         <InputBox
                             errors={{}}
                             name="amount"
@@ -222,7 +223,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Валюта</div>
+                        <div className={styles.fieldLabel}>{t('Валюта')}</div>
                         <InputBox
                             errors={{}}
                             name="currency"
@@ -235,7 +236,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Курс</div>
+                        <div className={styles.fieldLabel}>{t('Курс')}</div>
                         <InputBox
                             errors={{}}
                             name="course"
@@ -248,7 +249,7 @@ const PrivatPaymentInfo = () => {
                             }}
                         />
 
-                        <div className={styles.fieldLabel}>Дата оплати</div>
+                        <div className={styles.fieldLabel}>{t('Дата оплати')}</div>
                         <InputBox
                             errors={{}}
                             name="datetime"
@@ -262,7 +263,7 @@ const PrivatPaymentInfo = () => {
                         />
 
                         <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__sectionTitle}`}>
-                            Отримувач
+                            {t('Отримувач')}
                         </div>
 
                         <div className={styles.paymentDetailPage__providerBlock}>
@@ -286,7 +287,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        ПІБ
+                                        {t('ПІБ')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -304,14 +305,14 @@ const PrivatPaymentInfo = () => {
                         </div>
 
                         <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__sectionTitle}`}>
-                            Відправник
+                            {t('Відправник')}
                         </div>
 
                         <div className={styles.paymentDetailPage__providerBlock}>
                             <div className={styles.paymentDetailPage__providerGrid}>
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Контрагент
+                                        {t('Контрагент')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -328,7 +329,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Код ЄДРПОУ
+                                        {t('Код ЄДРПОУ')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -345,7 +346,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Код банку (МФО)
+                                        {t('Код банку (МФО)')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -379,7 +380,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Банк
+                                        {t('Банк')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -396,7 +397,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Розташування
+                                        {t('Розташування')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -415,7 +416,7 @@ const PrivatPaymentInfo = () => {
                     </div>
 
                     <div className={styles.column}>
-                        <div className={styles.fieldLabel}>Призначення платежу</div>
+                        <div className={styles.fieldLabel}>{t('Призначення платежу')}</div>
                         <textarea
                             className="comment"
                             value={formatValue(payment?.assignment)}
@@ -423,7 +424,7 @@ const PrivatPaymentInfo = () => {
                             disabled
                         />
 
-                        <div className={styles.fieldLabel}>Коментар до транзакції</div>
+                        <div className={styles.fieldLabel}>{t('Коментар до транзакції')}</div>
                         <textarea
                             className="comment"
                             value={formatValue(payment?.comment)}
@@ -431,7 +432,7 @@ const PrivatPaymentInfo = () => {
                             disabled
                         />
 
-                        <div className={styles.fieldLabel}>Платіж повернуто</div>
+                        <div className={styles.fieldLabel}>{t('Платіж повернуто')}</div>
                         <InputBox
                             errors={{}}
                             name="is_refunded"
@@ -445,7 +446,7 @@ const PrivatPaymentInfo = () => {
                         />
 
                         <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__sectionTitle}`}>
-                            CRM рахунок
+                            {t('CRM рахунок')}
                         </div>
 
                         <div className={styles.paymentDetailPage__providerBlock}>
@@ -469,7 +470,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Тип оплати
+                                        {t('Тип оплати')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -488,7 +489,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Метод оплати
+                                        {t('Метод оплати')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -507,7 +508,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Статус
+                                        {t('Статус')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -526,7 +527,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Орієнтовна дата сплати
+                                        {t('Орієнтовна дата сплати')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -543,7 +544,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Фактична дата сплати
+                                        {t('Фактична дата сплати')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -560,7 +561,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        Сума
+                                        {t('Сума')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -577,7 +578,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        ID платежу
+                                        {t('ID платежу')}
                                     </div>
                                     <InputBox
                                         errors={{}}
@@ -594,7 +595,7 @@ const PrivatPaymentInfo = () => {
 
                                 <div>
                                     <div className={`${styles.fieldLabel} ${styles.paymentDetailPage__providerLabel}`}>
-                                        ID замовлення
+                                        {t('ID замовлення')}
                                     </div>
                                     <InputBox
                                         errors={{}}

@@ -14,6 +14,7 @@ import { getAccessToken } from "../../../api/authStorage.js";
 import { fetchVendors } from "../../../api/tablesApi.js";
 import { useStickyXScroll } from "../../../hooks/useStickyXScroll.jsx";
 import ArrBack from "../../Common/ArrBack/ArrBack.jsx";
+import { t } from '../../../i18n';
 
 const ITEMS_PER_PAGE = 25;
 const MAX_AMOUNT = 1000000;
@@ -155,19 +156,19 @@ const VendorDebtList = () => {
     const columns = useMemo(() => [
         {
             key: "full_name",
-            title: "ПІБ постачальника",
+            title: t('ПІБ постачальника'),
             width: "1.6fr",
             render: (val) => val || "–",
         },
         {
             key: "debt_uah",
-            title: "Борг, грн",
+            title: t('Борг, грн'),
             width: "1fr",
             render: (val) => formatMoney(val),
         },
         {
             key: "debt_usd",
-            title: "Борг, $",
+            title: t('Борг, $'),
             width: "1fr",
             render: (val) => formatMoney(val),
         },
@@ -182,7 +183,7 @@ const VendorDebtList = () => {
                         fontWeight: 600,
                     }}
                 >
-                    {val ? "Без боргу" : "Борг"}
+                    {val ? t('Без боргу') : t('Борг')}
                 </span>
             ),
         },
@@ -224,7 +225,7 @@ const VendorDebtList = () => {
             <ArrBack/>
             <SearchFilter
                 onOpenFilter={onOpenFilter}
-                title={"Баланс розрахунків з постачальниками"}
+                title={t('Баланс розрахунків з постачальниками')}
                 searchValue={filterParams.search}
                 setSearchValue={(value) =>
                     setFilterParams((prev) => ({ ...prev, search: value }))
@@ -274,7 +275,7 @@ const VendorDebtList = () => {
                 <div>
                     <div style={{ marginBottom: 8 }}>
                         <p style={{ fontSize: 12, color: "#ffffff", marginBottom: 10 }}>
-                            Мінімальний і максимальний борг, грн
+                            {t('Мінімальний і максимальний борг, грн')}
                         </p>
                     </div>
 
@@ -372,7 +373,7 @@ const VendorDebtList = () => {
                 <div>
                     <div style={{ marginBottom: 8 }}>
                         <p style={{ fontSize: 12, color: "#ffffff", marginBottom: 10 }}>
-                            Мінімальний і максимальний борг, $
+                            {t('Мінімальний і максимальний борг, $')}
                         </p>
                     </div>
 

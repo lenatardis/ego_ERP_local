@@ -11,12 +11,13 @@ import { loginUser } from "../../../api/authApi";
 import { setTokens, setUserId } from "../../../api/authStorage";
 import CustomSelect from "../../Common/CustomSelect/CustomSelect";
 import { DEMO_USERS } from "../../../mocks/data/demoUsers";
+import { t } from '../../../i18n';
 
 // Accountant last in the picker (at the user's request); DEMO_USERS itself is shared seed, left as is
 const DEMO_ROLE_OPTIONS = [
     ...DEMO_USERS.filter((u) => !u.profile.groups.includes("Бухгалтер")),
     ...DEMO_USERS.filter((u) => u.profile.groups.includes("Бухгалтер")),
-].map((u) => ({ value: String(u.id), name: u.roleLabel }));
+].map((u) => ({ value: String(u.id), name: t(u.roleLabel) }));
 
 const AuthForm = () => {
     const dispatch = useAppDispatch();
@@ -25,10 +26,10 @@ const AuthForm = () => {
     const [demoRole, setDemoRole] = useState('');
 
     const LOGIN_REQUIREMENTS_MESSAGE =
-        'Логін повинен містити щонайменше 3 символи';
+        t('Логін повинен містити щонайменше 3 символи');
 
     const PASSWORD_REQUIREMENTS_MESSAGE =
-        'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру';
+        t('Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру');
 
     const validationSchema = Yup.object().shape({
         login: Yup.string()
@@ -89,11 +90,11 @@ const AuthForm = () => {
             dispatch(setProfile(result));
         } else {
             if (result?.field === 'credentials') {
-                setAuthError(result?.error || "Не вдалося авторизуватися");
+                setAuthError(t(result?.error || 'Не вдалося авторизуватися'));
             } else {
                 setError(result?.field || "password", {
                     type: "manual",
-                    message: result?.error || "Не вдалося авторизуватися",
+                    message: result?.error || t('Не вдалося авторизуватися'),
                 });
             }
         }
@@ -105,16 +106,16 @@ const AuthForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
             <div className={styles.form}>
                 <div className={styles.demoRole}>
-                    <span className={styles.demoRole__label}>Демо-роль</span>
+                    <span className={styles.demoRole__label}>{t('Демо-роль')}</span>
                     <CustomSelect value={demoRole} onChange={handleDemoRoleChange}
-                        options={DEMO_ROLE_OPTIONS} label={'Оберіть демо-роль'} />
+                        options={DEMO_ROLE_OPTIONS} label={t('Оберіть демо-роль')} />
                 </div>
-                <InputBox errors={errors} name={'login'} label={'Логін'} placeholder={'Логін'}
+                <InputBox errors={errors} name={'login'} label={t('Логін')} placeholder={t('Логін')}
                     type={'text'} options={{
                         ...register('login')
                     }} />
-                <InputBox errors={errors} name={'password'} type={'password'} placeholder={'Пароль'}
-                    label={'Пароль'} options={{
+                <InputBox errors={errors} name={'password'} type={'password'} placeholder={t('Пароль')}
+                    label={t('Пароль')} options={{
                         ...register("password")
                     }} />
             </div>
@@ -124,7 +125,7 @@ const AuthForm = () => {
             )}
 
             <button type="submit" className={`${styles.action} btnDark`} disabled={isLoading}>
-                <span>Увійти</span>
+                <span>{t('Увійти')}</span>
             </button>
             {isLoading && (
                 <Preloader />

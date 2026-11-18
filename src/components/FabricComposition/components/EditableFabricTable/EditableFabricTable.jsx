@@ -10,6 +10,7 @@ import NewFabric from "../NewFabric/NewFabric.jsx";
 import Tooltip from "../../../Common/TapTooltip/TapTooltip";
 import InfoIcon from "../../../../assets/icons/info.svg";
 import IconClose from "../../../../assets/icons/cross.svg";
+import { t } from '../../../../i18n';
 
 // універсальний парсер чисел
 const parseDecimal = (value) => {
@@ -85,9 +86,9 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
     const [createFabricRowIndex, setCreateFabricRowIndex] = useState(null);
 
     const fabricTooltip =
-        'Введіть код існуючої тканини або створіть нову в попапі (кнопка +). Якщо тканина існує, її категорія та тип заповняться автоматично. Є підказки для швидкого вибору коду';
+        t('Введіть код існуючої тканини або створіть нову в попапі (кнопка +). Якщо тканина існує, її категорія та тип заповняться автоматично. Є підказки для швидкого вибору коду');
     const priceUAHTooltip =
-        'Розраховується автоматично від ціни за 1м в доларах по поточному курсу, але ви можете відкорегувати це значення вручну';
+        t('Розраховується автоматично від ціни за 1м в доларах по поточному курсу, але ви можете відкорегувати це значення вручну');
 
 
     const gridTemplate = {
@@ -452,23 +453,23 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
     };
 
     const getWarehouseLabel = () => {
-        if (!whTree.length) return 'Оберіть';
+        if (!whTree.length) return t('Оберіть');
         const options = getWarehouseOptions();
-        return options.length ? 'Оберіть' : 'Немає';
+        return options.length ? t('Оберіть') : t('Немає');
     };
 
     const getRackLabel = (warehouseId) => {
-        if (!warehouseId) return <>Спочатку<br />склад</>;
+        if (!warehouseId) return <>{t('Спочатку')}<br />{t('склад')}</>;
 
         const options = getRackOptions(warehouseId);
-        return options.length ? 'Оберіть' : 'Немає';
+        return options.length ? t('Оберіть') : t('Немає');
     };
 
     const getCellLabel = (warehouseId, rackId) => {
-        if (!rackId) return <>Спочатку<br />стелаж</>;
+        if (!rackId) return <>{t('Спочатку')}<br />{t('стелаж')}</>;
 
         const options = getCellOptions(warehouseId, rackId);
-        return options.length ? 'Оберіть' : 'Немає';
+        return options.length ? t('Оберіть') : t('Немає');
     };
 
     const findById = (arr, id) => arr.find(x => x.id === id) || null;
@@ -505,12 +506,12 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
     };
 
     const getCellDisplayName = (cellMeta) => {
-        if (!cellMeta) return 'комірка не визначена';
+        if (!cellMeta) return t('комірка не визначена');
 
         return [
-            cellMeta.warehouseName ? `склад ${cellMeta.warehouseName}` : '',
-            cellMeta.rackName ? `стелаж ${cellMeta.rackName}` : '',
-            cellMeta.name ? `комірка ${cellMeta.name}` : '',
+            cellMeta.warehouseName ? t('склад {{warehouseName}}', {warehouseName: cellMeta.warehouseName}) : '',
+            cellMeta.rackName ? t('стелаж {{rackName}}', {rackName: cellMeta.rackName}) : '',
+            cellMeta.name ? t('комірка {{name}}', {name: cellMeta.name}) : '',
         ].filter(Boolean).join(' / ');
     };
 
@@ -585,19 +586,19 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
 
                 const editCapacityText = mode === 'edit'
                     ? hasSingleRow
-                        ? `Ви можете вказати максимум ${formatCapacityNumber(item.capacityLimit)} для рядка № ${rowNumbers} або обирати інші комірки на складі. (З урахуванням раніше збереженої кількості доступно: ${formatCapacityNumber(item.remainingCapacity)}, раніше збережено в цій накладній в цій комірці: ${formatCapacityNumber(item.originalQty)}). `
-                        : `Ви можете перерозподіляти сумарну кількість в межах ${formatCapacityNumber(item.capacityLimit)} між рядками № ${rowNumbers} або обирати інші комірки на складі. (Без урахування раніше збереженої кількості доступно: ${formatCapacityNumber(item.remainingCapacity)}, раніше збережено в цій накладній в цій комірці: ${formatCapacityNumber(item.originalQty)}). `
-                    : `Максимум доступно: ${formatCapacityNumber(item.capacityLimit)}. `;
+                        ? `${t('Ви можете вказати максимум {{capacityLimit}} для рядка № {{rowNumbers}} або обирати інші комірки на складі. (З урахуванням раніше збереженої кількості доступно: {{remainingCapacity}}, раніше збережено в цій накладній в цій комірці: {{originalQty}}).', {capacityLimit: formatCapacityNumber(item.capacityLimit), rowNumbers, remainingCapacity: formatCapacityNumber(item.remainingCapacity), originalQty: formatCapacityNumber(item.originalQty)})} `
+                        : `${t('Ви можете перерозподіляти сумарну кількість в межах {{capacityLimit}} між рядками № {{rowNumbers}} або обирати інші комірки на складі. (Без урахування раніше збереженої кількості доступно: {{remainingCapacity}}, раніше збережено в цій накладній в цій комірці: {{originalQty}}).', {capacityLimit: formatCapacityNumber(item.capacityLimit), rowNumbers, remainingCapacity: formatCapacityNumber(item.remainingCapacity), originalQty: formatCapacityNumber(item.originalQty)})} `
+                    : `${t('Максимум доступно: {{capacityLimit}}.', {capacityLimit: formatCapacityNumber(item.capacityLimit)})} `;
 
-                return `✓ ${item.cellLabel}: ${editCapacityText}У формі сумарно (в різних рядках) вказано - ${formatCapacityNumber(item.totalQty)}. Перевірте кількість в рядках № ${rowNumbers}.`;
+                return t('✓ {{cellLabel}}: {{editCapacityText}}У формі сумарно (в різних рядках) вказано - {{totalQty}}. Перевірте кількість в рядках № {{rowNumbers}}.', {cellLabel: item.cellLabel, editCapacityText, totalQty: formatCapacityNumber(item.totalQty), rowNumbers});
             })
             .join('\n');
     };
 
     const getCapacityFieldErrorText = (violation) => {
-        if (!violation) return 'Перевищено місткість комірки на складі';
+        if (!violation) return t('Перевищено місткість комірки на складі');
 
-        return `Перевищено місткість комірки на складі`;
+        return t('Перевищено місткість комірки на складі');
     };
 
     const makeActiveViolationPopupInfo = (violation, touchedRowIndex) => {
@@ -1038,13 +1039,13 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
     //validation and payload
 
     const VALIDATION_FIELD_LABELS = {
-        fabric: 'код тканини',
-        rolls: 'кількість рулонів',
-        length: 'довжина рулону',
-        cell: 'комірка',
-        capacity: 'місткість комірки',
-        priceUSD: 'ціна за 1м, $',
-        priceUAH: 'ціна за 1м, грн',
+        fabric: t('код тканини'),
+        rolls: t('кількість рулонів'),
+        length: t('довжина рулону'),
+        cell: t('комірка'),
+        capacity: t('місткість комірки'),
+        priceUSD: t('ціна за 1м, $'),
+        priceUAH: t('ціна за 1м, грн'),
     };
 
     const getFabricValidationFieldNames = (errors = {}) =>
@@ -1067,11 +1068,11 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
             const fabricName = row.fabric?.name?.trim();
 
             const rowLabel = fabricName
-                ? `В рядку ${rowNumber} в тканині ${fabricName}`
-                : `В рядку ${rowNumber}`;
+                ? t('В рядку {{rowNumber}} в тканині {{fabricName}}', {rowNumber, fabricName})
+                : t('В рядку {{rowNumber}}', {rowNumber});
 
             messages.push({
-                prefix: `${rowLabel} є незаповнені поля:`,
+                prefix: t('{{rowLabel}} є незаповнені поля:', {rowLabel}),
                 fields: [...new Set(fieldNames)],
             });
         });
@@ -1103,14 +1104,14 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
             const priceUAHNum = toNum(r.priceUAH);
             const priceUSDNum = toNum(r.priceUSD);
 
-            if (!hasFabric) e.fabric = 'Оберіть тканину';
-            if (!Number.isInteger(qty) || qty < 1) e.rolls = 'К-ть ≥ 1';
-            if (!hasCell) e.cell = 'Оберіть комірку';
-            if (!(hasCustom || hasStd) || (hasCustom && hasStd)) e.length = 'Вкажіть довжину';
+            if (!hasFabric) e.fabric = t('Оберіть тканину');
+            if (!Number.isInteger(qty) || qty < 1) e.rolls = t('К-ть ≥ 1');
+            if (!hasCell) e.cell = t('Оберіть комірку');
+            if (!(hasCustom || hasStd) || (hasCustom && hasStd)) e.length = t('Вкажіть довжину');
 
-            if (r.priceUAH !== '' && priceUAHNum < 0) e.priceUAH = 'Не може бути < 0';
-            if (r.priceUSD !== '' && priceUSDNum < 0) e.priceUSD = 'Не може бути < 0';
-            else if (!(priceUSDNum > 0)) e.priceUSD = 'Вкажіть ціну';
+            if (r.priceUAH !== '' && priceUAHNum < 0) e.priceUAH = t('Не може бути < 0');
+            if (r.priceUSD !== '' && priceUSDNum < 0) e.priceUSD = t('Не може бути < 0');
+            else if (!(priceUSDNum > 0)) e.priceUSD = t('Вкажіть ціну');
 
             if (Object.keys(e).length) {
                 errors[i] = e;
@@ -1255,18 +1256,18 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
             <div className={`${styles.editableTable} ${innerStyles.muiLocal} editableTable`}>
                 <div className={styles.gridTable__header} style={gridTemplate}>
                     <div>№</div>
-                    <div>Код тканини</div>
-                    <div>Категорія</div>
-                    <div>Тип тканини</div>
-                    <div>Кількість рулонів</div>
-                    <div>Довжина рулону, м</div>
-                    <div>Склад</div>
-                    <div>Стелаж</div>
-                    <div>Комірка</div>
-                    <div>Ціна за 1 м рулону,<br />$</div>
-                    <div>Ціна за 1 м рулону,<br />грн</div>
-                    <div>Сума,<br />$</div>
-                    <div>Сума,<br />грн</div>
+                    <div>{t('Код тканини')}</div>
+                    <div>{t('Категорія')}</div>
+                    <div>{t('Тип тканини')}</div>
+                    <div>{t('Кількість рулонів')}</div>
+                    <div>{t('Довжина рулону, м')}</div>
+                    <div>{t('Склад')}</div>
+                    <div>{t('Стелаж')}</div>
+                    <div>{t('Комірка')}</div>
+                    <div>{t('Ціна за 1 м рулону,')}<br />$</div>
+                    <div>{t('Ціна за 1 м рулону,')}<br />{t('грн')}</div>
+                    <div>{t('Сума,')}<br />$</div>
+                    <div>{t('Сума,')}<br />{t('грн')}</div>
                 </div>
                 <div className={styles.tableRows}>
                     {rows.map((row, idx) => {
@@ -1279,7 +1280,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                         type="button"
                                         className={innerStyles.removeRowBtn}
                                         onClick={() => handleRemoveRow(idx)}
-                                        aria-label="Видалити рядок"
+                                        aria-label={t('Видалити рядок')}
                                     >
                                         <img src={IconClose} alt="" />
                                     </button>
@@ -1292,16 +1293,16 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                                 <button
                                                     type="button"
                                                     className={innerStyles.createFabricBtn}
-                                                    title="Створити нову тканину"
+                                                    title={t('Створити нову тканину')}
                                                     onClick={() => openCreateFabricPopup(idx)}
-                                                    aria-label="Створити нову тканину"
+                                                    aria-label={t('Створити нову тканину')}
                                                 />
                                             )}
 
                                             {!isLocked && !readOnly && (
                                                 <div className={innerStyles.fabricTooltip}>
                                                     <Tooltip title={fabricTooltip} arrow placement="top">
-                                                        <img src={InfoIcon} className={innerStyles.infoIcon} alt="Інфо" />
+                                                        <img src={InfoIcon} className={innerStyles.infoIcon} alt={t('Інфо')} />
                                                     </Tooltip>
                                                 </div>
                                             )}
@@ -1311,7 +1312,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                                 value={row.fabric.name}
                                                 onChange={isLocked ? undefined : (e) => handleFabricCodeChange(idx, e.target.value)}
                                                 onBlur={isLocked ? undefined : () => handleFabricCodeBlur(idx)}
-                                                placeholder="Введіть код"
+                                                placeholder={t('Введіть код')}
                                                 autoComplete="off"
                                                 autoCorrect="off"
                                                 spellCheck={false}
@@ -1338,7 +1339,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                             && fabricHints[idx] !== undefined
                                             && fabricHints[idx]?.length > 0 && (
                                                 <div className={innerStyles.hintEmpty}>
-                                                    Є тканини зі схожим кодом. Оберіть потрібну тканину з підказок.
+                                                    {t('Є тканини зі схожим кодом. Оберіть потрібну тканину з підказок.')}
                                                 </div>
                                             )}
 
@@ -1350,7 +1351,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                             && fabricHints[idx] !== undefined
                                             && fabricHints[idx]?.length === 0 && (
                                                 <div className={innerStyles.hintEmpty}>
-                                                    Нічого не знайдено серед наявних тканин, можете створити нову тканину
+                                                    {t('Нічого не знайдено серед наявних тканин, можете створити нову тканину')}
                                                 </div>
                                             )}
 
@@ -1379,7 +1380,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                             type="number"
                                             value={row.rolls}
                                             onChange={readOnly ? undefined : (e) => handleChange(idx, 'rolls', e.target.value)}
-                                            placeholder="Введіть"
+                                            placeholder={t('Введіть')}
                                             readOnly={readOnly}
                                             className={`${innerStyles.fullBorder} ${activeCapacityErrorRows[idx] ? innerStyles.capacityWarningBorder : ''}`}
                                         />
@@ -1396,17 +1397,17 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                                     value={row.size.id ?? ''}
                                                     onChange={readOnly ? undefined : (e) => handleStandardSizeChange(idx, e.target.value)}
                                                     options={standardLengthOptions}
-                                                    label={isLoading ? 'Завантаження…' : 'Оберіть'}
+                                                    label={isLoading ? t('Завантаження…') : t('Оберіть')}
                                                     height="32px"
                                                     numeric
                                                     disabled={readOnly}
                                                     menuLeftAlign
                                                 />
                                             </div>
-                                            <div className={innerStyles.or}>або</div>
+                                            <div className={innerStyles.or}>{t('або')}</div>
                                             <input className={innerStyles.fullBorder}
                                                 type="number"
-                                                placeholder="Введіть"
+                                                placeholder={t('Введіть')}
                                                 value={row.customSize}
                                                 onChange={readOnly ? undefined : (e) => handleCustomSizeChange(idx, e.target.value)}
                                                 min={0}
@@ -1468,7 +1469,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                                 value={row.priceUSD}
                                                 onChange={readOnly ? undefined : (e) => handleChange(idx, 'priceUSD', e.target.value)}
                                                 readOnly={readOnly}
-                                                placeholder="Введіть"
+                                                placeholder={t('Введіть')}
                                             />
                                         </div>
 
@@ -1480,7 +1481,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                             {!readOnly && (
                                                 <div className={`${innerStyles.fabricTooltip} ${innerStyles.priceTooltipRight}`}>
                                                     <Tooltip title={priceUAHTooltip} arrow placement="top">
-                                                        <img src={InfoIcon} className={innerStyles.infoIcon} alt="Інфо" />
+                                                        <img src={InfoIcon} className={innerStyles.infoIcon} alt={t('Інфо')} />
                                                     </Tooltip>
                                                 </div>
                                             )}
@@ -1523,7 +1524,7 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
 
             {!readOnly && (
                 <button className={innerStyles.addBtn} type="button" onClick={handleAddRow}>
-                    <span>Додати новий запис</span>
+                    <span>{t('Додати новий запис')}</span>
                 </button>
             )}
             {!readOnly && capacityPopupInfo && (
@@ -1555,15 +1556,15 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                     textAlign: "center",
                                 }}
                             >
-                                Перевищено місткість комірки на складі
+                                {t('Перевищено місткість комірки на складі')}
                             </h3>
 
                             <p style={{ margin: 0 }}>
-                                Для <strong>{capacityPopupInfo.cellLabel}</strong> перевищено сумарну допустиму кількість (максимум <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>).
+                                {t('Для')} <strong>{capacityPopupInfo.cellLabel}</strong> {t('перевищено сумарну допустиму кількість (максимум')} <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>).
                             </p>
 
                            {mode !== 'edit' && (<p style={{ margin: 0 }}>
-                                Максимум для поточної форми:{' '}
+                                {t('Максимум для поточної форми:')}{' '}
                                 <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong>
                             </p>)}
 
@@ -1571,29 +1572,29 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                                 <p style={{ margin: 0 }}>
                                     {capacityPopupInfo.rows.length === 1 ? (
                                         <>
-                                            Ви можете вказати максимум <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> для рядка № <strong>{capacityPopupInfo.rows.map(row => row.rowNumber).join(', ')}</strong> або обирати інші комірки на складі.
+                                            {t('Ви можете вказати максимум')} <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> {t('для рядка №')} <strong>{capacityPopupInfo.rows.map(row => row.rowNumber).join(', ')}</strong> {t('або обирати інші комірки на складі.')}
                                         </>
                                     ) : (
                                         <>
-                                            Ви можете перерозподіляти сумарну кількість в межах <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> між рядками <strong> {capacityPopupInfo.rows.map(row => row.rowNumber).join(', ')}</strong> або обирати інші комірки на складі.
+                                            {t('Ви можете перерозподіляти сумарну кількість в межах')} <strong>{formatCapacityNumber(capacityPopupInfo.capacityLimit)}</strong> {t('між рядками')} <strong> {capacityPopupInfo.rows.map(row => row.rowNumber).join(', ')}</strong> {t('або обирати інші комірки на складі.')}
                                         </>
                                     )}
                                     {' '}
-                                    (З урахуванням раніше збереженої кількості доступно:{' '}
+                                    {t('(З урахуванням раніше збереженої кількості доступно:')}{' '}
                                     <strong>{formatCapacityNumber(capacityPopupInfo.remainingCapacity)}</strong>,
-                                    {' '}раніше збережено в цій накладній в цій комірці:{' '}
+                                    {' '}{t('раніше збережено в цій накладній в цій комірці:')}{' '}
                                     <strong>{formatCapacityNumber(capacityPopupInfo.originalQty)}</strong>).
                                 </p>
                             )}
 
                             <p style={{ margin: 0 }}>
-                                Зараз у формі для цієї комірки сумарно вказано:{' '}
+                                {t('Зараз у формі для цієї комірки сумарно вказано:')}{' '}
                                 <strong>{formatCapacityNumber(capacityPopupInfo.totalQty)}</strong>
                             </p>
 
 
                             <p style={{ margin: 0 }}>
-                                Перевірте сумарну кількість в рядках № {' '}
+                                {t('Перевірте сумарну кількість в рядках №')} {' '}
                                 <strong>
                                     {capacityPopupInfo.rows.map(row => row.rowNumber).join(', ')}
                                 </strong>
@@ -1602,13 +1603,13 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                             <p style={{ margin: 0 }}>
                                 {mode === 'edit' && capacityPopupInfo.rows.length === 1 ? (
                                     <>
-                                        Щоб увійти в ліміт зменште кількість в цій тканині або оберіть іншу комірку.
+                                        {t('Щоб увійти в ліміт зменште кількість в цій тканині або оберіть іншу комірку.')}
                                     </>
                                 ) : (
                                     <>
-                                        Щоб увійти в ліміт зменште кількість в цій тканині або перерозподіліть кількість з іншою тканиною, що зберігається в цій комірці (цю комірку використовують рядки: <strong>
+                                        {t('Щоб увійти в ліміт зменште кількість в цій тканині або перерозподіліть кількість з іншою тканиною, що зберігається в цій комірці (цю комірку використовують рядки:')} <strong>
                                             {capacityPopupInfo.rows.map(row => row.rowNumber).join(', ')}
-                                        </strong>), або оберіть іншу комірку.
+                                        </strong>{t('), або оберіть іншу комірку.')}
                                     </>
                                 )}
                             </p>
@@ -1623,14 +1624,14 @@ const EditableFabricTable = ({ mode = 'create', exchangeRate, readOnly = false, 
                             }}
                             onClick={() => setCapacityPopupInfo(null)}
                         >
-                            <span>Ок</span>
+                            <span>{t('Ок')}</span>
                         </button>
                     </div>
                 </CentralPopup>
             )}
             {!readOnly && isCreateFabricPopupOpen && (
                 <CentralPopup
-                    title="Створення нової тканини"
+                    title={t('Створення нової тканини')}
                     onClose={closeCreateFabricPopup}
                     verticalScroll
                     bigPopup
