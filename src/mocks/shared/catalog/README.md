@@ -12,5 +12,8 @@ The files in this folder are **identical in both repos** (`ego_ERP_local/src/moc
 `node scripts/check-shared-seed.mjs`. The ERP keeps `src/mocks/data/<name>.js` as re-exports, so its handlers
 import them as before. The CRM serves this data read-only (workspace `CLAUDE.md`, "Cross-app contract").
 
+`en.js` (2026-11-18) holds the English names of this catalog for the English version of the demos: the seed stays
+Ukrainian, and the mocks translate names with `localizeCatalogText` when they answer in English.
+
 The only app-specific input is `src/mocks/appBaseUrl.js` (one per repo): the base URL demo media
 (`public/demo/media/`, also identical in both repos) is served under.
