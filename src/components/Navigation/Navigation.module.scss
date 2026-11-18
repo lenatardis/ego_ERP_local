@@ -9,10 +9,10 @@
   flex-direction: column;
   align-items: center;
   // demo build: on a short window the menu scrolls instead of pushing "Перейти в CRM" / logout
-  // below the bottom edge. Only up to 617 px: the tallest menu (one group open, the largest)
-  // needs 613 px with the 17 px UA / EN switch (590 px before it, 2026-11-18), and on taller windows a scrollbar would only flash while one group closes and
+  // below the bottom edge. Only up to 630 px: the tallest menu (one group open, the largest)
+  // needs 626 px with the 30 px UA / EN switch (590 px before it, 2026-11-18), and on taller windows a scrollbar would only flash while one group closes and
   // another opens.
-  @media screen and (max-height: 617px) {
+  @media screen and (max-height: 630px) {
     overflow-y: auto;
     scrollbar-width: thin;
   }
@@ -83,8 +83,7 @@
 
   // Demo build (2026-11-18): UA / EN switch above "Перейти в CRM"
   &__lang {
-    display: flex;
-    width: 100%;
+    align-self: center; // only as wide as its two buttons, like "Перейти в CRM" (2026-11-18, at the user's request)
   }
 
   &__block {
