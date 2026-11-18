@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from './Navigation.module.scss';
 import logo from '../../assets/img/logo.jpg';
 import user from '../../assets/icons/user2.svg';
@@ -104,6 +104,26 @@ const Navigation = () => {
         window.addEventListener('keydown', onKeyDown);
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [isMobileOpen]);
+
+    // Demo build (2026-11-18, at the user's request): when the menu scrolls (short window, phone slide-out),
+    // a fade over its bottom edge shows there is more below – macOS hides scrollbars until you scroll
+    const navRef = useRef(null);
+    const [hasMoreBelow, setHasMoreBelow] = useState(false);
+    useEffect(() => {
+        const nav = navRef.current;
+        if (!nav) return undefined;
+        const check = () => setHasMoreBelow(nav.scrollHeight - nav.scrollTop - nav.clientHeight > 1);
+        check();
+        nav.addEventListener('scroll', check, { passive: true });
+        window.addEventListener('resize', check);
+        const observer = new ResizeObserver(check); // a group opening / closing changes the content height
+        Array.from(nav.children).forEach((child) => observer.observe(child));
+        return () => {
+            nav.removeEventListener('scroll', check);
+            window.removeEventListener('resize', check);
+            observer.disconnect();
+        };
+    }, []);
 
     const handleLogout = () => {
         logout(dispatch);
@@ -272,7 +292,7 @@ const Navigation = () => {
             <p className={styles.mobileBar__title}>{activeLink ? t(activeLink.name) : 'Ego Textile'}</p>
         </div>
         {isMobileOpen && <div className={styles.mobileOverlay} onClick={() => setIsMobileOpen(false)}/>}
-        <div className={`${styles.navigation} ${isMobileOpen ? styles.navigationOpen : ''}`}>
+        <div ref={navRef} className={`${styles.navigation} ${isMobileOpen ? styles.navigationOpen : ''}`}>
             <Link to={'/'} onClick={() => setIsMobileOpen(false)}>
                 <img
                     className={styles.navigation__logo}
@@ -347,6 +367,7 @@ const Navigation = () => {
                     </div>
                 </div>
             </div>
+            {hasMoreBelow && <div className={styles.scrollFade} aria-hidden="true"/>}
         </div>
         </>
     );
