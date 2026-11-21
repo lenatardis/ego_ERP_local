@@ -17,7 +17,7 @@ const VERSION_KEY = `${PREFIX}version`;
 // Bump when seed data or record shapes change: previously stored demo data is then discarded.
 const DATA_VERSION = 35;
 // Bump together with the CRM (same value in both repos) when shared seed data or record shapes change.
-const SHARED_DATA_VERSION = 4;
+const SHARED_DATA_VERSION = 5;
 
 // localStorage can be unavailable (blocked storage, some private modes): fall back to memory only.
 const storage = {

@@ -789,3 +789,10 @@ SEED_ORDERS.forEach((order) => {
 
 export const SEED_PAYMENT_BILLS = seed.paymentBills;
 export const SEED_PRIVAT_PAYMENTS = seed.payments;
+
+// Demo access (2026-11-21, at the user's request): the newest order on the CRM's start page (4278) is the first one a
+// visitor opens, so it is "В обробці" (IN_PROG) – the payment status in which the order form, products and bills can
+// be edited. Its 300 грн prepayment bill stays as it was (PAY_WAIT – what a bill made in the CRM starts with). Set
+// after everything above, so nothing else in the seed changes.
+const FIRST_SEEN_ORDER_ID = 4278;
+SEED_ORDERS.find((o) => o.id === FIRST_SEEN_ORDER_ID).payment.status = 'IN_PROG';
