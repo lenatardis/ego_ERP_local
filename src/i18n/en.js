@@ -12,6 +12,7 @@ const en = {
     'Вхід в ERP': 'Sign in to ERP',
     'Демо-доступ: оберіть роль у списку – логін і пароль заповняться самі.':
         'Demo access: pick a role from the list – the login and password are filled in for you.',
+    'Усі дані вигадані.': 'All data is fictional.',
     'Логін повинен містити щонайменше 3 символи': 'The login must have at least 3 characters',
     'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру':
         'The password must have at least 10 characters, including at least one capital letter and one digit',
