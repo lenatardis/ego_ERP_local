@@ -215,6 +215,11 @@
 
 // Demo build, mobile only (< 1024 px); the desktop layout is unchanged
 @media screen and (max-width: 1023px) {
+  .newFabric h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
   .createBlock {
     grid-template-columns: 1fr;
     row-gap: 16px;
