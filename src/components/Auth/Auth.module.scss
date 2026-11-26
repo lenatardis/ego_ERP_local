@@ -56,6 +56,58 @@
   }
 }
 
+// Demo build: collapsed ERP -> CRM ideas under the hint (Auth.jsx CrossAppIdeas)
+.ideas {
+  margin: -12px 0 20px;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 18px;
+
+  &__toggle {
+    min-height: 0;
+    padding: 0 0 0 12px;
+    border: none;
+    background: transparent;
+    color: var(--btn-dark);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__arrow {
+    display: inline-block;
+    margin-left: 4px;
+    transition: transform 0.2s;
+  }
+
+  &__arrowOpen {
+    transform: rotate(180deg);
+  }
+
+  &__body {
+    margin-top: 8px;
+    padding: 0 12px;
+
+    ul {
+      margin: 6px 0;
+      padding-left: 18px;
+      list-style: disc;
+    }
+
+    li + li {
+      margin-top: 4px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
 @media screen and (max-width: 480px) {
   .card {
     padding: 24px 20px;

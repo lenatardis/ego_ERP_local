@@ -21,6 +21,14 @@ const en = {
     'Сервер недоступний': 'Server unavailable',
     'Демо-роль': 'Demo role',
     'Оберіть демо-роль': 'Choose a demo role',
+    'ERP і CRM пов’язані між собою. Наприклад:': 'The ERP and the CRM are linked. For example:',
+    'Бухгалтер підтверджує квитанцію в «CRM платежі» – у CRM замовлення стає оплаченим.':
+        'The accountant approves a receipt on "CRM payments" – the order becomes paid in the CRM.',
+    'Пакувальник завершує пакування – у CRM замовлення стає «Готово до відправки».':
+        'The packer finishes packing – the CRM order becomes "Ready to ship".',
+    'Адміністратор змінює ціну на сторінці «Ціни» – калькулятор CRM рахує за новою.':
+        'The administrator changes a price on the "Prices" page – the CRM calculator uses the new one.',
+    'CRM відкривається кнопкою «Перейти в CRM» у меню.': 'The CRM opens with "Go to CRM" in the menu.',
     'Бачить усю ERP: склад, виробництво, ціни й бухгалтерію.':
         'Sees the whole ERP: stock, production, pricing and accounting.',
     'Інші ролі бачать лише свою частину – увійдіть під ними, щоб побачити роботу кожного.':
