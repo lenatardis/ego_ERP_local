@@ -19,6 +19,22 @@ const DEMO_ROLE_OPTIONS = [
     ...DEMO_USERS.filter((u) => u.profile.groups.includes("Бухгалтер")),
 ].map((u) => ({ value: String(u.id), name: t(u.roleLabel) }));
 
+// Demo build (2026-11-26, at the user's request): what the chosen role does and what to try, by demo user id
+const DEMO_ROLE_HINTS = {
+    1: ['Бачить усю ERP: склад, виробництво, ціни й бухгалтерію.',
+        'Інші ролі бачать лише свою частину – увійдіть під ними, щоб побачити роботу кожного.'],
+    3: ['Звіряє банківські платежі з рахунками CRM і підтверджує квитанції клієнтів.',
+        'Спробуйте: підтвердьте квитанцію в «CRM платежі» – замовлення в CRM стане оплаченим.'],
+    5: ['Кроїть тканину для замовлень у виробництві.',
+        'Спробуйте: відкрийте своє замовлення, оберіть рулон, внесіть роботу й завершіть – замовлення перейде до швачки.'],
+    6: ['Шиє комплекти після крою.',
+        'Спробуйте: відкрийте своє замовлення, внесіть виконану роботу й завершіть – замовлення перейде до пакувальника.'],
+    8: ['Пакує готові комплекти й товари зі складу.',
+        'Спробуйте: позначте товар спакованим і завершіть роботу – у CRM замовлення стане «Готово до відправки».'],
+    4: ['Веде склад: тканини, товари, надходження й постачальників.',
+        'Спробуйте: додайте надходження тканини – нові рулони з’являться на складі.'],
+};
+
 const AuthForm = () => {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +125,12 @@ const AuthForm = () => {
                     <span className={styles.demoRole__label}>{t('Демо-роль')}</span>
                     <CustomSelect value={demoRole} onChange={handleDemoRoleChange}
                         options={DEMO_ROLE_OPTIONS} label={t('Оберіть демо-роль')} />
+                    {DEMO_ROLE_HINTS[demoRole] && (
+                        <p className={styles.demoRole__hint}>
+                            {t(DEMO_ROLE_HINTS[demoRole][0])}
+                            <br/>{t(DEMO_ROLE_HINTS[demoRole][1])}
+                        </p>
+                    )}
                 </div>
                 <InputBox errors={errors} name={'login'} label={t('Логін')} placeholder={t('Логін')}
                     type={'text'} options={{

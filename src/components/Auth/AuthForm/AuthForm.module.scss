@@ -49,4 +49,16 @@
     padding-left: 16px;
     margin-bottom: 6px;
   }
+
+  // Demo build: what the chosen role does (AuthForm DEMO_ROLE_HINTS)
+  &__hint {
+    margin: 8px 0 0;
+    padding: 8px 12px;
+    border-left: 3px solid var(--btn-dark);
+    background-color: var(--bg-main);
+    border-radius: 0 8px 8px 0;
+    color: var(--text-primary);
+    font-size: 13px;
+    line-height: 18px;
+  }
 }

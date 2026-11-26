@@ -21,6 +21,27 @@ const en = {
     'Сервер недоступний': 'Server unavailable',
     'Демо-роль': 'Demo role',
     'Оберіть демо-роль': 'Choose a demo role',
+    'Бачить усю ERP: склад, виробництво, ціни й бухгалтерію.':
+        'Sees the whole ERP: stock, production, pricing and accounting.',
+    'Інші ролі бачать лише свою частину – увійдіть під ними, щоб побачити роботу кожного.':
+        'Other roles see only their part – sign in as them to see what each person does.',
+    'Звіряє банківські платежі з рахунками CRM і підтверджує квитанції клієнтів.':
+        'Matches bank payments to CRM bills and approves customer receipts.',
+    'Спробуйте: підтвердьте квитанцію в «CRM платежі» – замовлення в CRM стане оплаченим.':
+        'Try: approve a receipt on "CRM payments" – the order becomes paid in the CRM.',
+    'Кроїть тканину для замовлень у виробництві.': 'Cuts fabric for orders in production.',
+    'Спробуйте: відкрийте своє замовлення, оберіть рулон, внесіть роботу й завершіть – замовлення перейде до швачки.':
+        'Try: open one of your orders, pick a roll, enter the work done and finish – the order moves to the seamstress.',
+    'Шиє комплекти після крою.': 'Sews kits after cutting.',
+    'Спробуйте: відкрийте своє замовлення, внесіть виконану роботу й завершіть – замовлення перейде до пакувальника.':
+        'Try: open one of your orders, enter the work done and finish – the order moves to the packer.',
+    'Пакує готові комплекти й товари зі складу.': 'Packs finished kits and stock items.',
+    'Спробуйте: позначте товар спакованим і завершіть роботу – у CRM замовлення стане «Готово до відправки».':
+        'Try: mark an item as packed and finish – the CRM order becomes "Ready to ship".',
+    'Веде склад: тканини, товари, надходження й постачальників.':
+        'Runs the warehouse: fabrics, products, arrivals and vendors.',
+    'Спробуйте: додайте надходження тканини – нові рулони з’являться на складі.':
+        'Try: add a fabric arrival – the new rolls appear in stock.',
     'Логін': 'Login',
     'Пароль': 'Password',
     'Увійти': 'Sign in',
