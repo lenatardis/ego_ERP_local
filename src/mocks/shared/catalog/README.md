@@ -10,7 +10,8 @@ totals, bills and bank statement amounts are derived – so changing prices here
 The files in this folder are **identical in both repos** (`ego_ERP_local/src/mocks/shared/catalog/` and
 `ego_CRM_local/src/mocks/shared/catalog/`): edit them in the ERP, copy them to the CRM and run
 `node scripts/check-shared-seed.mjs`. The ERP keeps `src/mocks/data/<name>.js` as re-exports, so its handlers
-import them as before. The CRM serves this data read-only (workspace `CLAUDE.md`, "Cross-app contract").
+import them as before. The CRM serves this data read-only (workspace `CLAUDE.md`, "Cross-app contract"); pricelists and prices are
+only the seed of shared collections the ERP edits live (step 11), which `pricing.js` `priceFor` takes as `live`.
 
 `en.js` (2026-11-18) holds the English names of this catalog for the English version of the demos: the seed stays
 Ukrainian, and the mocks translate names with `localizeCatalogText` when they answer in English.

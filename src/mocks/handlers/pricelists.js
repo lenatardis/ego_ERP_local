@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toBoolOrUndefined, paginate, notFound } from './utils';
-import { getCollection, getSharedCollection, saveCollection, saveSharedCollection, nextId } from '../db';
+import { getSharedCollection, saveSharedCollection, nextId } from '../db';
 import { DEMO_PRICELISTS, DEMO_SOURCES } from '../data/pricelists';
 import { priceCountFor } from './prices';
 import { toIso } from '../data/vendors';
@@ -22,7 +22,8 @@ import { localizeCatalogText } from '../shared/catalog/en';
 // deleted_at, which Sources.jsx shows as "–". Changes are persisted in the visitor's browser (src/mocks/db.js).
 // Sources are shared with the CRM demo (../../../CLAUDE.md, "Cross-app contract"): the ERP owns and edits them, the
 // CRM reads them (its order source list, order display and prices), so they live in the shared store and are
-// re-read on every request. Pricelists and prices stay ERP-private.
+// re-read on every request. Pricelists (and prices, ./prices.js) are shared the same way since 2026-11-26 (workspace
+// CLAUDE.md step 11): the CRM prices orders from the source's active pricelist, else the default one.
 
 const PRICELISTS = 'pricelists';
 
@@ -30,12 +31,13 @@ const MAX_TITLE_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 100;
 const STATUSES = ['ACTIVE', 'DEPRECATED'];
 
-const pricelists = () => getCollection(PRICELISTS, DEMO_PRICELISTS);
+const pricelists = () => getSharedCollection(PRICELISTS, DEMO_PRICELISTS);
+const savePricelists = (list) => saveSharedCollection(PRICELISTS, list);
 const sources = () => getSharedCollection('sources', DEMO_SOURCES);
 const saveSources = (list) => saveSharedCollection('sources', list);
 
-const findPricelist = (id) => pricelists().find((p) => p.id === Number(id));
-const findActivePricelist = (id) => pricelists().find((p) => p.id === Number(id) && !p.deleted_at);
+const findPricelist = (id, list = pricelists()) => list.find((p) => p.id === Number(id));
+const findActivePricelist = (id, list = pricelists()) => list.find((p) => p.id === Number(id) && !p.deleted_at);
 const findActiveSource = (list, id) => list.find((s) => s.id === Number(id) && !s.deleted_at);
 
 const newestFirst = (a, b) => b.created.localeCompare(a.created) || b.id - a.id;
@@ -149,8 +151,9 @@ export const pricelistHandlers = [
         if (errors) return badRequest(errors);
 
         const now = toIso(new Date());
+        const list = pricelists();
         const pricelist = {
-            id: nextId(pricelists()),
+            id: nextId(list),
             title: payload.title.trim(),
             description: String(payload.description ?? '').trim(),
             status: payload.status ?? 'ACTIVE',
@@ -160,14 +163,15 @@ export const pricelistHandlers = [
             deleted_at: null,
         };
 
-        pricelists().push(pricelist);
-        saveCollection(PRICELISTS);
+        list.push(pricelist);
+        savePricelists(list);
 
         return HttpResponse.json(serializePricelist(pricelist), { status: 201 });
     })),
 
     http.patch(`${API}/warehouses/prices-lists/:id/`, withAuth(async ({ request, params }) => {
-        const pricelist = findActivePricelist(params.id);
+        const list = pricelists();
+        const pricelist = findActivePricelist(params.id, list);
         if (!pricelist) return notFound();
 
         const payload = await request.json();
@@ -179,7 +183,7 @@ export const pricelistHandlers = [
         if (payload.status !== undefined) pricelist.status = payload.status;
         if (payload.is_default !== undefined) pricelist.is_default = !!payload.is_default;
         pricelist.modified = toIso(new Date());
-        saveCollection(PRICELISTS);
+        savePricelists(list);
 
         return HttpResponse.json(serializePricelist(pricelist));
     })),
@@ -187,12 +191,13 @@ export const pricelistHandlers = [
     // soft delete: sources keep their link and receive the pricelist with its deleted_at;
     // the default pricelist can't be deleted until another one is made default
     http.delete(`${API}/warehouses/prices-lists/:id/`, withAuth(({ params }) => {
-        const pricelist = findActivePricelist(params.id);
+        const list = pricelists();
+        const pricelist = findActivePricelist(params.id, list);
         if (!pricelist) return notFound();
         if (pricelist.is_default) return badRequest({ is_default: ['Default priceslist can not be deleted.'] });
 
         pricelist.deleted_at = toIso(new Date());
-        saveCollection(PRICELISTS);
+        savePricelists(list);
 
         return new HttpResponse(null, { status: 204 });
     })),

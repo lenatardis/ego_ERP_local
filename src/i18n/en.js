@@ -1017,8 +1017,12 @@ const en = {
         'The catalog bedding sets are made from: sets, components, their types, sizes and options.',
     'Вкладки вгорі – різні частини каталогу; на кожній можна додати, змінити чи видалити запис.':
         'The tabs at the top are the parts of the catalog; on each one you can add, edit or delete a record.',
-    'Калькулятор CRM побудований з тих самих шаблонів, але зміни, зроблені тут, бачить лише ERP.':
-        'The CRM calculator is built from the same templates, but changes made here are seen only by the ERP.',
+    'Ціни комплектів, компонентів і опцій задають на сторінці «Ціни» – калькулятор CRM рахує за ними одразу.':
+        'Prices of sets, components and options are set on the "Prices" page – the CRM calculator uses them right away.',
+    'Ціни спільні з CRM: змініть ціну комплекту тут – калькулятор CRM порахує нову для замовлень з джерел цього прайслиста. Уже додані в замовлення товари зберігають свою ціну.':
+        'Prices are shared with the CRM: change a set price here and the CRM calculator charges the new one for orders from this price list\'s sources. Items already in an order keep their price.',
+    'Прайслисти спільні з CRM: замовлення джерела з неактивним списком CRM рахує за стандартним.':
+        'Price lists are shared with the CRM: orders from a source whose list is inactive are priced from the standard list.',
     'Платежі постачальникам: кому, скільки й з якої каси сплачено.':
         'Payments to vendors: who was paid, how much and from which cash desk.',
     '«Додати +» – новий платіж постачальнику.':

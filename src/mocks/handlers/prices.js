@@ -1,10 +1,10 @@
 import { http, HttpResponse } from 'msw';
 import { API, withAuth, isSet, toBoolOrUndefined, paginate, notFound, getRequestUser } from './utils';
-import { getCollection, saveCollection, nextId } from '../db';
+import { getCollection, saveCollection, getSharedCollection, saveSharedCollection, nextId } from '../db';
 import { C, col } from './calculatorTemplates';
 import { DEMO_PRODUCTS } from '../data/products';
 import { DEMO_PRICELISTS, PRICE_COUNT_KEYS } from '../data/pricelists';
-import { DEMO_PRICES, DEMO_COST_PRICES, ARRIVAL_COSTS, LATE_PRICE_IDS, ownerKey } from '../data/prices';
+import { DEMO_PRICES, DEMO_COST_PRICES, ARRIVAL_COSTS, ownerKey } from '../data/prices';
 import { localizeCatalogText } from '../shared/catalog/en';
 
 // Response shapes follow the original API, as consumed by NewPrices.jsx:
@@ -24,43 +24,21 @@ import { localizeCatalogText } from '../shared/catalog/en';
 // without a cost price item it is the raw material unit cost from the last arrival, and without
 // arrivals there is none (the page shows "Немає даних"). Only non-deleted pricelists count.
 // Changes are persisted in the visitor's browser (src/mocks/db.js).
+// Prices and pricelists are shared with the CRM demo (2026-11-26, workspace CLAUDE.md step 11): the ERP owns and edits
+// them, the CRM prices its calculator / storage popup from them, so they live in the shared store and are re-read on
+// every request. Cost prices stay ERP-private.
 
 const PRICES = 'prices';
 const COST_PRICES = 'costPrices';
 const PAGE_SIZE = 25;
 
-// Demo access (2026-11-12): three kits got a default-list price after the catalog seed was made (LATE_PRICE_IDS,
-// shared/catalog/prices.js). A visitor whose prices were stored before gets them added once (new id; skipped where
-// that kit already has a price in that list), without resetting anything; a later deletion is respected.
-const LATE_PRICES_DONE = 'latePricesAdded';
-let latePricesChecked = false;
-const addLatePrices = (list) => {
-    if (latePricesChecked) return;
-    latePricesChecked = true;
-    const done = getCollection(LATE_PRICES_DONE, []);
-    if (done.length) return;
-    let added = false;
-    DEMO_PRICES.filter((p) => LATE_PRICE_IDS.has(p.id)).forEach((late) => {
-        const exists = list.some((p) => p.owner === late.owner && Number(p.owner_id) === late.owner_id
-            && Number(p.prices_list_id) === late.prices_list_id);
-        if (!exists) {
-            list.push({ ...late, id: nextId(list) });
-            added = true;
-        }
-    });
-    if (added) saveCollection(PRICES);
-    done.push(true);
-    saveCollection(LATE_PRICES_DONE);
-};
-
-const prices = () => {
-    const list = getCollection(PRICES, DEMO_PRICES);
-    addLatePrices(list);
-    return list;
-};
+// The three late kit prices (LATE_PRICE_IDS, shared/catalog/prices.js) are part of DEMO_PRICES, so the shared store
+// starts with them; the ERP-private copy they used to be added to (marker `latePricesAdded`) is no longer read.
+const prices = () => getSharedCollection(PRICES, DEMO_PRICES);
+const savePrices = (list) => saveSharedCollection(PRICES, list);
 const costPrices = () => getCollection(COST_PRICES, DEMO_COST_PRICES);
 const products = () => getCollection('products', DEMO_PRODUCTS);
-const pricelists = () => getCollection('pricelists', DEMO_PRICELISTS);
+const pricelists = () => getSharedCollection('pricelists', DEMO_PRICELISTS);
 
 const activePricelistIds = () => new Set(pricelists().filter((pl) => !pl.deleted_at).map((pl) => pl.id));
 
@@ -305,22 +283,24 @@ export const priceHandlers = [
         if (Object.keys(errors).length) return badRequest(errors);
 
         const [owner, ownerId] = ownerRef;
+        const list = prices();
         const price = {
-            id: nextId(prices()),
+            id: nextId(list),
             owner,
             owner_id: ownerId,
             prices_list_id: plId,
             price: sellPrice,
             manager_id: getRequestUser(request)?.id ?? null,
         };
-        prices().push(price);
-        saveCollection(PRICES);
+        list.push(price);
+        savePrices(list);
 
         return HttpResponse.json(serializePrice(price), { status: 201 });
     })),
 
     http.patch(`${API}/warehouses/prices/:id/`, withAuth(async ({ request, params }) => {
-        const price = prices().find((p) => p.id === Number(params.id));
+        const list = prices();
+        const price = list.find((p) => p.id === Number(params.id));
         if (!price) return notFound();
 
         const payload = await request.json();
@@ -330,23 +310,24 @@ export const priceHandlers = [
             price.price = sellPrice;
         }
         price.manager_id = getRequestUser(request)?.id ?? price.manager_id;
-        saveCollection(PRICES);
+        savePrices(list);
 
         return HttpResponse.json(serializePrice(price));
     })),
 
     // an item must keep at least one price in the (non-deleted) pricelists
     http.delete(`${API}/warehouses/prices/:id/`, withAuth(({ params }) => {
-        const index = prices().findIndex((p) => p.id === Number(params.id));
+        const list = prices();
+        const index = list.findIndex((p) => p.id === Number(params.id));
         if (index === -1) return notFound();
 
-        const price = prices()[index];
+        const price = list[index];
         if (!ownerPrices(price.owner, price.owner_id).some((p) => p.id !== price.id)) {
             return badRequest({ error: 'Can not delete the last price of the item.' });
         }
 
-        prices().splice(index, 1);
-        saveCollection(PRICES);
+        list.splice(index, 1);
+        savePrices(list);
 
         return new HttpResponse(null, { status: 204 });
     })),
