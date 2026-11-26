@@ -28,7 +28,6 @@ const en = {
         'The packer finishes packing – the CRM order becomes "Ready to ship".',
     'Адміністратор змінює ціну на сторінці «Ціни» – калькулятор CRM рахує за новою.':
         'The administrator changes a price on the "Prices" page – the CRM calculator uses the new one.',
-    'CRM відкривається кнопкою «Перейти в CRM» у меню.': 'The CRM opens with "Go to CRM" in the menu.',
     'Бачить усю ERP: склад, виробництво, ціни й бухгалтерію.':
         'Sees the whole ERP: stock, production, pricing and accounting.',
     'Інші ролі бачать лише свою частину – увійдіть під ними, щоб побачити роботу кожного.':

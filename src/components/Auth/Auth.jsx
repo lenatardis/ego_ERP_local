@@ -28,7 +28,6 @@ const CrossAppIdeas = () => {
                     <ul>
                         {CROSS_APP_IDEAS.map((idea) => <li key={idea}>{idea}</li>)}
                     </ul>
-                    <p>{t('CRM відкривається кнопкою «Перейти в CRM» у меню.')}</p>
                 </div>
             )}
         </div>
