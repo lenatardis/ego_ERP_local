@@ -10,9 +10,13 @@ import {BrowserRouter} from "react-router-dom"
 import {store} from './store/store';
 import {startMockBackend} from './mocks/browser';
 import {startVersionCheck} from './utils/versionCheck';
+import {startPhotoSkeletons} from './utils/photoSkeleton';
 
 // Demo build: a tab running an outdated bundle reloads to the deployed one (src/utils/versionCheck.js)
 startVersionCheck();
+
+// Photo skeletons stop shimmering once their photo has loaded (src/utils/photoSkeleton.js)
+startPhotoSkeletons();
 
 // Demo mode: the mock backend must be running before the app's first request (session check in App.jsx)
 startMockBackend()

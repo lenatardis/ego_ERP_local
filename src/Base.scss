@@ -237,6 +237,11 @@ body {
   animation: photoSkeleton 1.2s ease-in-out infinite;
 }
 
+/* loaded (or failed) photo: stop the shimmer, so phones don't repaint every photo each frame (src/utils/photoSkeleton.js) */
+.photoSkeleton[data-loaded] {
+  animation: none;
+}
+
 @keyframes photoSkeleton {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }

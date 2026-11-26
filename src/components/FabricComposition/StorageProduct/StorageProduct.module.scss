@@ -63,6 +63,8 @@
 // scroll container of the ghost-scroll table: its own scrollbar is hidden, the sticky ghost bar replaces it
 .xScrollHide {
   scrollbar-width: none;
+  /* no Android stretch / glow at the table's left and right ends: the photos squashed while the header stayed put */
+  overscroll-behavior-x: none;
   -ms-overflow-style: none;
 
   &::-webkit-scrollbar {
