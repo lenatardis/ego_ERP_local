@@ -73,7 +73,8 @@
     font-weight: 600;
     cursor: pointer;
 
-    &:hover {
+    // only the caption is underlined, not the gap and the arrow
+    &:hover .ideas__label {
       text-decoration: underline;
     }
   }

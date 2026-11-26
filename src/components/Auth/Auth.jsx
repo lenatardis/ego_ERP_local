@@ -19,7 +19,7 @@ const CrossAppIdeas = () => {
         <div className={styles.ideas}>
             <button type="button" className={styles.ideas__toggle} aria-expanded={isOpen}
                     onClick={() => setIsOpen((v) => !v)}>
-                {t('Що можна спробувати')}
+                <span className={styles.ideas__label}>{t('Що можна спробувати')}</span>
                 <span className={`${styles.ideas__arrow} ${isOpen ? styles.ideas__arrowOpen : ''}`}>▾</span>
             </button>
             {isOpen && (

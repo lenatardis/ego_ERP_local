@@ -39,7 +39,8 @@
     cursor: pointer;
     white-space: nowrap;
 
-    &:hover {
+    // only the caption is underlined, not the gap and the arrow
+    &:hover .guide__label {
       text-decoration: underline;
     }
   }

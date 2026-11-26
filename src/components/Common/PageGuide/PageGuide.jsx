@@ -19,7 +19,7 @@ const Guide = ({ guide }) => {
                 <p className={styles.guide__summary}>{guide.summary}</p>
                 <button type="button" className={styles.guide__toggle} aria-expanded={isOpen}
                         onClick={() => setIsOpen((v) => !v)}>
-                    {t('Що можна спробувати')}
+                    <span className={styles.guide__label}>{t('Що можна спробувати')}</span>
                     <span className={`${styles.guide__arrow} ${isOpen ? styles.guide__arrowOpen : ''}`}>▾</span>
                 </button>
             </div>
