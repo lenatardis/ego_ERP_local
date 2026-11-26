@@ -13,6 +13,7 @@ const en = {
     'Демо-доступ: оберіть роль у списку – логін і пароль заповняться самі.':
         'Demo access: pick a role from the list – the login and password are filled in for you.',
     'Усі дані вигадані.': 'All data is fictional.',
+    'ERP і CRM пов’язані між собою.': 'The ERP and the CRM are linked.',
     'Логін повинен містити щонайменше 3 символи': 'The login must have at least 3 characters',
     'Пароль повинен містити щонайменше 10 символів, включаючи хоча б одну велику літеру і одну цифру':
         'The password must have at least 10 characters, including at least one capital letter and one digit',
@@ -21,13 +22,6 @@ const en = {
     'Сервер недоступний': 'Server unavailable',
     'Демо-роль': 'Demo role',
     'Оберіть демо-роль': 'Choose a demo role',
-    'ERP і CRM пов’язані між собою. Наприклад:': 'The ERP and the CRM are linked. For example:',
-    'Бухгалтер підтверджує квитанцію в «CRM платежі» – у CRM замовлення стає оплаченим.':
-        'The accountant approves a receipt on "CRM payments" – the order becomes paid in the CRM.',
-    'Пакувальник завершує пакування – у CRM замовлення стає «Готово до відправки».':
-        'The packer finishes packing – the CRM order becomes "Ready to ship".',
-    'Адміністратор змінює ціну на сторінці «Ціни» – калькулятор CRM рахує за новою.':
-        'The administrator changes a price on the "Prices" page – the CRM calculator uses the new one.',
     'Бачить усю ERP: склад, виробництво, ціни й бухгалтерію.':
         'Sees the whole ERP: stock, production, pricing and accounting.',
     'Інші ролі бачать лише свою частину – увійдіть під ними, щоб побачити роботу кожного.':
