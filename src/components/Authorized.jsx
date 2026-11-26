@@ -35,6 +35,7 @@ import PaymentForCRM from "./PaymentForCRM/PaymentForCRM.jsx";
 import CRMPaymentInfo from "./PaymentForCRM/CRMPaymentInfo/CRMPaymentInfo.jsx";
 import { useAppSelector } from "../hooks/redux";
 import { getProfile } from "../store/selectors";
+import PageGuide from "./Common/PageGuide/PageGuide.jsx";
 
 
 
@@ -65,6 +66,7 @@ const Authorized = () => {
             <div className={'wrapper'}>
                 <Navigation/>
                 <div className={'contentBox'}>
+                    <PageGuide/>
                     <Routes>
                         <Route path={'/'} element={<Navigate to={startPage} replace />} />
                         <Route path={'/storage'} element={<FabricComposition/>}/>

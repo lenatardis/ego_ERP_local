@@ -1,0 +1,91 @@
+// Demo build: page guide for portfolio visitors (PageGuide.jsx)
+.guide {
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--btn-dark);
+  border-radius: 0 8px 8px 0;
+  background-color: var(--bg-second);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 20px;
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    column-gap: 10px;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+  }
+
+  &__summary {
+    flex: 1;
+    margin: 0;
+  }
+
+  &__toggle {
+    flex-shrink: 0;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--btn-dark);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__arrow {
+    display: inline-block;
+    margin-left: 4px;
+    transition: transform 0.2s;
+  }
+
+  &__arrowOpen {
+    transform: rotate(180deg);
+  }
+
+  &__tips {
+    margin: 8px 0 0 26px;
+    padding-left: 18px;
+    list-style: disc;
+
+    li + li {
+      margin-top: 4px;
+    }
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .guide {
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 18px;
+
+    &__head {
+      flex-wrap: wrap;
+      row-gap: 6px;
+    }
+
+    &__summary {
+      flex-basis: calc(100% - 26px);
+    }
+
+    &__toggle {
+      margin-left: 26px;
+    }
+
+    &__tips {
+      margin-left: 26px;
+    }
+  }
+}

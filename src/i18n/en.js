@@ -31,10 +31,10 @@ const en = {
         'Try: approve a receipt on "CRM payments" – the order becomes paid in the CRM.',
     'Кроїть тканину для замовлень у виробництві.': 'Cuts fabric for orders in production.',
     'Спробуйте: відкрийте своє замовлення, оберіть рулон, внесіть роботу й завершіть – замовлення перейде до швачки.':
-        'Try: open one of your orders, pick a roll, enter the work done and finish – the order moves to the seamstress.',
+        'Try: open one of your orders, pick a roll, record the work done and finish – the order moves to the seamstress.',
     'Шиє комплекти після крою.': 'Sews kits after cutting.',
     'Спробуйте: відкрийте своє замовлення, внесіть виконану роботу й завершіть – замовлення перейде до пакувальника.':
-        'Try: open one of your orders, enter the work done and finish – the order moves to the packer.',
+        'Try: open one of your orders, record the work done and finish – the order moves to the packer.',
     'Пакує готові комплекти й товари зі складу.': 'Packs finished kits and stock items.',
     'Спробуйте: позначте товар спакованим і завершіть роботу – у CRM замовлення стане «Готово до відправки».':
         'Try: mark an item as packed and finish – the CRM order becomes "Ready to ship".',
@@ -1009,6 +1009,122 @@ const en = {
     'замовленнях': 'orders',
     'Джерело «{{name}}» вказане в {{count}} {{orders}}.': 'The source "{{name}}" is set on {{count}} {{orders}}.',
     'Ви дійсно хочете його видалити? Існуючі замовлення збережуть джерело.': 'Do you really want to delete it? Existing orders will keep the source.',
+
+    // ---- page guides (Common/PageGuide/pageGuides.js; demo build)
+    'Що можна спробувати':
+        'What to try',
+    'Каталог, з якого складаються комплекти постільної білизни: комплекти, компоненти, їх типи, розміри й опції.':
+        'The catalog bedding sets are made from: sets, components, their types, sizes and options.',
+    'Вкладки вгорі – різні частини каталогу; на кожній можна додати, змінити чи видалити запис.':
+        'The tabs at the top are the parts of the catalog; on each one you can add, edit or delete a record.',
+    'Калькулятор CRM побудований з тих самих шаблонів, але зміни, зроблені тут, бачить лише ERP.':
+        'The CRM calculator is built from the same templates, but changes made here are seen only by the ERP.',
+    'Платежі постачальникам: кому, скільки й з якої каси сплачено.':
+        'Payments to vendors: who was paid, how much and from which cash desk.',
+    '«Додати +» – новий платіж постачальнику.':
+        '"Add +" – a new payment to a vendor.',
+    '«Баланс» – скільки ще винні кожному постачальнику.':
+        '"Balance" – how much is still owed to each vendor.',
+    'Замовлення на крій: комплекти, які шиють для замовлень CRM.':
+        'Orders to cut: bedding sets made for CRM orders.',
+    '«Мої активні замовлення» – призначені вам, «Всі доступні замовлення» – уся черга крою.':
+        '"My active orders" – assigned to you, "All available orders" – the whole cutting queue.',
+    'Відкрийте своє замовлення: оберіть рулон, внесіть виконану роботу й завершіть – замовлення перейде до швачки.':
+        'Open one of your orders: pick a roll, record the work done and finish – the order moves to the seamstress.',
+    'Замовлення на пошиття: комплекти після крою.':
+        'Orders to sew: bedding sets after cutting.',
+    '«Мої активні замовлення» – призначені вам, «Всі доступні замовлення» – уся черга пошиття.':
+        '"My active orders" – assigned to you, "All available orders" – the whole sewing queue.',
+    'Відкрийте своє замовлення, внесіть виконану роботу й завершіть – замовлення перейде до пакувальника.':
+        'Open one of your orders, record the work done and finish – the order moves to the packer.',
+    'Замовлення на пакування: пошиті комплекти й товари зі складу.':
+        'Orders to pack: sewn bedding sets and stock items.',
+    'Перемикач «Комплекти» / «Товари зі складу» показує два види замовлень.':
+        'The "Bedding sets" / "Stock items" switch shows the two kinds of orders.',
+    'Відкрийте своє замовлення, позначте товар спакованим і завершіть роботу – у CRM замовлення стане «Готово до відправки».':
+        'Open one of your orders, mark the item as packed and finish – the CRM order becomes "Ready to ship".',
+    'Виробництво: що шиють і пакують для замовлень CRM і на якому етапі кожне замовлення.':
+        'Production: what is being made and packed for CRM orders, and the stage of each order.',
+    'Відкривати замовлення й завершувати етапи можуть лише закрійник, швачка й пакувальник – увійдіть під цими ролями.':
+        'Only the cutter, seamstress and packer can open orders and finish stages – sign in as one of them.',
+    'Готове замовлення одразу стає «Готово до відправки» в CRM.':
+        'A finished order becomes "Ready to ship" in the CRM right away.',
+    'Замовлення в роботі: що скроїти, з якої тканини, і історія етапів.':
+        'Order in progress: what to cut, from which fabric, and its stage history.',
+    'Оберіть рулон у «Вибір тканини», натисніть «Внести виконану роботу», потім «Завершити роботу».':
+        'Pick a roll in "Choose fabric", click "Record the work done", then "Finish work".',
+    'Замовлення в роботі: що пошити, і історія етапів.':
+        'Order in progress: what to sew, and its stage history.',
+    'Натисніть «Внести виконану роботу», потім «Завершити роботу» – замовлення перейде до пакувальника.':
+        'Click "Record the work done", then "Finish work" – the order moves to the packer.',
+    'Замовлення в роботі: що спакувати, і історія етапів.':
+        'Order in progress: what to pack, and its stage history.',
+    'Для товару зі складу спершу оберіть його у «Вибір товару».':
+        'For a stock item, first pick it in "Choose item".',
+    'Позначте товар спакованим, натисніть «Внести виконану роботу», потім «Завершити роботу» – у CRM замовлення стане «Готово до відправки».':
+        'Mark the item as packed, click "Record the work done", then "Finish work" – the CRM order becomes "Ready to ship".',
+    'Тканини на складі: скільки рулонів і метрів лишилось і де вони лежать.':
+        'Fabrics in stock: how many rolls and metres are left and where they are.',
+    'Іконка в колонці «Розташування» показує стелаж і комірку кожного рулону.':
+        'The icon in the "Location" column shows the rack and cell of each roll.',
+    '«Фільтр» – за категорією й наявністю; «Готова продукція» – товари зі складу.':
+        '"Filter" – by category and availability; "Finished goods" – stock items.',
+    'Нові рулони додає комірник через «Надходження».':
+        'New rolls are added by the storekeeper through "Arrivals".',
+    'Готова продукція на складі: товари, їх кольори, розміри й залишки.':
+        'Finished goods in stock: products, their colours, sizes and quantities.',
+    '«Показати варіанти» розгортає кольори й розміри кожного товару.':
+        '"Show variants" lists the colours and sizes of each product.',
+    '«Фільтр» – за категорією й наявністю; «Тканини» – рулони тканин.':
+        '"Filter" – by category and availability; "Fabrics" – fabric rolls.',
+    'Надходження: накладні на тканини й готову продукцію від постачальників.':
+        'Arrivals: delivery notes for fabrics and finished goods from vendors.',
+    '«+Тканини» або «+Готова продукція» – нова накладна; після збереження товар з’являється на складі.':
+        '"+Fabrics" or "+Finished goods" – a new delivery note; once saved, the goods appear in stock.',
+    'Збережену накладну можна переглянути або відредагувати.':
+        'A saved delivery note can be viewed or edited.',
+    'Постачальники тканин і товарів та їх контакти.':
+        'Vendors of fabrics and goods, and their contacts.',
+    '«Додати +» – новий постачальник; його можна обрати в накладній і в платежі.':
+        '"Add +" – a new vendor; you can then pick them in a delivery note and in a payment.',
+    'Собівартість і ціни комплектів, компонентів і опцій у кожному прайслисті.':
+        'Costs and prices of sets, components and options in each price list.',
+    'Змініть ціну в таблиці й збережіть рядок або всі зміни разом.':
+        'Change a price in the table and save the row, or all changes at once.',
+    '«Показати маржу/націнку» – скільки заробляє кожна позиція.':
+        '"Show margin / markup" – how much each item earns.',
+    'Прайслисти: окремі набори цін для різних джерел замовлень.':
+        'Price lists: separate sets of prices for different order sources.',
+    '«Додати прайслист» – новий список; ціни в ньому задають на сторінці «Ціни».':
+        '"Add a price list" – a new list; its prices are set on the "Prices" page.',
+    'Колонка «Джерела» показує, які джерела замовлень беруть ціни з цього списку.':
+        'The "Sources" column shows which order sources take their prices from this list.',
+    'Джерела замовлень (сайт, Instagram…) і прайслист кожного.':
+        'Order sources (website, Instagram…) and the price list of each.',
+    'Джерела спільні з CRM: нове, перейменоване чи видалене джерело одразу видно там.':
+        'Sources are shared with the CRM: a new, renamed or deleted source shows there right away.',
+    'Прайслист джерела визначає ціни товарів у замовленнях CRM з цього джерела.':
+        "A source's price list sets the product prices in CRM orders from that source.",
+    'Банківська виписка: платежі клієнтів, які треба прив’язати до рахунків CRM.':
+        'Bank statement: customer payments to be linked to CRM bills.',
+    "«Фільтр» → «Лише не прив'язані» – що лишилось розібрати.":
+        '"Filter" → "Unlinked only" – what is left to sort out.',
+    "Розгорніть платіж і натисніть «Прив'язати замовлення вручну» – ERP запропонує схожі рахунки за ім’ям, сумою й датою.":
+        'Expand a payment and click "Link an order manually" – the ERP suggests bills that match by name, amount and date.',
+    'Прив’язаний рахунок стає оплаченим; коли оплачено всі рахунки замовлення, воно стає оплаченим і в CRM.':
+        "A linked bill becomes paid; once all of an order's bills are paid, the order becomes paid in the CRM too.",
+    'Баланс розрахунків: скільки винні кожному постачальнику.':
+        'Balance: how much is owed to each vendor.',
+    '«Фільтр» – лише з боргом або без боргу.':
+        '"Filter" – only with a debt, or only without.',
+    'Рахунки замовлень CRM: оплати, які бухгалтер підтверджує чи відхиляє.':
+        'CRM order bills: payments the accountant approves or declines.',
+    '«Фільтр» → «На розгляді» – клієнт надіслав квитанцію, і вона чекає на рішення.':
+        '"Filter" → "Under review" – the customer sent a receipt and it waits for a decision.',
+    '«Підтвердити платіж» – рахунок стає оплаченим, а коли оплачено все, замовлення стає оплаченим і в CRM.':
+        '"Approve payment" – the bill becomes paid, and once everything is paid, the order becomes paid in the CRM too.',
+    'Відхилений рахунок менеджер побачить у CRM як неоплачений.':
+        'The manager sees a declined bill in the CRM as unpaid.',
 };
 
 export default en;
