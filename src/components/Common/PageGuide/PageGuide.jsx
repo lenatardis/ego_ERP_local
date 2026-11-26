@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './PageGuide.module.scss';
-import infoIcon from '../../../assets/icons/info.svg';
+import bulbIcon from '../../../assets/icons/bulb.svg';
 import { useAppSelector } from '../../../hooks/redux';
 import { getProfile } from '../../../store/selectors';
 import { getPageGuide } from './pageGuides';
@@ -15,7 +15,7 @@ const Guide = ({ guide }) => {
     return (
         <div className={styles.guide}>
             <div className={styles.guide__head}>
-                <img src={infoIcon} alt="" className={styles.guide__icon}/>
+                <img src={bulbIcon} alt="" className={styles.guide__icon}/>
                 <p className={styles.guide__summary}>{guide.summary}</p>
                 <button type="button" className={styles.guide__toggle} aria-expanded={isOpen}
                         onClick={() => setIsOpen((v) => !v)}>
