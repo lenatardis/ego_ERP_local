@@ -215,8 +215,9 @@
 
 // Demo build, mobile only (< 1024 px); the desktop layout is unchanged
 @media screen and (max-width: 1023px) {
-  .newFabric h2 {
-    font-size: 22px;
+  // .titleBlock: wins over the arrival pages' own mobile `h2` (24 px) when the form is their popup
+  .newFabric .titleBlock h2 {
+    font-size: 18px;
     margin-bottom: 16px;
   }
 
