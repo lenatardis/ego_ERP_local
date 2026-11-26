@@ -213,6 +213,11 @@ body {
   flex-direction: row;
 }
 
+// Demo build: the tables (and their ghost scroll bars) ended right where the page numbers start – a little space between
+.MuiPagination-root {
+  margin-top: 12px;
+}
+
 .errorMsg {
   color: #d54f4f;
   margin-top: 2px;
